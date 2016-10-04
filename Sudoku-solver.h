@@ -18,8 +18,7 @@
     sireeshkodali1@gmail.com
     dkiran100@gmail.com
     */
-//#ifndef _SUDOKU_SOLVER_
-//#define _SUDOKU_SOLVER_
+
 #pragma once
 
 namespace CSudokuSolver
@@ -33,7 +32,7 @@ namespace CSudokuSolver
 		struct SUDOKU_ANS box[9][9];
 	};
 
-	typedef SUDOKU_ANS_BOARD SUDOKU_ANS_BOARD;
+	//typedef SUDOKU_ANS_BOARD SUDOKU_ANS_BOARD;
 
 	void print_sudoku(int sudoku_q[9][9]);							//print a given sudoku
 	bool initialise_sudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudoku_ans);		//initialse a sudoku
