@@ -48,43 +48,43 @@ int main()
 	//TODO: Read www.sudokuwiki.org
 
 	//initialise the answer board
-	if (!initialise_sudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
+	if (!initialiseSudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
 	{ 
 		//something went wrong - the input sudoku was probably wrong
 		std::cerr<< "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
-		print_sudoku(sudoku_q);
+		printSudoku(sudoku_q);
 		std::cout << "The sudoku contains " << count(sudoku_q) << " clues.\n";
 		return -1;
 	}
 
 	std::cout << "The given sudoku is :\n";
-	print_sudoku(sudoku_q);
+	printSudoku(sudoku_q);
 
 	std::cout << "Given : " << count(sudoku_q) << '\n';
 
 	while (count(sudoku_q) < 81 && sudoku_ans.changed) 
 	{
 		sudoku_ans.changed = false;
-		check_columns(sudoku_ans, sudoku_q);
-		check_rows(sudoku_ans, sudoku_q);
-		naked_single(sudoku_ans, sudoku_q);
-		check_box(sudoku_ans, sudoku_q);
+		checkColumns(sudoku_ans, sudoku_q);
+		checkRows(sudoku_ans, sudoku_q);
+		nakedSingle(sudoku_ans, sudoku_q);
+		checkBox(sudoku_ans, sudoku_q);
 		if (!sudoku_ans.changed)
-			naked_pair(sudoku_ans);
+			nakedPair(sudoku_ans);
 		if (!sudoku_ans.changed)
-			check_box_rows(sudoku_ans);
+			pointingBoxColumns(sudoku_ans);
 		if (!sudoku_ans.changed)
-			check_box_columns(sudoku_ans);
+			pointingBoxRows(sudoku_ans);
 	}
 	
-	if (check_error(sudoku_ans, sudoku_q)) 
+	if (checkError(sudoku_ans, sudoku_q)) 
 	{
 		std::cout << "Something went wrong!\n";
-		print_sudoku(sudoku_q);
+		printSudoku(sudoku_q);
 		return -1;
 	}
 	auto eTime = std::chrono::high_resolution_clock::now();	
-	print_sudoku(sudoku_q);
+	printSudoku(sudoku_q);
 
 	std::cout << "Answered : " << count(sudoku_q) << '\n';
 	std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
