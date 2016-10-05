@@ -247,6 +247,8 @@ void CSudokuSolver::naked_pair(SUDOKU_ANS_BOARD &sudoku_ans)
 											disable_pos(sudoku_ans, num[0], l, m);
 											disable_pos(sudoku_ans, num[1], l, m);
 										}
+							if (sudoku_ans.changed)
+								return;
 						}
 					}
 				}
@@ -295,6 +297,8 @@ void CSudokuSolver::naked_pair(SUDOKU_ANS_BOARD &sudoku_ans)
 											disable_pos(sudoku_ans, num[0], l, m);
 											disable_pos(sudoku_ans, num[1], l, m);
 										}
+							if (sudoku_ans.changed)
+								return;
 						}
 					}
 				}
