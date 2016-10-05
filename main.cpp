@@ -48,7 +48,8 @@ int main()
 	//TODO: Read www.sudokuwiki.org
 
 	//initialise the answer board
-	if (!initialise_sudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) { 
+	if (!initialise_sudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
+	{ 
 		//something went wrong - the input sudoku was probably wrong
 		std::cerr<< "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
 		print_sudoku(sudoku_q);
@@ -61,7 +62,8 @@ int main()
 
 	std::cout << "Given : " << count(sudoku_q) << '\n';
 
-	while (count(sudoku_q) < 81 && sudoku_ans.changed) {
+	while (count(sudoku_q) < 81 && sudoku_ans.changed) 
+	{
 		sudoku_ans.changed = false;
 		check_columns(sudoku_ans, sudoku_q);
 		check_rows(sudoku_ans, sudoku_q);
@@ -75,9 +77,13 @@ int main()
 			check_box_columns(sudoku_ans);
 	}
 	
-	if (check_error(sudoku_ans, sudoku_q)) {
+	if (check_error(sudoku_ans, sudoku_q)) 
+	{
 		std::cout << "Something went wrong!\n";
+		print_sudoku(sudoku_q);
+		return -1;
 	}
+	
 	print_sudoku(sudoku_q);
 
 	std::cout << "Answered : " << count(sudoku_q) << '\n';
