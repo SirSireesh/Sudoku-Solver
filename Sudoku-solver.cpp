@@ -212,13 +212,11 @@ void CSudokuSolver::naked_pair(SUDOKU_ANS_BOARD &sudoku_ans)
 
 	//for the row
 	for (int i = 0; i < 9; ++i)
-		for (int j = 0; j < 9; ++j) 
-		{
+		for (int j = 0; j < 9; ++j)
+		{	
 			pair = true;
 			if (counter[i][j] == 2) 
-			{
 				for (int k = j + 1; k < 9; ++k) 
-				{
 					if (counter[i][k] == 2 && sudoku_ans.box[i][k].done == false && sudoku_ans.box[i][j].done == false) 
 					{
 						for (int n = 0; n < 9; ++n) 
@@ -268,8 +266,6 @@ void CSudokuSolver::naked_pair(SUDOKU_ANS_BOARD &sudoku_ans)
 								return;
 						}
 					}
-				}
-			}
 
 		}
 	//for the column
@@ -277,10 +273,8 @@ void CSudokuSolver::naked_pair(SUDOKU_ANS_BOARD &sudoku_ans)
 		for (int j = 0; j < 9; ++j) 
 		{
 			pair = true;
-			if (counter[j][i] == 2) 
-			{
+			if (counter[j][i] == 2)
 				for (int k = j + 1; k < 9; ++k) 
-				{
 					if (counter[k][i] == 2 && sudoku_ans.box[k][i].done == false && sudoku_ans.box[j][i].done == false) 
 					{
 						for (int n = 0; n < 9; ++n) 
@@ -330,9 +324,6 @@ void CSudokuSolver::naked_pair(SUDOKU_ANS_BOARD &sudoku_ans)
 								return;
 						}
 					}
-				}
-			}
-
 		}
 
 }
