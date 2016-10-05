@@ -18,7 +18,7 @@
     sireeshkodali1@gmail.com
     dkiran100@gmail.com
     */
-#include <time.h>
+#include <chrono>
 #include <iostream>
 #include "Sudoku-solver.h"
 
@@ -43,7 +43,7 @@ int main()
 	std::cout << "This program is free software, and you are welcome to redistribute it under\n";
 	std::cout << "certain conditions; check license.txt for more details\n\n";
 
-	clock_t tStart = clock();
+	auto sTime = std::chrono::high_resolution_clock::now();
 	//TODO: Create gui instead for input
 	//TODO: Read www.sudokuwiki.org
 
@@ -83,11 +83,11 @@ int main()
 		print_sudoku(sudoku_q);
 		return -1;
 	}
-	
+	auto eTime = std::chrono::high_resolution_clock::now();	
 	print_sudoku(sudoku_q);
 
 	std::cout << "Answered : " << count(sudoku_q) << '\n';
-	std::cout << "Time taken = " << (double) (clock() - tStart)/CLOCKS_PER_SEC << '\n';
+	std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
 
 	return 0;
 }
