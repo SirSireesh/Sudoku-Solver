@@ -246,7 +246,6 @@ void CSudokuSolver::naked_pair(SUDOKU_ANS_BOARD &sudoku_ans)
 										if (l == i && (m == j || m == k)) {
 											disable_pos(sudoku_ans, num[0], l, m);
 											disable_pos(sudoku_ans, num[1], l, m);
-
 										}
 						}
 					}
@@ -254,6 +253,55 @@ void CSudokuSolver::naked_pair(SUDOKU_ANS_BOARD &sudoku_ans)
 			}
 
 		}
+	//for the column
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j) {
+			pair = true;
+			if (counter[j][i] == 2) {
+				for (int k = j + 1; k < 9; ++k) {
+					if (counter[k][i] == 2 && sudoku_ans.box[k][i].done == false && sudoku_ans.box[j][i].done == false) {
+						for (int n = 0; n < 9; ++n) {
+							if (sudoku_ans.box[j][i].num[n] != sudoku_ans.box[k][i].num[n]) {
+								pair = false;
+								break;
+							}
+							else if (sudoku_ans.box[j][i].num[n]) {
+								if (num[0] == -1)
+									num[0] = n;
+								else
+									num[1] = n;
+							}
+						}
+						if (pair) {
+							//while using disable_* may seem better, it will let us into an infinite loop
+							for (int l = 0; l < j; ++l){
+								disable_pos(sudoku_ans, num[0], l, i);
+								disable_pos(sudoku_ans, num[1], l, i);
+							}
+							for (int l = j + 1; l < k; ++l) {
+								disable_pos(sudoku_ans, num[0], l, i);
+								disable_pos(sudoku_ans, num[1], l, i);
+							}
+							for (int l = k + 1; l < 9; ++l) {
+								disable_pos(sudoku_ans, num[0], l, i);
+								disable_pos(sudoku_ans, num[1], l, i);
+							}
+
+							if (j - (j % 3) == k - (k % 3)) 
+								//disable the box
+								for (int l = i - (i % 3); l < (i - (i % 3) + 3); ++l) 
+									for (int m = j - (j % 3); l < j - (j % 3) + 3; ++l)
+										if (l == i && (m == j || m == k)) {
+											disable_pos(sudoku_ans, num[0], l, m);
+											disable_pos(sudoku_ans, num[1], l, m);
+										}
+						}
+					}
+				}
+			}
+
+		}
+
 }
 
 void CSudokuSolver::check_box(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
