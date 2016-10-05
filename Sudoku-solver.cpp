@@ -436,3 +436,21 @@ void CSudokuSolver::check_box_columns(SUDOKU_ANS_BOARD &sudoku_ans)
 				}
 		}
 }
+
+bool CSudokuSolver::check_error(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
+{
+	int poss = 0;
+	for (int i = 0; i < 9; ++i) {
+		for (int j = 0; j < 9; ++j) {
+			if (!sudoku_q[i][j]) {
+				poss = 0;
+				for (int n = 0; n < 9; ++n)
+					if (sudoku_ans.box[i][j].num[n])
+						++poss;	
+				if (poss == 0)
+					return true;
+			}
+		}
+	}
+	return false;
+}

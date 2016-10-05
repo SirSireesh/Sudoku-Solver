@@ -55,6 +55,7 @@ namespace CSudokuSolver
 	void check_hidden(SUDOKU_ANS_BOARD &sudoku_ans);					//TODO:search for hidden pairs in a box
 	void x_wing(SUDOKU_ANS_BOARD &sudoku_ans);						//TODO:Apply the very advanced and complicated x-wing algorithm
 	int count(int sudoku_q[9][9]);								//count the number of determined answers in a given sudoku
+	bool check_error(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]);			//check if something went wrong
 
 	//NOTE - the functions that solve a sudoku are sorted in the order of complexity and speed. The lower a function is, the lesser it should be used!
 }

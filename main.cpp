@@ -74,7 +74,10 @@ int main()
 		if (!sudoku_ans.changed)
 			check_box_columns(sudoku_ans);
 	}
-
+	
+	if (check_error(sudoku_ans, sudoku_q)) {
+		std::cout << "Something went wrong!\n";
+	}
 	print_sudoku(sudoku_q);
 
 	std::cout << "Answered : " << count(sudoku_q) << '\n';
