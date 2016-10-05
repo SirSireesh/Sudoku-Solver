@@ -18,6 +18,7 @@
     sireeshkodali1@gmail.com
     dkiran100@gmail.com
     */
+
 #include <iostream>
 #include "Sudoku-solver.h"
 
@@ -66,31 +67,23 @@ void CSudokuSolver::disable_pos(SUDOKU_ANS_BOARD &sudoku_ans, int n, int x, int 
 void CSudokuSolver::disable_column(SUDOKU_ANS_BOARD &sudoku_ans, int n, int column)
 {
 	for (int i = 0; i < 9; ++i) 
-	{
 		if (sudoku_ans.box[i][column].done == false)
 			disable_pos(sudoku_ans, n, i, column);
-	}
 }
 
 void CSudokuSolver::disable_row(SUDOKU_ANS_BOARD &sudoku_ans, int n, int row)
 {
 	for (int j = 0; j < 9; ++j) 
-	{
 		if (sudoku_ans.box[row][j].done == false)
 			disable_pos(sudoku_ans, n, row, j);
-	}
-
 }
 
 void CSudokuSolver::disable_box(SUDOKU_ANS_BOARD &sudoku_ans, int n, int x, int y)
 {
-	for (int i = x - (x%3); i < (x - (x%3) + 3); ++i) {
+	for (int i = x - (x%3); i < (x - (x%3) + 3); ++i)
 		for (int j = y - (y%3); j < (y  - (y%3) + 3); ++j) 
-		{
 			if (sudoku_ans.box[i][j].done == false)
 				disable_pos(sudoku_ans, n, i, j);
-		}
-	}
 }
 
 void CSudokuSolver::finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], int n, int x, int y)
@@ -110,9 +103,8 @@ void CSudokuSolver::finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], i
 	sudoku_q[x][y] = n + 1;
 
 	for (int i = 0; i < 9; ++i) 
-	{
 		sudoku_ans.box[x][y].num[i] = false;
-	}
+
 	disable_row(sudoku_ans, n, x);
 	disable_column(sudoku_ans, n, y);
 	disable_box(sudoku_ans, n, x, y);
@@ -132,13 +124,11 @@ void CSudokuSolver::check_columns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][
 
 	for (int i = 0; i < 9; ++i) 
 	{
-		for (auto& k : only_pos) 	//reset the bool for every column we check
-			k = true;
+		for (auto& elem : only_pos) 	//reset the bool for every column we check
+			elem = true;
 		for (int j = 0; j < 9; ++j) 
-		{
 			if (sudoku_ans.box[j][i].done == false) 	//make sure the position was not already filled
-				for (int n = 0; n < 9; ++n) 
-				{
+				for (int n = 0; n < 9; ++n)
 					if (sudoku_ans.box[j][i].num[n] && only_pos[n]) 
 					{
 						for (int k = j + 1; k < 9; ++k)
@@ -150,8 +140,6 @@ void CSudokuSolver::check_columns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][
 						if (only_pos[n]) 		//if it is the only posiion, finalize it
 							finalize(sudoku_ans, sudoku_q, n, j, i);
 					}
-				}
-		}
 	}
 }
 
@@ -168,8 +156,8 @@ void CSudokuSolver::check_rows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 	bool only_pos[9];
 
 	for (int i = 0; i < 9; ++i){
-		for (auto& k : only_pos)		//reset the bool for every row we check
-			k = true;
+		for (auto& elem : only_pos)		//reset the bool for every row we check
+			elem = true;
 		for (int j = 0; j < 9; ++j) 
 			if (sudoku_ans.box[i][j].done == false) 	//make sure that the position is not already filled
 				for (int n  = 0; n < 9; ++n)
@@ -364,15 +352,13 @@ void CSudokuSolver::check_box(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 	{
 		for (int j = 0; j < 9; j += 3) 
 		{
-			for (auto& a : only_pos)
-				a = true;
+			for (auto& elem : only_pos)
+				elem = true;
 			for (int k = i; k < i + 3; ++k) 
-			{
 				for (int l = j; l < j + 3; ++l) 
-				{
 					//This gets us each individual box in the 3x3 box
 					if (sudoku_ans.box[k][l].done == false)
-						for (int n = 0; n < 9; ++n) {
+						for (int n = 0; n < 9; ++n) 
 							if (sudoku_ans.box[k][l].num[n] && only_pos[n]) 
 							{
 								for (int m = i; m < i + 3; ++m) 
@@ -388,9 +374,6 @@ void CSudokuSolver::check_box(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 								if (only_pos[n]) 
 									finalize(sudoku_ans, sudoku_q, n, k, l);
 							}
-						}
-				}
-			}
 		}
 	}
 }
@@ -408,10 +391,10 @@ void CSudokuSolver::check_box_rows(SUDOKU_ANS_BOARD &sudoku_ans)
 	for (int i = 0; i < 9; i += 3)
 		for (int j = 0; j < 9; j += 3) 
 		{
-			for (auto& a : only_row)
-				a = true;
+			for (auto& elem : only_row)
+				elem = true;
 			for (int k = i; k < i + 3; ++k)
-				for (int l = j; l < j + 3; ++l) {
+				for (int l = j; l < j + 3; ++l) 
 					if (sudoku_ans.box[k][l].done == false) 
 						for (int n = 0; n < 9; ++n) 
 							if (sudoku_ans.box[k][l].num[n] && only_row[n]) 
@@ -419,26 +402,21 @@ void CSudokuSolver::check_box_rows(SUDOKU_ANS_BOARD &sudoku_ans)
 								//check all the rows for the same num
 								for (int m = i; m < i + 3; ++m)
 									for (int o = j; o < j + 3; ++o) 
-									{
 										if (m != k)
 											if (sudoku_ans.box[m][o].done == false && sudoku_ans.box[m][o].num[n]) 
 											{
 												only_row[n] = false;
 												break;
 											}
-									}
 								if (only_row[n]) 
 								{
 									//disable n for the rest of the row
-									for (int m = 0; m < j - (j % 3); ++m) {
+									for (int m = 0; m < j - (j % 3); ++m)
 										disable_pos(sudoku_ans, n, k, m);
-									}
-									for (int m = j - (j % 3) + 3; m < 9; ++m) {
+									for (int m = j - (j % 3) + 3; m < 9; ++m)
 										disable_pos(sudoku_ans, n, k, m);
-									}
 								}
 							}
-				}
 		}
 }
 
@@ -454,8 +432,8 @@ void CSudokuSolver::check_box_columns(SUDOKU_ANS_BOARD &sudoku_ans)
 	for (int i = 0; i < 9; i += 3)
 		for (int j = 0; j < 9; j += 3) 
 		{
-			for (auto& a : only_column)
-				a = true;
+			for (auto& elem : only_column)
+				elem = true;
 			for (int k = i; k < i + 3; ++k)
 				for (int l = j; l < j + 3; ++l) 
 					if (sudoku_ans.box[l][k].done == false) 
@@ -488,9 +466,8 @@ void CSudokuSolver::check_box_columns(SUDOKU_ANS_BOARD &sudoku_ans)
 bool CSudokuSolver::check_error(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 {
 	int poss = 0;
-	for (int i = 0; i < 9; ++i) {
+	for (int i = 0; i < 9; ++i) 
 		for (int j = 0; j < 9; ++j) 
-		{
 			if (!sudoku_q[i][j]) 
 			{
 				poss = 0;
@@ -500,7 +477,5 @@ bool CSudokuSolver::check_error(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]
 				if (poss == 0)
 					return true;
 			}
-		}
-	}
 	return false;
 }
