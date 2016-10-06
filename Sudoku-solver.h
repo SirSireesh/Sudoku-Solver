@@ -32,8 +32,6 @@ namespace CSudokuSolver
 		struct SUDOKU_ANS box[9][9];
 	};
 
-	//typedef SUDOKU_ANS_BOARD SUDOKU_ANS_BOARD;
-
 	void printSudoku(int sudoku_q[9][9]);							//print a given sudoku
 	bool initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudoku_ans);		//initialse a sudoku from a given question board
 	void disableRow(SUDOKU_ANS_BOARD &sudoku_ans, int n, int row);				//disable every instance of n in a given row
