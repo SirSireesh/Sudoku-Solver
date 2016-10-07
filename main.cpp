@@ -75,6 +75,10 @@ int main()
 			pointingBoxColumns(sudoku_ans);
 		if (!sudoku_ans.changed)
 			pointingBoxRows(sudoku_ans);
+		if (!sudoku_ans.changed) 
+			boxLineReduceRow(sudoku_ans);
+		if (!sudoku_ans.changed)
+			boxLineReduceColumn(sudoku_ans);
 	}
 	
 	if (checkError(sudoku_ans, sudoku_q)) 

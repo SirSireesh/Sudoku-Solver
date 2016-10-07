@@ -452,6 +452,74 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans)
 		}
 }
 
+void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans)
+{
+	bool only_box_row[9];
+
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			if (sudoku_ans.box[i][j].done == false) 
+				for (int n = 0; n < 9; ++n)
+					if (sudoku_ans.box[i][j].num[n] && only_box_row[n])
+					{
+						for (int k = j - (j % 3) + 3; k < 9; ++k)
+							if (sudoku_ans.box[i][k].num[n])
+							{
+								only_box_row[n] = false;
+								break;
+							}
+						if (only_box_row[n])
+						{
+							//std::cout << "boxLineReduceRow: Disabling " << n + 1 << " at " << i << ' ' << j << '\n';
+							for (int k = i - (i % 3); k < i - (i % 3) + 3; ++k)
+								for (int l = j - (j % 3); l < j - (j % 3) + 3; ++l)
+									if (k != i)
+									{
+										disablePos(sudoku_ans, n, k, l);
+										//if (sudoku_ans.changed)
+											//std::cout << "Something changed\n"; 
+										//std::cout << "Disabled " << n + 1 << " at " << k << ' ' << l << " i = " << i << '\n';
+									}
+						}
+						if (sudoku_ans.changed)
+							return;
+					}
+}
+
+void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans)
+{
+	bool only_box_column[9];
+	std::cout << "boxLineReduceColumn:\n";
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			if (sudoku_ans.box[j][i].done == false) 
+				for (int n = 0; n < 9; ++n)
+					if (sudoku_ans.box[j][i].num[n] && only_box_column[n])
+					{
+						for (int k = j - (j % 3) + 3; k < 9; ++k)
+							if (sudoku_ans.box[k][i].num[n])
+							{
+								only_box_column[n] = false;
+								break;
+							}
+						if (only_box_column[n])
+						{
+							std::cout << "boxLineReduceRow: Disabling " << n + 1 << " at " << i << ' ' << j << '\n';
+							for (int k = i - (i % 3); k < i - (i % 3) + 3; ++k)
+								for (int l = j - (j % 3); l < j - (j % 3) + 3; ++l)
+									if (k != i)
+									{
+										disablePos(sudoku_ans, n, k, l);
+										if (sudoku_ans.changed)
+											std::cout << "Something changed\n"; 
+										std::cout << "Disabled " << n + 1 << " at " << k << ' ' << l << " i = " << i << '\n';
+									}
+						}
+						if (sudoku_ans.changed)
+							return;
+					}
+}
+
 bool CSudokuSolver::checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 {
 	int poss = 0;
