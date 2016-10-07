@@ -28,15 +28,15 @@ int main()
 {
 	SUDOKU_ANS_BOARD sudoku_ans;
 	int sudoku_q[9][9] = {
-		{0,2,0,0,0,1,9,0,0},		//0 is null value or a blank box in the sudoku
-		{0,0,7,6,0,0,0,1,0},
-		{0,0,0,5,0,0,0,6,4},
-		{0,0,0,0,4,3,0,0,1},
-		{0,0,4,0,0,0,7,0,0},
-		{2,0,0,7,6,0,0,0,0},
-		{7,8,0,0,0,6,0,0,0},
-		{0,6,0,0,0,7,4,0,0},
-		{0,0,1,3,0,0,0,9,0}};
+		{0,4,0,5,1,0,0,0,0},		//0 is null value or a blank box in the sudoku
+		{3,0,0,0,0,0,0,0,2},
+		{5,1,0,2,6,0,9,0,0},
+		{0,0,0,0,9,0,7,8,1},
+		{0,0,0,0,0,0,0,0,0},
+		{1,7,5,0,3,0,0,0,0},
+		{0,0,9,0,4,2,0,6,8},
+		{2,0,0,0,0,0,0,0,3},
+		{0,0,0,0,5,6,0,9,0}};
 
 	std::cout << "Sudoku-solver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
 	std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
