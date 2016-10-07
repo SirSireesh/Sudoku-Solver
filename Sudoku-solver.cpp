@@ -379,32 +379,32 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans)
 
 	bool only_row[9];
 
-	for (int i = 0; i < 9; i += 3)
-		for (int j = 0; j < 9; j += 3) 
+	for (int i = 0; i <= 6; i += 3)
+		for (int j = 0; j <= 6; j += 3) 
 		{
 			for (auto& elem : only_row)
 				elem = true;
-			for (int k = i; k < i + 3; ++k)
-				for (int l = j; l < j + 3; ++l) 
+			for (int k = i; k < i + 3 && k < 9; ++k)
+				for (int l = j; l < j + 3 && l < 9; ++l) 
 					if (sudoku_ans.box[k][l].done == false) 
 						for (int n = 0; n < 9; ++n) 
 							if (sudoku_ans.box[k][l].num[n] && only_row[n]) 
 							{
 								//check all the rows for the same num
-								for (int m = i; m < i + 3; ++m)
-									for (int o = j; o < j + 3; ++o) 
+								for (int m = i; m < i + 3 && m < 9; ++m)
+									for (int o = j; o < j + 3 && o < 9; ++o) 
 										if (m != k)
 											if (sudoku_ans.box[m][o].done == false && sudoku_ans.box[m][o].num[n]) 
 											{
 												only_row[n] = false;
 												break;
 											}
-								if (only_row[n]) 
+								if (only_row[n])
 								{
 									//disable n for the rest of the row
-									for (int m = 0; m < j - (j % 3); ++m)
+									for (int m = 0; m < j; ++m)
 										disablePos(sudoku_ans, n, k, m);
-									for (int m = j - (j % 3) + 3; m < 9; ++m)
+									for (int m = j + 3; m < 9; ++m)
 										disablePos(sudoku_ans, n, k, m);
 								}
 							}
@@ -425,8 +425,8 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans)
 		{
 			for (auto& elem : only_column)
 				elem = true;
-			for (int k = i; k < i + 3; ++k)
-				for (int l = j; l < j + 3; ++l) 
+			for (int k = i; k < i + 3 && k < 9; ++k)
+				for (int l = j; l < j + 3 && l < 9; ++l) 
 					if (sudoku_ans.box[l][k].done == false) 
 						for (int n = 0; n < 9; ++n)
 							if (sudoku_ans.box[l][k].num[n] && only_column[n]) 
@@ -434,21 +434,19 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans)
 								//check all the columns for the same num
 								for (int m = i; m < i + 3; ++m)
 									for (int o = j; o < j + 3; ++o) 
-									{
-										if (o != j)
+										if (m != k)
 											if (sudoku_ans.box[o][m].done == false && sudoku_ans.box[o][m].num[n]) 
 											{
 												only_column[n] = false;
 												break;
 											}
-									}
 								if (only_column[n]) 
 								{
 									//disable n for the rest of the column
-									for (int m = 0; m < i - (i%3); ++m)
-										disablePos(sudoku_ans, n, m, l);
-									for (int m = i - (i%3) + 3; m < 9; ++m)
-										disablePos(sudoku_ans, n, m, l);
+									for (int m = 0; m < j; ++m)
+										disablePos(sudoku_ans, n, m, k);
+									for (int m = j + 3; m < 9; ++m)
+										disablePos(sudoku_ans, n, m, k);
 								}
 							}
 		}
