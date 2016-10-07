@@ -47,8 +47,8 @@ namespace CSudokuSolver
 	void nakedPair(SUDOKU_ANS_BOARD &sudoku_ans);						//look for a naked pair
 	void pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans);					//check each 3x3 box of sudoku's rows for a number whose sole possiblities lie in that row
 	void pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans);					//check each 3x3 box of sudoku's columns for a number whose sole possiblities lie in that column
-	void checkOtherBoxRows(SUDOKU_ANS_BOARD &sudoku_ans);					//TODO:check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
-	void checkOtherBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans);				//TODO:check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
+	void boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans);					//TODO:check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
+	void boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans);					//TODO:check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
 	void checkHidden(SUDOKU_ANS_BOARD &sudoku_ans);						//TODO:search for hidden pairs in a box
 	void xWing(SUDOKU_ANS_BOARD &sudoku_ans);						//TODO:Apply the very advanced and complicated x-wing algorithm
 	int count(int sudoku_q[9][9]);								//count the number of determined answers in a given sudoku
