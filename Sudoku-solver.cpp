@@ -489,7 +489,7 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans)
 void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans)
 {
 	bool only_box_column[9];
-	std::cout << "boxLineReduceColumn:\n";
+	//std::cout << "boxLineReduceColumn:\n";
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 			if (sudoku_ans.box[j][i].done == false) 
@@ -518,6 +518,82 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans)
 						if (sudoku_ans.changed)
 							return;
 					}
+}
+
+void CSudokuSolver::hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans)
+{
+	int counter[9][9];
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			counter[i][j] = 0;
+
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			for (int n = 0; n < 9; ++n)
+				if (sudoku_ans.box[i][j].num[n])
+					++counter[i][n];
+
+	bool hidden_pair = true;
+	int num1[2] = {-1, -1};
+	int num2[2] = {-1, -1};
+
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			if (counter[i][j] == 2)
+			{
+				for (int k = j + 1; k < 9; ++k)
+				{
+					if (counter[i][k] == 2)
+					{
+						num1[0] = j;
+						num2[0] = k;
+					}
+				}
+				if (num1[0] != -1 && num2[0] != -1)
+				{
+					for (int k = 0; k < 9; ++k) 
+					{
+						if ((sudoku_ans.box[i][k].num[num1[0]] && !sudoku_ans.box[i][k].num[num2[0]]) || (!sudoku_ans.box[i][k].num[num1[0]] && sudoku_ans.box[i][k].num[num2[0]]))
+						{
+							hidden_pair = false;
+							break;
+						}
+						else if (sudoku_ans.box[i][k].num[num1[0]] && sudoku_ans.box[i][k].num[num2[0]])
+						{
+							num1[1] = k;
+							for (int l = k + 1; l < 9; ++l)
+							{
+								if (sudoku_ans.box[i][l].num[num1[0]] && !sudoku_ans.box[i][l].num[num2[0]])
+								{
+									hidden_pair = false;
+									break;
+								}
+								else if (!sudoku_ans.box[i][l].num[num1[0]] && sudoku_ans.box[i][l].num[num2[0]])
+								{
+									hidden_pair = false;
+									break;
+								}
+								else if (sudoku_ans.box[i][l].num[num1[0]] && sudoku_ans.box[i][l].num[num2[0]])
+								{
+									num2[1] = l;
+									break;
+								}
+							}
+						}
+					}
+				}
+				if (hidden_pair)
+				{
+					for (int k = 0; k < 9; ++k)
+						if (k != num1[0] && k != num2[0])
+						{
+							disablePos(sudoku_ans, k, i, num1[1]);
+							disablePos(sudoku_ans, k, i, num2[1]);
+						}
+					if (sudoku_ans.changed)
+						return;
+				}
+			}
 }
 
 bool CSudokuSolver::checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
