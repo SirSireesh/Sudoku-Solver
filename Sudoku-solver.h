@@ -39,6 +39,8 @@ namespace CSudokuSolver
 	void disableBox(SUDOKU_ANS_BOARD &sudoku_ans, int n, int x, int y);			//disable every instance of n in a given box
 	void disablePos(SUDOKU_ANS_BOARD &sudoku_ans, int n, int x, int y);			//disable n for a given position
 	void finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], int n, int x, int y);	//finalize n for a given position
+	int count(int sudoku_q[9][9]);								//count the number of determined answers in a given sudoku
+	bool checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]);			//check if something went wrong
 
 	void checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]);			//check the rows of a given sudoku for a number only possible in one place in the row
 	void checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]);			//check the columns of a given sudoku for a number only possible in one place in the column
@@ -52,8 +54,6 @@ namespace CSudokuSolver
 	void hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans);						//search for hidden pairs TODO:Test if it truly works 
 	void nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans);						//TODO:Search for naked triples
 	void xWing(SUDOKU_ANS_BOARD &sudoku_ans);						//TODO:Apply the very advanced and complicated x-wing algorithm
-	int count(int sudoku_q[9][9]);								//count the number of determined answers in a given sudoku
-	bool checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]);			//check if something went wrong
 
 	//NOTE - the functions that solve a sudoku are sorted in the order of complexity and speed. The lower a function is, the lesser it should be used!
 }
