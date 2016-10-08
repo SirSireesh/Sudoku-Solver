@@ -79,6 +79,8 @@ int main()
 			boxLineReduceRow(sudoku_ans);
 		if (!sudoku_ans.changed)
 			boxLineReduceColumn(sudoku_ans);
+		if (!sudoku_ans.changed)
+			hiddenPair(sudoku_ans);
 	}
 	
 	if (checkError(sudoku_ans, sudoku_q)) 
