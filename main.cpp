@@ -28,15 +28,15 @@ int main()
 {
 	SUDOKU_ANS_BOARD sudoku_ans;
 	int sudoku_q[9][9] = {
-		{0,4,0,5,1,0,0,0,0},		//0 is null value or a blank box in the sudoku
-		{3,0,0,0,0,0,0,0,2},
-		{5,1,0,2,6,0,9,0,0},
-		{0,0,0,0,9,0,7,8,1},
-		{0,0,0,0,0,0,0,0,0},
-		{1,7,5,0,3,0,0,0,0},
-		{0,0,9,0,4,2,0,6,8},
-		{2,0,0,0,0,0,0,0,3},
-		{0,0,0,0,5,6,0,9,0}};
+		{0,0,0,0,0,0,0,0,0},		//0 is null value or a blank box in the sudoku
+		{0,0,1,9,0,0,5,0,0},
+		{5,6,0,3,1,0,0,9,0},
+		{1,0,0,6,0,0,0,2,8},
+		{0,0,4,0,0,0,7,0,0},
+		{2,7,0,0,0,4,0,0,3},
+		{0,4,0,0,6,8,0,3,5},
+		{0,0,2,0,0,5,9,0,0},
+		{0,0,0,0,0,0,0,0,0}};
 
 	std::cout << "Sudoku-solver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
 	std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
@@ -70,7 +70,7 @@ int main()
 		nakedSingle(sudoku_ans, sudoku_q);
 		checkBox(sudoku_ans, sudoku_q);
 		if (!sudoku_ans.changed)
-			nakedPair(sudoku_ans);
+		//	nakedPair(sudoku_ans);
 		if (!sudoku_ans.changed)
 			pointingBoxColumns(sudoku_ans);
 		if (!sudoku_ans.changed)
