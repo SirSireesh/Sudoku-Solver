@@ -20,6 +20,8 @@
     */
 
 #include <iostream>
+#include <list>
+#include <algorithm>
 #include "Sudoku-solver.h"
 
 bool CSudokuSolver::initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudoku_ans)
@@ -112,22 +114,14 @@ void CSudokuSolver::finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], i
 
 void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 {
-	/*
-	 * The logic here is simple -
-	 * go through each column
-	 * if the position is the only possible position for a number in a column
-	 * mark that as the actual position of the number
-	 */
-
-	//the bool keeps track of whether this is the only possible position of a number in a column or not
 	bool only_pos[9];
 
 	for (int i = 0; i < 9; ++i) 
 	{
-		for (auto& elem : only_pos) 	//reset the bool for every column we check
+		for (auto& elem : only_pos)
 			elem = true;
 		for (int j = 0; j < 9; ++j) 
-			if (sudoku_ans.box[j][i].done == false) 	//make sure the position was not already filled
+			if (sudoku_ans.box[j][i].done == false)
 				for (int n = 0; n < 9; ++n)
 					if (sudoku_ans.box[j][i].num[n] && only_pos[n]) 
 					{
@@ -137,7 +131,7 @@ void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9
 								only_pos[n] = false;
 								break;
 							}
-						if (only_pos[n]) 		//if it is the only posiion, finalize it
+						if (only_pos[n])
 							finalize(sudoku_ans, sudoku_q, n, j, i);
 					}
 	}
@@ -145,21 +139,13 @@ void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9
 
 void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 {
-	/*
-	 * The logic here is simple
-	 * go through each row
-	 * if the position us the only possible position in a row
-	 * mark that as the actual position of the number
-	 */
-
-	//the bool keeps track of whether this is the only possible position of a number in a row or not
 	bool only_pos[9];
 
 	for (int i = 0; i < 9; ++i){
-		for (auto& elem : only_pos)		//reset the bool for every row we check
+		for (auto& elem : only_pos)		
 			elem = true;
 		for (int j = 0; j < 9; ++j) 
-			if (sudoku_ans.box[i][j].done == false) 	//make sure that the position is not already filled
+			if (sudoku_ans.box[i][j].done == false) 	
 				for (int n  = 0; n < 9; ++n)
 					if (sudoku_ans.box[i][j].num[n] && only_pos[n]) 
 					{
@@ -172,6 +158,39 @@ void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 						if (only_pos[n]) 
 							finalize(sudoku_ans, sudoku_q, n, i, j);
 					}
+	}
+}
+
+void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
+{
+	bool only_pos[9];
+
+	for (int i = 0; i < 9; i += 3) 
+	{
+		for (int j = 0; j < 9; j += 3) 
+		{
+			for (auto& elem : only_pos)
+				elem = true;
+			for (int k = i; k < i + 3 && k < 9; ++k) 
+				for (int l = j; l < j + 3 && j < 9; ++l) 
+					if (sudoku_ans.box[k][l].done == false)
+						for (int n = 0; n < 9; ++n)
+							if (sudoku_ans.box[k][l].num[n] && only_pos[n]) 
+							{
+								for (int m = i; m < i + 3; ++m) 
+									for (int o = j; o < j + 3; ++o) 
+										if (sudoku_ans.box[m][o].done == false) 
+										{
+											if ((m != k || o != l) && (sudoku_ans.box[m][o].num[n]))
+											{
+												only_pos[n] = false;
+												break;
+											}
+										}
+								if (only_pos[n]) 
+									finalize(sudoku_ans, sudoku_q, n, k, l);
+							}
+		}
 	}
 }
 
@@ -197,6 +216,7 @@ void CSudokuSolver::nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]
 
 void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 {
+	//TODO:add column check
 	int counter[9][9];
 	bool pair = true;
 	int num[2] = {-1, -1};
@@ -210,8 +230,8 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 						++counter[i][j];
 		}
 
-	//for the row
 	for (int i = 0; i < 9; ++i)
+	{
 		for (int j = 0; j < 9; ++j)
 		{	
 			pair = true;
@@ -236,7 +256,6 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 						}
 						if (pair) 
 						{
-							//while using disable_* may seem better, it will let us into an infinite loop
 							for (int l = 0; l < j; ++l)
 							{
 								disablePos(sudoku_ans, num[0], i, l);
@@ -254,7 +273,6 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 							}
 
 							if (j - (j % 3) == k - (k % 3)) 
-								//disable the box
 								for (int l = i - (i % 3); l < (i - (i % 3) + 3); ++l) 
 									for (int m = j - (j % 3); l < j - (j % 3) + 3; ++l)
 										if (l == i && (m == j || m == k)) 
@@ -268,7 +286,8 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 					}
 
 		}
-	//for the column
+	}
+
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j) 
 		{
@@ -294,7 +313,6 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 						}
 						if (pair) 
 						{
-							//while using disable_* may seem better, it will let us into an infinite loop
 							for (int l = 0; l < j; ++l)
 							{
 								disablePos(sudoku_ans, num[0], l, i);
@@ -325,58 +343,11 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 						}
 					}
 		}
-
 }
 
-void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
-{
-	/* Algorithm is yet again simple - but avoid using as it is very slow
-	 * Go through a 3x3 box
-	 * For every num you see, check if the num is there anywhere else in the box
-	 * If not, finalize it
-	 * Implementation looks lengthy, DON'T PANIC! We can shorten it (hopefully)
-	 */
-
-	bool only_pos[9];
-
-	for (int i = 0; i < 9; i += 3) 
-	{
-		for (int j = 0; j < 9; j += 3) 
-		{
-			for (auto& elem : only_pos)
-				elem = true;
-			for (int k = i; k < i + 3; ++k) 
-				for (int l = j; l < j + 3; ++l) 
-					//This gets us each individual box in the 3x3 box
-					if (sudoku_ans.box[k][l].done == false)
-						for (int n = 0; n < 9; ++n) 
-							if (sudoku_ans.box[k][l].num[n] && only_pos[n]) 
-							{
-								for (int m = i; m < i + 3; ++m) 
-									for (int o = j; o < j + 3; ++o) 
-										if (sudoku_ans.box[m][o].done == false) 
-										{
-											if ((m != k || o != l) && (sudoku_ans.box[m][o].num[n]))
-											{
-												only_pos[n] = false;
-												break;
-											}
-										}
-								if (only_pos[n]) 
-									finalize(sudoku_ans, sudoku_q, n, k, l);
-							}
-		}
-	}
-}
 
 void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans)
 {
-	/*
-	 * Algorithm is complex - avoid using unless absolutely necessary!
-	 * For every 3x3 box, check if a number fits only in a particular row
-	 * If true, disable the number for the rest of the row
-	 */
-
 	bool only_row[9];
 
 	for (int i = 0; i <= 6; i += 3)
@@ -390,7 +361,6 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans)
 						for (int n = 0; n < 9; ++n) 
 							if (sudoku_ans.box[k][l].num[n] && only_row[n]) 
 							{
-								//check all the rows for the same num
 								for (int m = i; m < i + 3 && m < 9; ++m)
 									for (int o = j; o < j + 3 && o < 9; ++o) 
 										if (m != k)
@@ -401,7 +371,6 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans)
 											}
 								if (only_row[n])
 								{
-									//disable n for the rest of the row
 									for (int m = 0; m < j; ++m)
 										disablePos(sudoku_ans, n, k, m);
 									for (int m = j + 3; m < 9; ++m)
@@ -413,11 +382,6 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans)
 
 void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans)
 {
-	/*
-	 * Algorithm is complex
-	 * For every 3x3 box, check if a number fits only in a particular row
-	 * If true, disable the number for the rest of the row
-	 */
 	bool only_column[9];
 
 	for (int i = 0; i < 9; i += 3)
@@ -431,7 +395,6 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans)
 						for (int n = 0; n < 9; ++n)
 							if (sudoku_ans.box[l][k].num[n] && only_column[n]) 
 							{
-								//check all the columns for the same num
 								for (int m = i; m < i + 3; ++m)
 									for (int o = j; o < j + 3; ++o) 
 										if (m != k)
@@ -442,7 +405,6 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans)
 											}
 								if (only_column[n]) 
 								{
-									//disable n for the rest of the column
 									for (int m = 0; m < j; ++m)
 										disablePos(sudoku_ans, n, m, k);
 									for (int m = j + 3; m < 9; ++m)
@@ -457,39 +419,45 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans)
 	bool only_box_row[9];
 
 	for (int i = 0; i < 9; ++i)
+	{
 		for (int j = 0; j < 9; ++j)
+		{
 			if (sudoku_ans.box[i][j].done == false) 
+			{
 				for (int n = 0; n < 9; ++n)
+				{
 					if (sudoku_ans.box[i][j].num[n] && only_box_row[n])
 					{
 						for (int k = j - (j % 3) + 3; k < 9; ++k)
+						{
 							if (sudoku_ans.box[i][k].num[n])
 							{
 								only_box_row[n] = false;
 								break;
 							}
+						}
 						if (only_box_row[n])
 						{
-							//std::cout << "boxLineReduceRow: Disabling " << n + 1 << " at " << i << ' ' << j << '\n';
 							for (int k = i - (i % 3); k < i - (i % 3) + 3; ++k)
+							{
 								for (int l = j - (j % 3); l < j - (j % 3) + 3; ++l)
 									if (k != i)
-									{
 										disablePos(sudoku_ans, n, k, l);
-										//if (sudoku_ans.changed)
-											//std::cout << "Something changed\n"; 
-										//std::cout << "Disabled " << n + 1 << " at " << k << ' ' << l << " i = " << i << '\n';
-									}
+							}
 						}
 						if (sudoku_ans.changed)
 							return;
 					}
+				}
+			}
+		}
+	}
 }
 
 void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans)
 {
 	bool only_box_column[9];
-	//std::cout << "boxLineReduceColumn:\n";
+
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 			if (sudoku_ans.box[j][i].done == false) 
@@ -504,16 +472,10 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans)
 							}
 						if (only_box_column[n])
 						{
-							std::cout << "boxLineReduceRow: Disabling " << n + 1 << " at " << i << ' ' << j << '\n';
 							for (int k = i - (i % 3); k < i - (i % 3) + 3; ++k)
 								for (int l = j - (j % 3); l < j - (j % 3) + 3; ++l)
 									if (k != i)
-									{
 										disablePos(sudoku_ans, n, k, l);
-										if (sudoku_ans.changed)
-											std::cout << "Something changed\n"; 
-										std::cout << "Disabled " << n + 1 << " at " << k << ' ' << l << " i = " << i << '\n';
-									}
 						}
 						if (sudoku_ans.changed)
 							return;
@@ -522,6 +484,7 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans)
 
 void CSudokuSolver::hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans)
 {
+	//TODO:check colums and boxes
 	int counter[9][9];
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
@@ -594,6 +557,94 @@ void CSudokuSolver::hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans)
 						return;
 				}
 			}
+}
+
+void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans)
+{
+	int counter[9][9];
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+		{
+			counter[j][i] = 0;
+			if (sudoku_ans.box[j][i].done == false)
+				for (int n = 0; n < 9; ++n)
+					if (sudoku_ans.box[j][i].num[n])
+						++counter[j][i];
+		}
+
+	std::list<int> nums;
+	std::list<int> rows;
+
+	for (int i = 0; i < 9; ++i)
+	{
+		nums.clear();
+		rows.clear();
+		for (int j = 0; j < 9; ++j)
+		{
+			if (counter[j][i] == 2 || counter[j][i] == 3)
+				rows.push_back(j);
+		}
+		if (rows.size() == 3)
+		{
+			for (auto row : rows)
+			{
+				for (int n = 0; n < 9; ++n)
+				{
+					if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && sudoku_ans.box[row][i].num[n])
+						nums.push_back(n);
+				}
+			}
+			if (nums.size() == 3)
+			{
+				for (int j = 0; j < 9; ++j)
+				{
+					if (std::find(rows.begin(), rows.end(), j) == rows.end() && sudoku_ans.box[j][i].done == false)
+					{
+						for (auto num : nums)
+							disablePos(sudoku_ans, num, j, i);
+					}
+				}
+				if (sudoku_ans.changed)
+					return;
+			}
+		}
+	}
+
+	std::list<int> columns;
+	for (int i = 0; i < 9; ++i)
+	{
+		nums.clear();
+		columns.clear();
+		for (int j = 0; j < 9; ++j)
+		{
+			if (counter[i][j] == 2 || counter[i][j] == 3)
+				columns.push_back(j);
+		}
+		if (columns.size() == 3)
+		{
+			for (auto column : columns)
+			{
+				for (int n = 0; n < 9; ++n)
+				{
+					if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && sudoku_ans.box[i][column].num[n])
+						nums.push_back(n);
+				}
+			}
+			if (nums.size() == 3)
+			{
+				for (int j = 0; j < 9; ++j)
+				{
+					if (std::find(columns.begin(), columns.end(), j) == columns.end() && sudoku_ans.box[j][i].done == false)
+					{
+						for (auto num : nums)
+							disablePos(sudoku_ans, num, i, j);
+					}
+				}
+				if (sudoku_ans.changed)
+					return;
+			}
+		}
+	}
 }
 
 bool CSudokuSolver::checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])

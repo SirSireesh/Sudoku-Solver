@@ -53,6 +53,7 @@ namespace CSudokuSolver
 	void boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans);					//TODO:check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
 	void hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans);						//search for hidden pairs TODO:Test if it truly works 
 	void nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans);						//TODO:Search for naked triples
+	void hiddenTriple(SUDOKU_ANS_BOARD &sudoku_ans);					//TODO:Search for hidden pairs
 	void xWing(SUDOKU_ANS_BOARD &sudoku_ans);						//TODO:Apply the very advanced and complicated x-wing algorithm
 
 	//NOTE - the functions that solve a sudoku are sorted in the order of complexity and speed. The lower a function is, the lesser it should be used!

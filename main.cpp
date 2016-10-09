@@ -81,6 +81,8 @@ int main()
 			boxLineReduceColumn(sudoku_ans);
 		if (!sudoku_ans.changed)
 			hiddenPair(sudoku_ans);
+		if (!sudoku_ans.changed)
+			nakedTriple(sudoku_ans);
 	}
 	
 	if (checkError(sudoku_ans, sudoku_q)) 
