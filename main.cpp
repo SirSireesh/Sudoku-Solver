@@ -47,10 +47,8 @@ int main()
 	//TODO: Create gui instead for input
 	//TODO: Read www.sudokuwiki.org
 
-	//initialise the answer board
 	if (!initialiseSudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
 	{ 
-		//something went wrong - the input sudoku was probably wrong
 		std::cerr<< "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
 		printSudoku(sudoku_q);
 		std::cout << "The sudoku contains " << count(sudoku_q) << " clues.\n";
@@ -70,7 +68,7 @@ int main()
 		nakedSingle(sudoku_ans, sudoku_q);
 		checkBox(sudoku_ans, sudoku_q);
 		if (!sudoku_ans.changed)
-		//	nakedPair(sudoku_ans);
+			nakedPair(sudoku_ans);
 		if (!sudoku_ans.changed)
 			pointingBoxColumns(sudoku_ans);
 		if (!sudoku_ans.changed)
