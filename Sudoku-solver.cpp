@@ -288,11 +288,79 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 										}
 									}
 							}
+							if (sudoku_ans.changed)
+								return;
 						}
 					}
 				}
 			}
 	}
+
+	std::list<int> rows;
+	for (int i = 0; i < 9; ++i)
+	{
+		rows.clear();
+		for (int j = 0; j < 9; ++j)
+		{
+			if (counter[i][j] == 2)
+			{
+				rows.push_back(j);
+			}
+		}
+		if (rows.size() >= 2)
+			for (auto row : rows)
+			{
+				for (auto row_n : rows) 
+				{
+					if (row_n <= row)
+						continue;
+					else
+					{
+						naked_pair = true;
+						for (int n = 0; n < 9; ++n)
+						{
+							if (sudoku_ans.box[row][i].num[n] != sudoku_ans.box[row_n][i].num[n])
+								naked_pair = false;
+						}
+						if (naked_pair)
+						{
+							int nums[2] = {-1, -1};
+							for (int n = 0; n < 9; ++n)
+								if (sudoku_ans.box[row][i].num[n])
+								{
+									if (num[0] == -1)
+										nums[0] = n;
+									else
+										nums[1] = n;
+								}
+							for (int j = 0; j < 9; ++j)
+							{
+								if (j != row && j != row_n)
+								{
+									disablePos(sudoku_ans, nums[0], j, i);
+									disablePos(sudoku_ans, nums[1], j, i);
+								}
+							}
+							if (row - (row % 3) == row_n - (row_n % 3))
+							{
+								for (int k = i - (i % 3); k < i - (i % 3) + 3 && k < 9; ++k)
+									for (int j = row - (row % 3); j < row - (row % 3) + 3 && j < 9; ++j)
+									{
+										if (k != i)
+										{
+											disablePos(sudoku_ans, nums[0], j, k);
+											disablePos(sudoku_ans, nums[1], j, k);
+										}
+									}
+							}
+							if (sudoku_ans.changed)
+								return;
+						}
+					}
+				}
+			}
+	}
+
 }
 
 
