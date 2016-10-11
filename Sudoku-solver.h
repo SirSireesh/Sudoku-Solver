@@ -41,6 +41,7 @@ namespace CSudokuSolver
 	void finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], int n, int x, int y);	//finalize n for a given position
 	int count(int sudoku_q[9][9]);								//count the number of determined answers in a given sudoku
 	bool checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]);			//check if something went wrong
+	void printSudokuAnsBoard(SUDOKU_ANS_BOARD sudoku_ans);					//Print the value possible in each and every position
 
 	void checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]);			//check the rows of a given sudoku for a number only possible in one place in the row
 	void checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]);			//check the columns of a given sudoku for a number only possible in one place in the column
