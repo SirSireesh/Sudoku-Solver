@@ -230,119 +230,69 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 						++counter[i][j];
 		}
 
+	bool naked_pair;
+	std::list<int> columns;
 	for (int i = 0; i < 9; ++i)
 	{
+		columns.clear();
 		for (int j = 0; j < 9; ++j)
-		{	
-			pair = true;
-			if (counter[i][j] == 2) 
-				for (int k = j + 1; k < 9; ++k) 
-					if (counter[i][k] == 2 && sudoku_ans.box[i][k].done == false && sudoku_ans.box[i][j].done == false) 
-					{
-						for (int n = 0; n < 9; ++n) 
-						{
-							if (sudoku_ans.box[i][j].num[n] != sudoku_ans.box[i][k].num[n]) 
-							{
-								pair = false;
-								break;
-							}
-							else if (sudoku_ans.box[i][j].num[n]) 
-							{
-								if (num[0] == -1)
-									num[0] = n;
-								else
-									num[1] = n;
-							}
-						}
-						if (pair) 
-						{
-							for (int l = 0; l < j; ++l)
-							{
-								disablePos(sudoku_ans, num[0], i, l);
-								disablePos(sudoku_ans, num[1], i, l);
-							}
-							for (int l = j + 1; l < k; ++l) 
-							{
-								disablePos(sudoku_ans, num[0], i, l);
-								disablePos(sudoku_ans, num[1], i, l);
-							}
-							for (int l = k + 1; l < 9; ++l) 
-							{
-								disablePos(sudoku_ans, num[0], i, l);
-								disablePos(sudoku_ans, num[1], i, l);
-							}
-
-							if (j - (j % 3) == k - (k % 3)) 
-								for (int l = i - (i % 3); l < (i - (i % 3) + 3); ++l) 
-									for (int m = j - (j % 3); l < j - (j % 3) + 3; ++l)
-										if (l == i && (m == j || m == k)) 
-										{
-											disablePos(sudoku_ans, num[0], l, m);
-											disablePos(sudoku_ans, num[1], l, m);
-										}
-							if (sudoku_ans.changed)
-								return;
-						}
-					}
-
-		}
-	}
-
-	for (int i = 0; i < 9; ++i)
-		for (int j = 0; j < 9; ++j) 
 		{
-			pair = true;
-			if (counter[j][i] == 2)
-				for (int k = j + 1; k < 9; ++k) 
-					if (counter[k][i] == 2 && sudoku_ans.box[k][i].done == false && sudoku_ans.box[j][i].done == false) 
+			if (counter[i][j] == 2)
+			{
+				columns.push_back(j);
+			}
+		}
+		if (columns.size() >= 2)
+			for (auto column : columns)
+			{
+				for (auto column_n : columns) 
+				{
+					if (column_n <= column)
+						continue;
+					else
 					{
-						for (int n = 0; n < 9; ++n) 
+						naked_pair = true;
+						for (int n = 0; n < 9; ++n)
 						{
-							if (sudoku_ans.box[j][i].num[n] != sudoku_ans.box[k][i].num[n]) 
-							{
-								pair = false;
-								break;
-							}
-							else if (sudoku_ans.box[j][i].num[n]) 
-							{
-								if (num[0] == -1)
-									num[0] = n;
-								else
-									num[1] = n;
-							}
+							if (sudoku_ans.box[i][column].num[n] != sudoku_ans.box[i][column_n].num[n])
+								naked_pair = false;
 						}
-						if (pair) 
+						if (naked_pair)
 						{
-							for (int l = 0; l < j; ++l)
+							int nums[2] = {-1, -1};
+							for (int n = 0; n < 9; ++n)
+								if (sudoku_ans.box[i][column].num[n])
+								{
+									if (num[0] == -1)
+										nums[0] = n;
+									else
+										nums[1] = n;
+								}
+							for (int j = 0; j < 9; ++j)
 							{
-								disablePos(sudoku_ans, num[0], l, i);
-								disablePos(sudoku_ans, num[1], l, i);
+								if (j != column && j != column_n)
+								{
+									disablePos(sudoku_ans, nums[0], i, j);
+									disablePos(sudoku_ans, nums[1], i, j);
+								}
 							}
-							for (int l = j + 1; l < k; ++l) 
+							if (column - (column % 3) == column_n - (column_n % 3))
 							{
-								disablePos(sudoku_ans, num[0], l, i);
-								disablePos(sudoku_ans, num[1], l, i);
-							}
-							for (int l = k + 1; l < 9; ++l) 
-							{
-								disablePos(sudoku_ans, num[0], l, i);
-								disablePos(sudoku_ans, num[1], l, i);
-							}
-
-							if (j - (j % 3) == k - (k % 3)) 
-								//disable the box
-								for (int l = i - (i % 3); l < (i - (i % 3) + 3); ++l) 
-									for (int m = j - (j % 3); l < j - (j % 3) + 3; ++l)
-										if (l == i && (m == j || m == k)) 
+								for (int k = i - (i % 3); k < i - (i % 3) + 3 && k < 9; ++k)
+									for (int j = column - (column % 3); j < column - (column % 3) + 3 && j < 9; ++j)
+									{
+										if (k != i)
 										{
-											disablePos(sudoku_ans, num[0], l, m);
-											disablePos(sudoku_ans, num[1], l, m);
+											disablePos(sudoku_ans, nums[0], k, j);
+											disablePos(sudoku_ans, nums[1], k, j);
 										}
-							if (sudoku_ans.changed)
-								return;
+									}
+							}
 						}
 					}
-		}
+				}
+			}
+	}
 }
 
 
