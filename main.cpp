@@ -50,8 +50,8 @@ int main(int argc, char *argv[])
 					std::cout << "certain conditions; check license.txt for more details\n\n";
 					return 0;
 				case 'h':
-					std::cout << "Sudoku-solver : version 0.5 (Astra)\n\n";
-					std::cout << "usage : Sudoku-solver [arguments]\n";
+					std::cout << "Sudoku-solver : version 0.5 (Batman)\n\n";
+					std::cout << "usage : Sudoku-solver [arguments] < [sudoku]\n";
 					std::cout << "Arguments: ";
 					std::cout << " -l\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 					print_steps = true;
 					break;
 				case 'v' :
-					std::cout << "Sudoku-solver : version 0.5 (Astra)\n";
+					std::cout << "Sudoku-solver : version 0.7 (Astra)\n";
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
 				default :
