@@ -24,11 +24,6 @@
 
 using namespace CSudokuSolver;
 
-const char *RED = "\033[31m";
-const char *GREEN = "\033[32m";
-const char *PINK = "\033[35m";
-const char *RESET = "\033[0m";
-
 int main(int argc, char *argv[])
 {
 	bool print_steps = false;

@@ -545,7 +545,7 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_st
 						{
 							if (print_steps)
 								std::cout << GREEN << "Box Line Reduce Row : " << PINK << (char) (i + 65) << RESET << " : "<< GREEN
-								       	<< n + 1 << RESET << " is only possible within a box\n";
+									<< n + 1 << RESET << " is only possible within a box\n";
 							return;
 						}
 					}
