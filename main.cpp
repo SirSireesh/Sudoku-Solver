@@ -24,28 +24,60 @@
 
 using namespace CSudokuSolver;
 
-int main()
+int main(int argc, char *argv[])
 {
 	SUDOKU_ANS_BOARD sudoku_ans;
 	int sudoku_q[9][9] = {
-		{0,0,0,0,0,0,0,0,0},		//0 is null value or a blank box in the sudoku
-		{0,0,1,9,0,0,5,0,0},
-		{5,6,0,3,1,0,0,9,0},
-		{1,0,0,6,0,0,0,2,8},
-		{0,0,4,0,0,0,7,0,0},
-		{2,7,0,0,0,4,0,0,3},
-		{0,4,0,0,6,8,0,3,5},
-		{0,0,2,0,0,5,9,0,0},
-		{0,0,0,0,0,0,0,0,0}};
+		{3,0,5,0,0,4,0,6,8},		//0 is null value or a blank box in the sudoku
+		{0,1,0,0,0,0,5,4,0},
+		{0,0,6,0,9,0,0,3,0},
+		{0,0,0,5,0,0,0,0,4},
+		{0,0,0,6,0,7,0,0,0},
+		{9,0,0,0,0,2,0,0,0},
+		{0,4,0,0,7,0,3,0,0},
+		{0,6,7,0,0,0,0,1,0},
+		{1,2,0,8,0,0,7,0,5}};
 
-	std::cout << "Sudoku-solver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
-	std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
-	std::cout << "This program is free software, and you are welcome to redistribute it under\n";
-	std::cout << "certain conditions; check license.txt for more details\n\n";
+	bool print_steps = false;
+	while (--argc > 0 && (*++argv)[0] == '-')
+	{
+		char c;
+		while((c = *++argv[0]))
+			switch (c)
+			{
+				case 'l':
+					std::cout << "Sudoku-solver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
+					std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
+					std::cout << "This program is free software, and you are welcome to redistribute it under\n";
+					std::cout << "certain conditions; check license.txt for more details\n\n";
+					return 0;
+				case 'h':
+					std::cout << "Sudoku-solver : version 0.5 (Astra)\n\n";
+					std::cout << "usage : Sudoku-solver [arguments]\n";
+					std::cout << "Arguments: ";
+					std::cout << " -l\t Print license info and exit\n";
+					std::cout << " -h\t Print this help menu and exit\n";
+					std::cout << " -i\t Read input from stdin (default)\n";
+					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
+					std::cout << " -v\t Print version info and exit\n";
+					return 0;
+				case 'i' :
+					break;
+				case 't' :
+					print_steps = true;
+					break;
+				case 'v' :
+					std::cout << "Sudoku-solver : version 0.5 (Astra)\n";
+					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
+					return 0;
+				default :
+					std::cout << "\033[31mInvalid Option : " << c << '\n';
+					break;
+			}
+	}
 
 	auto sTime = std::chrono::high_resolution_clock::now();
 	//TODO: Create gui instead for input
-	//TODO: Read www.sudokuwiki.org
 
 	if (!initialiseSudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
 	{ 
@@ -63,26 +95,26 @@ int main()
 	while (count(sudoku_q) < 81 && sudoku_ans.changed) 
 	{
 		sudoku_ans.changed = false;
-		checkColumns(sudoku_ans, sudoku_q);
-		checkRows(sudoku_ans, sudoku_q);
-		nakedSingle(sudoku_ans, sudoku_q);
-		checkBox(sudoku_ans, sudoku_q);
+		checkColumns(sudoku_ans, sudoku_q, print_steps);
+		checkRows(sudoku_ans, sudoku_q, print_steps);
+		nakedSingle(sudoku_ans, sudoku_q, print_steps);
+		checkBox(sudoku_ans, sudoku_q, print_steps);
 		if (!sudoku_ans.changed)
-			pointingBoxColumns(sudoku_ans);
+			pointingBoxColumns(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
-			pointingBoxRows(sudoku_ans);
+			pointingBoxRows(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed) 
-			boxLineReduceRow(sudoku_ans);
+			boxLineReduceRow(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
-			boxLineReduceColumn(sudoku_ans);
+			boxLineReduceColumn(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
-			hiddenPair(sudoku_ans);
+			hiddenPair(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
-			nakedPair(sudoku_ans);
+			nakedPair(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
-			nakedTriple(sudoku_ans);
+			nakedTriple(sudoku_ans, print_steps);
 	}
-	
+
 	if (checkError(sudoku_ans, sudoku_q)) 
 	{
 		std::cerr << "Something went wrong!\n";
