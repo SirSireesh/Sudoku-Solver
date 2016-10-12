@@ -22,7 +22,43 @@
 #include <iostream>
 #include <list>
 #include <algorithm>
+#include <string>
 #include "Sudoku-solver.h"
+
+bool CSudokuSolver::inputSudoku(int sudoku_q[9][9])
+{
+	std::string input;
+	std::getline(std::cin, input);
+
+	if (input.length() < 81)
+	{
+		std::cout << "The input was too large! Check your input and try again!\n";
+		return false;
+	}
+	if (input.length() > 81)
+	{
+		std::cout << "The input was too small! Check your input and try again!\n";
+		return false;
+	}
+
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+		{
+			switch (input[(i * 9) + j])
+			{
+				case '1': case '2' : case '3' : case '4' : case '5' : case '6' : case '7' : case '8' : case '9' :
+					sudoku_q[i][j] = static_cast<int> (input[(i * 9) + j] - '0');
+					break;
+				case '0' : case '.' : case ' ' : 
+					sudoku_q[i][j] = 0;
+					break;
+				default :
+					std::cout << "Invalid input : " << input[(i * 9) + j] << "\n";
+					return false;
+			}
+		}
+	return true;
+}
 
 bool CSudokuSolver::initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudoku_ans)
 {
@@ -37,12 +73,19 @@ bool CSudokuSolver::initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudok
 	return true;
 }
 
-void CSudokuSolver::printSudoku(int sudoku_q[9][9])
+void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 {
 	for (int i = 0; i < 9; ++i) 
 	{
 		for (int j = 0; j < 9; ++j)
-			!(sudoku_q[i][j]) ? std::cout << " |" : std::cout << sudoku_q[i][j] << '|';
+		{
+			if (!sudoku_q[i][j] && sudoku_a[i][j])
+				std::cout << "\033[32m" << sudoku_a[i][j] << "\033[35m|\033[0m";
+			else if (!sudoku_q[i][j] && !sudoku_a[i][j])
+				std::cout << " \033[35m|\033[0m";
+			else if (sudoku_q[i][j])
+				std::cout << "\033[31m"<<sudoku_q[i][j] << "\033[35m|\033[0m";
+		}
 		std::cout << '\n';
 	}
 }
@@ -229,7 +272,7 @@ void CSudokuSolver::nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]
 				finalize(sudoku_ans, sudoku_q, num, i, j);
 				if (print_steps)
 					std::cout << "\033[32mBox : \033[35m" << (char) (i + 65) << j + 1 
-											<< "\033[0m set to \033[35m" << num + 1 << " :\033[0m unique in column\n";
+						<< "\033[0m set to \033[35m" << num + 1 << " :\033[0m unique in column\n";
 			}
 		}
 }
@@ -381,8 +424,8 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							if (sudoku_ans.changed)
 							{
 								if (naked_pair)
-								std::cout << "\033[32mNaked Pair : \033[35m" << (char) (row + 65) << i << "\033[0m and \033[35m" << (char) (row_n + 65) 
-									<< i << " \033[0mhave a naked pair\n";
+									std::cout << "\033[32mNaked Pair : \033[35m" << (char) (row + 65) << i << "\033[0m and \033[35m" << (char) (row_n + 65) 
+										<< i << " \033[0mhave a naked pair\n";
 								return;
 							}
 						}
@@ -497,7 +540,7 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_st
 						{
 							if (print_steps)
 								std::cout << "\033[32mBox Line Reduce Row : \033[35m" << (char) (i + 65) << " : " << n + 1
-									 << " \033[0m is only possible within a box\n";
+									<< " \033[0m is only possible within a box\n";
 							return;
 						}
 					}
@@ -534,7 +577,7 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print
 						{
 							if (print_steps)
 								std::cout << "\033[32mBox Line Reduce Column : \033[35m" << (char) (i + 65) << " : " << n + 1
-									 << " \033[0m is only possible within a box\n";
+									<< " \033[0m is only possible within a box\n";
 							return;
 						}
 					}
