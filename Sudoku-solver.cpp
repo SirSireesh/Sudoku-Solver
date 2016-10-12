@@ -112,7 +112,7 @@ void CSudokuSolver::finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], i
 	disableBox(sudoku_ans, n, x, y);
 }
 
-void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
+void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps)
 {
 	bool only_pos[9];
 
@@ -132,12 +132,17 @@ void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9
 								break;
 							}
 						if (only_pos[n])
+						{
 							finalize(sudoku_ans, sudoku_q, n, j, i);
+							if (print_steps)
+								std::cout << "\033[32mColumn : \033[35m" << (char) (j + 65) << i + 1 
+									<< "\033[0m set to \033[35m" << n + 1 << " :\033[0m unique in column\n";
+						}
 					}
 	}
 }
 
-void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
+void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps)
 {
 	bool only_pos[9];
 
@@ -156,12 +161,17 @@ void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 								break;
 							}
 						if (only_pos[n]) 
+						{
 							finalize(sudoku_ans, sudoku_q, n, i, j);
+							if (print_steps)
+								std::cout << "\033[32mRow : \033[35m" << (char) (i + 65) << j + 1 
+									<< "\033[0m set to \033[35m" << n + 1 << " :\033[0m unique in column\n";
+						}
 					}
 	}
 }
 
-void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
+void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps)
 {
 	bool only_pos[9];
 
@@ -187,14 +197,19 @@ void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 												break;
 											}
 										}
-								if (only_pos[n]) 
+								if (only_pos[n])
+								{
 									finalize(sudoku_ans, sudoku_q, n, k, l);
+									if (print_steps)
+										std::cout << "\033[32mBox : \033[35m" << (char) (k + 65) << l + 1 
+											<< "\033[0m set to \033[35m" << n + 1 << " :\033[0m unique in column\n";
+								}
 							}
 		}
 	}
 }
 
-void CSudokuSolver::nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
+void CSudokuSolver::nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps)
 {
 	int poss = 0;
 	int num;
@@ -210,11 +225,16 @@ void CSudokuSolver::nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]
 						num = n;
 					}
 			if (poss == 1)
+			{
 				finalize(sudoku_ans, sudoku_q, num, i, j);
+				if (print_steps)
+					std::cout << "\033[32mBox : \033[35m" << (char) (i + 65) << j + 1 
+											<< "\033[0m set to \033[35m" << num + 1 << " :\033[0m unique in column\n";
+			}
 		}
 }
 
-void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
+void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
 	//TODO:add column check
 	int counter[9][9];
@@ -289,7 +309,12 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 									}
 							}
 							if (sudoku_ans.changed)
+							{
+								if (naked_pair)
+									std::cout << "\033[32mNaked Pair : \033[35m" << (char) (i  + 65) << column << "\033[0m and \033[35m" << (char) (i + 65) 
+										<< column_n << " \033[0mhave a naked pair\n";
 								return;
+							}
 						}
 					}
 				}
@@ -354,7 +379,12 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 									}
 							}
 							if (sudoku_ans.changed)
+							{
+								if (naked_pair)
+								std::cout << "\033[32mNaked Pair : \033[35m" << (char) (row + 65) << i << "\033[0m and \033[35m" << (char) (row_n + 65) 
+									<< i << " \033[0mhave a naked pair\n";
 								return;
+							}
 						}
 					}
 				}
@@ -364,7 +394,7 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans)
 }
 
 
-void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans)
+void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
 	bool only_row[9];
 
@@ -398,7 +428,7 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans)
 		}
 }
 
-void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans)
+void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
 	bool only_column[9];
 
@@ -432,7 +462,7 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans)
 		}
 }
 
-void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans)
+void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
 	bool only_box_row[9];
 
@@ -464,7 +494,12 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans)
 							}
 						}
 						if (sudoku_ans.changed)
+						{
+							if (print_steps)
+								std::cout << "\033[32mBox Line Reduce Row : \033[35m" << (char) (i + 65) << " : " << n + 1
+									 << " \033[0m is only possible within a box\n";
 							return;
+						}
 					}
 				}
 			}
@@ -472,7 +507,7 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans)
 	}
 }
 
-void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans)
+void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
 	bool only_box_column[9];
 
@@ -496,11 +531,16 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans)
 										disablePos(sudoku_ans, n, k, l);
 						}
 						if (sudoku_ans.changed)
+						{
+							if (print_steps)
+								std::cout << "\033[32mBox Line Reduce Column : \033[35m" << (char) (i + 65) << " : " << n + 1
+									 << " \033[0m is only possible within a box\n";
 							return;
+						}
 					}
 }
 
-void CSudokuSolver::hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans)
+void CSudokuSolver::hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
 	//TODO:check colums and boxes
 	int counter[9][9];
@@ -577,7 +617,7 @@ void CSudokuSolver::hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans)
 			}
 }
 
-void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans)
+void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
 	int counter[9][9];
 	for (int i = 0; i < 9; ++i)
