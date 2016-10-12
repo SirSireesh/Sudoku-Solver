@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
 				default :
-					std::cout << RED << "Invalid Option : " << c << '\n';
+					std::cout << RED << "Invalid Option : " << c << RESET << '\n';
 					std::cout << "usage : Sudoku-solver [arguments] < [sudoku]\n";
 					std::cout << "Arguments: ";
 					std::cout << " -l\t Print license info and exit\n";
