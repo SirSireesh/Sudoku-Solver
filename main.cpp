@@ -24,6 +24,11 @@
 
 using namespace CSudokuSolver;
 
+const char *RED = "\033[31m";
+const char *GREEN = "\033[32m";
+const char *PINK = "\033[35m";
+const char *RESET = "\033[0m";
+
 int main(int argc, char *argv[])
 {
 	bool print_steps = false;
@@ -59,15 +64,26 @@ int main(int argc, char *argv[])
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
 				default :
-					std::cout << "\033[31mInvalid Option : " << c << '\n';
-					break;
+					std::cout << RED << "Invalid Option : " << c << '\n';
+					std::cout << "usage : Sudoku-solver [arguments] < [sudoku]\n";
+					std::cout << "Arguments: ";
+					std::cout << " -l\t Print license info and exit\n";
+					std::cout << " -h\t Print this help menu and exit\n";
+					std::cout << " -i\t Read input from stdin (default)\n";
+					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
+					std::cout << " -v\t Print version info and exit\n";
+					return -1;
 			}
 	}
 
 	SUDOKU_ANS_BOARD sudoku_ans;
 	int sudoku_q[9][9];
 
-	inputSudoku(sudoku_q);
+	if (!inputSudoku(sudoku_q))
+	{
+		std::cout << "Exiting ...\n";
+		return -2;
+	}
 
 	int sudoku_a[9][9];
 	for (int i = 0; i < 9; ++i)
@@ -76,20 +92,19 @@ int main(int argc, char *argv[])
 
 
 	auto sTime = std::chrono::high_resolution_clock::now();
-	//TODO: Create gui instead for input
 
 	if (!initialiseSudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
 	{ 
 		std::cerr<< "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
 		printSudoku(sudoku_q, sudoku_a);
-		std::cout << "\033[31mThe sudoku contains " << count(sudoku_q) << " clues.\033[0m\n";
+		std::cout << RED << "The sudoku contains " << count(sudoku_q) << " clues.\n" << RESET;
 		return -1;
 	}
 
 	std::cout << "The given sudoku is :\n";
 	printSudoku(sudoku_q, sudoku_q);
 
-	std::cout << "Given : " << "\033[31m"<< count(sudoku_q) << "\033[0m\n";
+	std::cout << "Given : " << RED << count(sudoku_q) << RESET;
 
 	while (count(sudoku_a) < 81 && sudoku_ans.changed) 
 	{
@@ -118,13 +133,13 @@ int main(int argc, char *argv[])
 	{
 		std::cerr << "Something went wrong!\n";
 		printSudoku(sudoku_q, sudoku_a);
-		return -1;
+		return -3;
 	}
 	auto eTime = std::chrono::high_resolution_clock::now();	
 	printSudoku(sudoku_q, sudoku_a);
 
-	std::cout << "Answered : " << "\033[32m" << count(sudoku_a) << '\n';
-	std::cout << "\033[0m" << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
+	std::cout << "Answered : " << GREEN << count(sudoku_a) << RESET << '\n';
+	std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
 
 	return 0;
 }
