@@ -32,7 +32,7 @@ namespace CSudokuSolver
 		struct SUDOKU_ANS box[9][9];
 	};
 
-	void printSudoku(int sudoku_q[9][9]);							//print a given sudoku
+	void printSudoku(int sudoku_q[9][9], int sudoku_a[9][9]);				//print a given sudoku
 	bool initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudoku_ans);		//initialse a sudoku from a given question board
 	void disableRow(SUDOKU_ANS_BOARD &sudoku_ans, int n, int row);				//disable every instance of n in a given row
 	void disableColumn(SUDOKU_ANS_BOARD &sudoku_ans, int n, int column);			//disable every instance of n in a given column
@@ -40,7 +40,8 @@ namespace CSudokuSolver
 	void disablePos(SUDOKU_ANS_BOARD &sudoku_ans, int n, int x, int y);			//disable n for a given position
 	void finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], int n, int x, int y);	//finalize n for a given position
 	int count(int sudoku_q[9][9]);								//count the number of determined answers in a given sudoku
-	bool checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]);			//check if something went wrong
+	bool checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_a[9][9]);			//check if something went wrong
+	bool inputSudoku(int sudoku_q[9][9]);							//take a sudoku for stdin
 
 	void checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check the rows of a given sudoku for a number only possible in one place in the row
 	void checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check the columns of a given sudoku for a number only possible in one place in the column
