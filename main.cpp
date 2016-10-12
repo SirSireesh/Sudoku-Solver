@@ -51,14 +51,14 @@ int main()
 	{ 
 		std::cerr<< "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
 		printSudoku(sudoku_q);
-		std::cout << "The sudoku contains " << count(sudoku_q) << " clues.\n";
+		std::cout << "\033[31mThe sudoku contains " << count(sudoku_q) << " clues.\033[0m\n";
 		return -1;
 	}
 
 	std::cout << "The given sudoku is :\n";
 	printSudoku(sudoku_q);
 
-	std::cout << "Given : " << count(sudoku_q) << '\n';
+	std::cout << "Given : " << "\033[31m"<< count(sudoku_q) << "\033[0m\n";
 
 	while (count(sudoku_q) < 81 && sudoku_ans.changed) 
 	{
@@ -67,8 +67,6 @@ int main()
 		checkRows(sudoku_ans, sudoku_q);
 		nakedSingle(sudoku_ans, sudoku_q);
 		checkBox(sudoku_ans, sudoku_q);
-		if (!sudoku_ans.changed)
-			nakedPair(sudoku_ans);
 		if (!sudoku_ans.changed)
 			pointingBoxColumns(sudoku_ans);
 		if (!sudoku_ans.changed)
@@ -80,20 +78,22 @@ int main()
 		if (!sudoku_ans.changed)
 			hiddenPair(sudoku_ans);
 		if (!sudoku_ans.changed)
+			nakedPair(sudoku_ans);
+		if (!sudoku_ans.changed)
 			nakedTriple(sudoku_ans);
 	}
 	
 	if (checkError(sudoku_ans, sudoku_q)) 
 	{
-		std::cout << "Something went wrong!\n";
+		std::cerr << "Something went wrong!\n";
 		printSudoku(sudoku_q);
 		return -1;
 	}
 	auto eTime = std::chrono::high_resolution_clock::now();	
 	printSudoku(sudoku_q);
 
-	std::cout << "Answered : " << count(sudoku_q) << '\n';
-	std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
+	std::cout << "Answered : " << "\033[32m" << count(sudoku_q) << '\n';
+	std::cout << "\033[0m" << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
 
 	return 0;
 }
