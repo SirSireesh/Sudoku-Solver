@@ -26,16 +26,6 @@ using namespace CSudokuSolver;
 
 int main(int argc, char *argv[])
 {
-	SUDOKU_ANS_BOARD sudoku_ans;
-	int sudoku_q[9][9];
-
-	inputSudoku(sudoku_q);
-
-	int sudoku_a[9][9];
-	for (int i = 0; i < 9; ++i)
-		for (int j = 0; j < 9; ++j)
-			sudoku_a[i][j] = sudoku_q[i][j];
-
 	bool print_steps = false;
 	while (--argc > 0 && (*++argv)[0] == '-')
 	{
@@ -50,7 +40,7 @@ int main(int argc, char *argv[])
 					std::cout << "certain conditions; check license.txt for more details\n\n";
 					return 0;
 				case 'h':
-					std::cout << "Sudoku-solver : version 0.5 (Batman)\n\n";
+					std::cout << "Sudoku-solver : version 0.7 (Batman)\n\n";
 					std::cout << "usage : Sudoku-solver [arguments] < [sudoku]\n";
 					std::cout << "Arguments: ";
 					std::cout << " -l\t Print license info and exit\n";
@@ -73,6 +63,17 @@ int main(int argc, char *argv[])
 					break;
 			}
 	}
+
+	SUDOKU_ANS_BOARD sudoku_ans;
+	int sudoku_q[9][9];
+
+	inputSudoku(sudoku_q);
+
+	int sudoku_a[9][9];
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			sudoku_a[i][j] = sudoku_q[i][j];
+
 
 	auto sTime = std::chrono::high_resolution_clock::now();
 	//TODO: Create gui instead for input
