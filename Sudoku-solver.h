@@ -61,6 +61,7 @@ namespace CSudokuSolver
 }
 extern const char *RED;
 extern const char *GREEN;
+extern const char *BLUE;
 extern const char *PINK;
 extern const char *RESET;
 

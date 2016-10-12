@@ -27,6 +27,7 @@
 
 const char *RED = "\033[31m";
 const char *GREEN = "\033[32m";
+const char *BLUE = "\033[34m";
 const char *PINK = "\033[35m";
 const char *RESET = "\033[0m";
 
@@ -85,11 +86,11 @@ void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 		for (int j = 0; j < 9; ++j)
 		{
 			if (!sudoku_q[i][j] && sudoku_a[i][j])
-				std::cout << RED << sudoku_a[i][j] << PINK << "|" << RESET;
+				std::cout << RED << sudoku_a[i][j] << BLUE << "|" << RESET;
 			else if (!sudoku_q[i][j] && !sudoku_a[i][j])
-				std::cout << PINK << " |" << RESET;
+				std::cout << BLUE << " |" << RESET;
 			else if (sudoku_q[i][j])
-				std::cout << GREEN <<sudoku_q[i][j] << PINK << "|" << RESET;
+				std::cout << GREEN << sudoku_q[i][j] << BLUE << "|" << RESET;
 		}
 		std::cout << '\n';
 	}

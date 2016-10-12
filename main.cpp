@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 	std::cout << "The given sudoku is :\n";
 	printSudoku(sudoku_q, sudoku_q);
 
-	std::cout << "Given : " << RED << count(sudoku_q) << RESET;
+	std::cout << "Given : " << RED << count(sudoku_q) << RESET << '\n';
 
 	while (count(sudoku_a) < 81 && sudoku_ans.changed) 
 	{
