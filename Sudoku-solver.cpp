@@ -25,6 +25,11 @@
 #include <string>
 #include "Sudoku-solver.h"
 
+const char *RED = "\033[31m";
+const char *GREEN = "\033[32m";
+const char *PINK = "\033[35m";
+const char *RESET = "\033[0m";
+
 bool CSudokuSolver::inputSudoku(int sudoku_q[9][9])
 {
 	std::string input;
@@ -80,11 +85,11 @@ void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 		for (int j = 0; j < 9; ++j)
 		{
 			if (!sudoku_q[i][j] && sudoku_a[i][j])
-				std::cout << "\033[32m" << sudoku_a[i][j] << "\033[35m|\033[0m";
+				std::cout << RED << sudoku_a[i][j] << PINK << "|" << RESET;
 			else if (!sudoku_q[i][j] && !sudoku_a[i][j])
-				std::cout << " \033[35m|\033[0m";
+				std::cout << PINK << " |" << RESET;
 			else if (sudoku_q[i][j])
-				std::cout << "\033[31m"<<sudoku_q[i][j] << "\033[35m|\033[0m";
+				std::cout << GREEN <<sudoku_q[i][j] << PINK << "|" << RESET;
 		}
 		std::cout << '\n';
 	}
@@ -178,8 +183,8 @@ void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9
 						{
 							finalize(sudoku_ans, sudoku_q, n, j, i);
 							if (print_steps)
-								std::cout << "\033[32mColumn : \033[35m" << (char) (j + 65) << i + 1 
-									<< "\033[0m set to \033[35m" << n + 1 << " :\033[0m unique in column\n";
+								std::cout << GREEN << "Column : " << PINK << static_cast<char> (j + 65) << i + 1 
+									<< RESET << " set to " << GREEN << n + 1 << RESET << " : unique in column\n";
 						}
 					}
 	}
@@ -207,8 +212,8 @@ void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], 
 						{
 							finalize(sudoku_ans, sudoku_q, n, i, j);
 							if (print_steps)
-								std::cout << "\033[32mRow : \033[35m" << (char) (i + 65) << j + 1 
-									<< "\033[0m set to \033[35m" << n + 1 << " :\033[0m unique in column\n";
+								std::cout << GREEN << "Row : " << PINK << static_cast<char> (i + 65) << j + 1 
+									<< RESET <<" set to " << GREEN << n + 1 << RESET << " : unique in row\n";
 						}
 					}
 	}
@@ -244,8 +249,8 @@ void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], b
 								{
 									finalize(sudoku_ans, sudoku_q, n, k, l);
 									if (print_steps)
-										std::cout << "\033[32mBox : \033[35m" << (char) (k + 65) << l + 1 
-											<< "\033[0m set to \033[35m" << n + 1 << " :\033[0m unique in column\n";
+										std::cout << GREEN << "Box : " << PINK << static_cast<char> (k + 65) << l + 1 
+											<< RESET << " set to " << GREEN << n + 1 << RESET << " : unique in  3x3 box\n";
 								}
 							}
 		}
@@ -271,8 +276,8 @@ void CSudokuSolver::nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]
 			{
 				finalize(sudoku_ans, sudoku_q, num, i, j);
 				if (print_steps)
-					std::cout << "\033[32mBox : \033[35m" << (char) (i + 65) << j + 1 
-						<< "\033[0m set to \033[35m" << num + 1 << " :\033[0m unique in column\n";
+					std::cout << GREEN << "Single : " << PINK << static_cast<char> (i + 65) << j + 1 
+						<< RESET << " set to " << GREEN << num + 1 <<  RESET << " : unique in box\n";
 			}
 		}
 }
@@ -354,8 +359,8 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							if (sudoku_ans.changed)
 							{
 								if (naked_pair)
-									std::cout << "\033[32mNaked Pair : \033[35m" << (char) (i  + 65) << column << "\033[0m and \033[35m" << (char) (i + 65) 
-										<< column_n << " \033[0mhave a naked pair\n";
+									std::cout << GREEN << "Naked Pair : " << PINK << static_cast<char> (i  + 65) << column << RESET << 
+										" and " << PINK << static_cast<char> (i + 65) << column_n << RESET << " have a naked pair\n";
 								return;
 							}
 						}
@@ -424,8 +429,8 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							if (sudoku_ans.changed)
 							{
 								if (naked_pair)
-									std::cout << "\033[32mNaked Pair : \033[35m" << (char) (row + 65) << i << "\033[0m and \033[35m" << (char) (row_n + 65) 
-										<< i << " \033[0mhave a naked pair\n";
+									std::cout << GREEN << "Naked Pair : " << PINK << static_cast<char> (row + 65) << i << RESET << 
+										" and " << PINK << static_cast<char> (row_n + 65) << i << RESET <<" have a naked pair\n";
 								return;
 							}
 						}
@@ -539,8 +544,8 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_st
 						if (sudoku_ans.changed)
 						{
 							if (print_steps)
-								std::cout << "\033[32mBox Line Reduce Row : \033[35m" << (char) (i + 65) << " : " << n + 1
-									<< " \033[0m is only possible within a box\n";
+								std::cout << GREEN << "Box Line Reduce Row : " << PINK << (char) (i + 65) << RESET << " : "<< GREEN
+								       	<< n + 1 << RESET << " is only possible within a box\n";
 							return;
 						}
 					}
@@ -576,8 +581,8 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print
 						if (sudoku_ans.changed)
 						{
 							if (print_steps)
-								std::cout << "\033[32mBox Line Reduce Column : \033[35m" << (char) (i + 65) << " : " << n + 1
-									<< " \033[0m is only possible within a box\n";
+								std::cout << GREEN << "Box Line Reduce Column : " << PINK << (char) (i + 65) << RESET << " : " << GREEN 
+									<< n + 1 << RESET << " is only possible within a box\n";
 							return;
 						}
 					}
