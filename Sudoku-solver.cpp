@@ -84,7 +84,7 @@ void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 	std::cout << "\t\t  " << PINK << "1 2 3 4 5 6 7 8 9\n";
 	for (int i = 0; i < 9; ++i) 
 	{
-		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << BLUE << '|'; 
+		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << BLUE << " |"; 
 		for (int j = 0; j < 9; ++j)
 		{
 			if (!sudoku_q[i][j] && sudoku_a[i][j])
