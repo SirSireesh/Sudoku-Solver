@@ -273,9 +273,9 @@ void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], b
 void CSudokuSolver::nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps)
 {
 	int poss = 0;
-	int num;
+	int num = 0;
 	for (int i = 0; i < 9; ++i)
-		for (int j = 0; j < 9; ++j) 
+		for (int j = 0; j < 9; ++j)
 		{
 			poss = 0;
 			if (sudoku_ans.box[i][j].done == false)
