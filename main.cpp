@@ -120,6 +120,8 @@ int main(int argc, char *argv[])
 			nakedPair(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
 			nakedTriple(sudoku_ans, print_steps);
+		if (!sudoku_ans.changed)
+			xWing(sudoku_ans, print_steps);
 	}
 
 	if (checkError(sudoku_ans, sudoku_a)) 
