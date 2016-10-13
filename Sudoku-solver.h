@@ -47,11 +47,11 @@ namespace CSudokuSolver
 	void checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check the columns of a given sudoku for a number only possible in one place in the column
 	void nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check all the positions in a sudoku for a number that is the sole possibility in the box
 	void checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check each 3x3 box of a sudoku for a number who has only one spot
-	void nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//look for a naked pair
 	void pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//check each 3x3 box of sudoku's rows for a number whose sole possiblities lie in that row
 	void pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);		//check each 3x3 box of sudoku's columns for a number whose sole possiblities lie in that column
 	void boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
 	void boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);		//check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
+	void nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//look for a naked pair
 	void hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//search for hidden pairs TODO:Test if it truly works 
 	void nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//search for naked triples
 	void hiddenTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//TODO:Search for hidden triples
