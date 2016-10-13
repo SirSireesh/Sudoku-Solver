@@ -85,9 +85,6 @@ int main(int argc, char *argv[])
 		for (int j = 0; j < 9; ++j)
 			sudoku_a[i][j] = sudoku_q[i][j];
 
-
-	auto sTime = std::chrono::high_resolution_clock::now();
-
 	if (!initialiseSudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
 	{ 
 		std::cerr<< "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
@@ -100,6 +97,8 @@ int main(int argc, char *argv[])
 	printSudoku(sudoku_q, sudoku_q);
 
 	std::cout << "Given : " << RED << count(sudoku_q) << RESET << '\n';
+
+	auto sTime = std::chrono::high_resolution_clock::now();
 
 	while (count(sudoku_a) < 81 && sudoku_ans.changed) 
 	{
@@ -124,13 +123,15 @@ int main(int argc, char *argv[])
 			xWing(sudoku_ans, print_steps);
 	}
 
+	auto eTime = std::chrono::high_resolution_clock::now();	
+
 	if (checkError(sudoku_ans, sudoku_a)) 
 	{
 		std::cerr << "Something went wrong!\n";
 		printSudoku(sudoku_q, sudoku_a);
 		return -3;
 	}
-	auto eTime = std::chrono::high_resolution_clock::now();	
+
 	printSudoku(sudoku_q, sudoku_a);
 
 	std::cout << "Answered : " << GREEN << count(sudoku_a) << RESET << '\n';
