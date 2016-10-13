@@ -83,16 +83,17 @@ void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 {
 	for (int i = 0; i < 9; ++i) 
 	{
+		std::cout << BLUE << "\t\t|";
 		for (int j = 0; j < 9; ++j)
 		{
 			if (!sudoku_q[i][j] && sudoku_a[i][j])
-				std::cout << RED << sudoku_a[i][j] << BLUE << "|" << RESET;
+				std::cout << RED << sudoku_a[i][j] << BLUE << "|";
 			else if (!sudoku_q[i][j] && !sudoku_a[i][j])
 				std::cout << BLUE << " |" << RESET;
 			else if (sudoku_q[i][j])
-				std::cout << GREEN << sudoku_q[i][j] << BLUE << "|" << RESET;
+				std::cout << GREEN << sudoku_q[i][j] << BLUE << "|";
 		}
-		std::cout << '\n';
+		std::cout << '\n' << RESET;
 	}
 }
 
@@ -448,6 +449,9 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_ste
 										disablePos(sudoku_ans, n, k, m);
 									for (int m = j + 3; m < 9; ++m)
 										disablePos(sudoku_ans, n, k, m);
+									if (sudoku_ans.changed)
+										std::cout << GREEN << "Pointing Box Rows : " << n + 1 << RESET << 
+											" is unique to 3x3 box in row " << PINK << static_cast<char> (k + 65) << RESET << '\n';
 								}
 							}
 		}
@@ -482,6 +486,9 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_
 										disablePos(sudoku_ans, n, m, k);
 									for (int m = j + 3; m < 9; ++m)
 										disablePos(sudoku_ans, n, m, k);
+									if (sudoku_ans.changed)
+										std::cout << GREEN << "Pointing Box Colums : " << n + 1 << RESET << 
+											" is unique to 3x3 box in column " << PINK << l + 1 << RESET << '\n';
 								}
 							}
 		}
@@ -700,7 +707,10 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									}
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Naked Triple Column\n" << RESET;
+										std::cout << GREEN << "Naked Triple Column : ";
+										for (auto num : nums)
+											std::cout << ' ' << num + 1;
+										std::cout << RESET << " are present only in column " << PINK << i + 1 << RESET << '\n';
 										return;
 									}
 								}
