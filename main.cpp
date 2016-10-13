@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 					print_steps = true;
 					break;
 				case 'v' :
-					std::cout << "Sudoku-solver : version 0.7 (Astra)\n";
+					std::cout << "Sudoku-solver : version 0.8 (Captain)\n";
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
 				default :
