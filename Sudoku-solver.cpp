@@ -286,139 +286,121 @@ void CSudokuSolver::nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]
 
 void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
-	//TODO:add column check
 	int counter[9][9];
-	bool pair = true;
-	int num[2] = {-1, -1};
-	for (int i = 0; i < 9; ++i) 
-		for (int j = 0; j < 9; ++j) 
-		{
-			counter[i][j] = 0;
-			if (sudoku_ans.box[i][j].done == false)
-				for (int n = 0; n < 9; ++n)
-					if (sudoku_ans.box[i][j].num[n])
-						++counter[i][j];
-		}
-
-	std::list<int> columns;
-	std::list<int> nums;
 	for (int i = 0; i < 9; ++i)
-	{
-		columns.clear();
 		for (int j = 0; j < 9; ++j)
 		{
-			if (counter[i][j] == 2)
-			{
-				columns.push_back(j);
-			}
+			counter[j][i] = 0;
+			if (sudoku_ans.box[j][i].done == false)
+				for (int n = 0; n < 9; ++n)
+					if (sudoku_ans.box[j][i].num[n])
+						++counter[j][i];
 		}
-		if (columns.size() >= 2)
-			for (auto column : columns)
-			{
-				for (auto column_n : columns) 
-				{
-					if (column_n > column)
-					{
-						nums.clear();
-						for (int n = 0; n < 9; ++n)
-						{
-							if (sudoku_ans.box[i][column].num[n] == sudoku_ans.box[i][column_n].num[n])
-								nums.push_back(n);
-						}
-						if (nums.size() == 2)
-						{
-							for (int j = 0; j < 9; ++j)
-							{
-								if (j != column && j != column_n)
-								{
-									for (auto num : nums)
-										disablePos(sudoku_ans, num, i, j);
-								}
-							}
-							if (column - (column % 3) == column_n - (column_n % 3))
-							{
-								for (int k = i - (i % 3); k < i - (i % 3) + 3 && k < 9; ++k)
-									for (int j = column - (column % 3); j < column - (column % 3) + 3 && j < 9; ++j)
-									{
-										if (k != i)
-										{
-											for (auto num : nums)
-												disablePos(sudoku_ans, num, k, j);
-										}
-									}
-							}
-							if (sudoku_ans.changed)
-							{
-								std::cout << GREEN << "Naked Pair : " << PINK << static_cast<char> (i  + 65) << column << RESET << 
-									" and " << PINK << static_cast<char> (i + 65) << column_n << RESET << " have a naked pair\n";
-								return;
-							}
-						}
-					}
-				}
-			}
-	}
 
+	std::list<int> nums;
 	std::list<int> rows;
+
 	for (int i = 0; i < 9; ++i)
 	{
+		nums.clear();
 		rows.clear();
 		for (int j = 0; j < 9; ++j)
 		{
-			if (counter[i][j] == 2)
-			{
+			if (counter[j][i] == 2 || counter[j][i] == 3)
 				rows.push_back(j);
-			}
 		}
 		if (rows.size() >= 2)
-			for (auto row : rows)
+		{
+			for (auto row1 : rows)
 			{
-				for (auto row_n : rows) 
+				for (auto row2 : rows)
 				{
-					if (row_n > row)
+					if (row2 > row1)
 					{
 						nums.clear();
 						for (int n = 0; n < 9; ++n)
 						{
-							if (sudoku_ans.box[row][i].num[n] == sudoku_ans.box[row_n][i].num[n])
+							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
+									(sudoku_ans.box[row1][i].num[n]
+									 || sudoku_ans.box[row2][i].num[n]))
 								nums.push_back(n);
 						}
 						if (nums.size() == 2)
 						{
 							for (int j = 0; j < 9; ++j)
 							{
-								if (j != row && j != row_n)
+								if (std::find(rows.begin(), rows.end(), j) == rows.end() && sudoku_ans.box[j][i].done == false)
 								{
 									for (auto num : nums)
 										disablePos(sudoku_ans, num, j, i);
 								}
 							}
-							if (row - (row % 3) == row_n - (row_n % 3))
-							{
-								for (int k = i - (i % 3); k < i - (i % 3) + 3 && k < 9; ++k)
-									for (int j = row - (row % 3); j < row - (row % 3) + 3 && j < 9; ++j)
-									{
-										if (k != i)
-										{
-											for (auto num : nums)
-												disablePos(sudoku_ans, num, j, k);
-										}
-									}
-							}
 							if (sudoku_ans.changed)
 							{
-								std::cout << GREEN << "Naked Pair : " << PINK << static_cast<char> (row + 65) << i << RESET << 
-									" and " << PINK << static_cast<char> (row_n + 65) << i << RESET <<" have a naked pair\n";
+								std::cout << GREEN << "Naked Row Column : ";
+								for (auto num : nums)
+									std::cout << ' ' << num + 1;
+								std::cout << RESET << " are present only in column " << PINK << i + 1 << RESET << '\n';
 								return;
 							}
 						}
 					}
 				}
 			}
+		}
 	}
 
+	std::list<int> columns;
+	for (int i = 0; i < 9; ++i)
+	{
+		nums.clear();
+		columns.clear();
+		for (int j = 0; j < 9; ++j)
+		{
+			if (counter[i][j] == 2 || counter[i][j] == 3)
+				columns.push_back(j);
+		}
+		if (columns.size() >= 2)
+		{
+			for (auto column1 : columns)
+			{
+				for (auto column2 : columns)
+				{
+					if (column2 > column1)
+					{
+						nums.clear();
+						for (int n = 0; n < 9; ++n)
+						{
+							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
+									(sudoku_ans.box[i][column1].num[n]
+									 || sudoku_ans.box[i][column2].num[n]))
+								nums.push_back(n);
+						}
+						if (nums.size() == 2)
+						{
+							for (int j = 0; j < 9; ++j)
+							{
+								if (std::find(columns.begin(), columns.end(), j) == columns.end() && sudoku_ans.box[j][i].done == false)
+								{
+									for (auto num : nums)
+										disablePos(sudoku_ans, num, i, j);
+								}
+							}
+							if (sudoku_ans.changed)
+							{
+								std::cout << GREEN << "Naked Pair Row : ";
+								for (auto num : nums)
+									std::cout << ' ' << num + 1;
+								std::cout << RESET << " are present only in row " << PINK << static_cast<char> (i + 65) << RESET << '\n';
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
-
 
 void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
@@ -733,7 +715,7 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 			if (counter[i][j] == 2 || counter[i][j] == 3)
 				columns.push_back(j);
 		}
-		if (columns.size() == 3)
+		if (columns.size() >= 3)
 		{
 			for (auto column1 : columns)
 			{
@@ -748,7 +730,10 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 								nums.clear();
 								for (int n = 0; n < 9; ++n)
 								{
-									if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && sudoku_ans.box[i][column1].num[n])
+									if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
+											(sudoku_ans.box[i][column1].num[n]
+											 || sudoku_ans.box[i][column2].num[n]
+											 || sudoku_ans.box[i][column3].num[n]))
 										nums.push_back(n);
 								}
 								if (nums.size() == 3)
