@@ -81,7 +81,7 @@ bool CSudokuSolver::initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudok
 
 void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 {
-	std::cout << "\t\t  " << PINK << "1 2 3 4 5 6 7 8 9\n";
+	std::cout << "\t\t   " << PINK << "1 2 3 4 5 6 7 8 9\n";
 	for (int i = 0; i < 9; ++i) 
 	{
 		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << BLUE << " |"; 
@@ -341,7 +341,7 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							{
 								std::cout << GREEN << "Naked Pair (Column) : " << PINK;
 								for (auto row : rows)
-									std::cout << static_cast<char> (row + 65) << i << ' ';
+									std::cout << static_cast<char> (row + 65) << i + 1 << ' ';
 								for (auto num : nums)
 									std::cout << num + 1 << ' ';
 								std::cout << RESET << '\n';
@@ -704,7 +704,7 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									}
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Naked Triple (Column) : ";
+										std::cout << GREEN << "Naked Triple (Column) : " << PINK;
 										for (auto row : rows)
 											std::cout << static_cast<char> (row + 65) << i + 1 << ' ';
 										std::cout << RESET << " removes " << GREEN;
@@ -784,6 +784,124 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 
 		}
 	}
+}
+
+void CSudokuSolver::xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
+{
+	int counter[9][9];
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			counter[i][j] = 0;
+
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			if (sudoku_ans.box[i][j].done == false)
+				for (int n = 0; n < 9; ++n)
+					if (sudoku_ans.box[i][j].num[n]) 
+						++counter[i][n];
+	std::list<int> columns;
+
+	for (int i = 0; i < 9; ++i)
+	{
+		for (int j = 0; j < 9; ++j)
+		{
+			if (counter[i][j] == 2)
+			{
+				for (int k = i + 1; k < 9; ++k)
+					if (counter[k][j] == 2)
+					{
+						columns.clear();
+						for (int l = 0; l < 9; ++l)
+						{
+							if ((columns.size() == 0 || std::find(columns.begin(), columns.end(), l) == columns.end()) 
+									&& (sudoku_ans.box[i][l].num[j]
+										|| sudoku_ans.box[k][l].num[j]))
+								columns.push_back(l);
+						}
+						if (columns.size() == 2)
+						{
+							for (int l = 0; l < 9; ++l)
+							{
+								if (l != i && l != k)
+									for (auto column : columns)
+										disablePos(sudoku_ans, j, l, column);
+							}
+							if (sudoku_ans.changed)
+							{
+								if (print_steps)
+								{
+									std::cout << GREEN << "X Wing (Rows) : " << PINK;
+									for (auto column : columns)
+									{
+										std::cout << static_cast<char> (i + 65) << column + 1 << ' ';
+										std::cout << static_cast<char> (k + 65) << column + 1 << ' ';
+									}
+									std::cout << RESET << "removes " << GREEN << j + 1 << RESET << '\n';
+								}
+								return;
+							}
+						}
+					}
+			}
+		}
+	}
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			counter[i][j] = 0;
+
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			if (sudoku_ans.box[j][i].done == false)
+				for (int n = 0; n < 9; ++n)
+					if (sudoku_ans.box[j][i].num[n]) 
+						++counter[n][i];
+	std::list<int> rows;
+
+	for (int i = 0; i < 9; ++i)
+	{
+		for (int j = 0; j < 9; ++j)
+		{
+			if (counter[j][i] == 2)
+			{
+				for (int k = i + 1; k < 9; ++k)
+					if (counter[j][k] == 2)
+					{
+						rows.clear();
+						for (int l = 0; l < 9; ++l)
+						{
+							if ((rows.size() == 0 || std::find(rows.begin(), rows.end(), l) == rows.end()) 
+									&& (sudoku_ans.box[l][i].num[j]
+										|| sudoku_ans.box[l][k].num[j]))
+								rows.push_back(l);
+						}
+						if (rows.size() == 2)
+						{
+							for (int l = 0; l < 9; ++l)
+							{
+								if (l != i && l != k)
+									for (auto row : rows)
+										disablePos(sudoku_ans, j, row, l);
+							}
+							if (sudoku_ans.changed)
+							{
+								if (print_steps)
+								{
+									std::cout << GREEN << "X Wing (Columns) : " << PINK;
+									for (auto row : rows)
+									{
+										std::cout << static_cast<char> (row + 65) << i + 1 << ' ';
+										std::cout << static_cast<char> (row + 65) << k + 1 << ' ';
+									}
+									std::cout << RESET << "removes " << GREEN << j + 1 << RESET << '\n';
+								}
+								return;
+							}
+						}
+					}
+			}
+		}
+	}
+
 }
 
 bool CSudokuSolver::checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
