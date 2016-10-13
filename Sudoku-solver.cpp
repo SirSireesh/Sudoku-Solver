@@ -74,27 +74,27 @@ bool CSudokuSolver::initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudok
 			if (sudoku_ans.box[i][j].done == true || (sudoku_q[i][j] && sudoku_ans.box[i][j].num[sudoku_q[i][j] - 1] == false)) 
 				return false;
 			if (sudoku_q[i][j])
-				finalize(sudoku_ans, sudoku_q, sudoku_q[i][j] - 1, i, j);	//finalize expects numbers in terms of array subscripts, hence num - 1
+				finalize(sudoku_ans, sudoku_q, sudoku_q[i][j] - 1, i, j);
 		}
 	return true;
 }
 
 void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 {
-	std::cout << "\t\t   " << PINK << "1 2 3 4 5 6 7 8 9\n";
+	std::cout << "\t\t  " << PINK << "1 2 3 4 5 6 7 8 9\n";
 	for (int i = 0; i < 9; ++i) 
 	{
-		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << BLUE << " |";
+		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << BLUE << '|'; 
 		for (int j = 0; j < 9; ++j)
 		{
 			if (!sudoku_q[i][j] && sudoku_a[i][j])
 				std::cout << RED << sudoku_a[i][j] << BLUE << "|";
 			else if (!sudoku_q[i][j] && !sudoku_a[i][j])
-				std::cout << BLUE << " |" << RESET;
+				std::cout << BLUE <<" |" << RESET;
 			else if (sudoku_q[i][j])
 				std::cout << GREEN << sudoku_q[i][j] << BLUE << "|";
 		}
-		std::cout << '\n' << RESET;
+		std::cout << RESET << '\n';
 	}
 }
 
@@ -114,7 +114,7 @@ void CSudokuSolver::disablePos(SUDOKU_ANS_BOARD &sudoku_ans, int n, int x, int y
 	{
 		sudoku_ans.changed = true;
 		sudoku_ans.box[x][y].num[n] = false;
-	}
+	}	
 }
 
 void CSudokuSolver::disableColumn(SUDOKU_ANS_BOARD &sudoku_ans, int n, int column)
@@ -143,12 +143,12 @@ void CSudokuSolver::finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], i
 {
 	if (sudoku_ans.box[x][y].num[n] == false) 
 	{
-		std::cout << "error : The number " << n + 1 << " was set to false at " << x << ' ' << y << "!\n";
+		std::cout << RED << "error : The number " << n + 1 << " was set to false at " << x << ' ' << y << "!\n";
 		return;
 	}
 	if (sudoku_ans.box[x][y].done) 
 	{
-		std::cout << "error : The position " << x << ' ' << y << " was set to done!" << " Number " << sudoku_q[x][y] << " is already there!\n";
+		std::cout << RED << "error : The position " << x << ' ' << y << " was set to done!" << " Number " << sudoku_q[x][y] << " is already there!\n";
 		return;
 	}
 	sudoku_ans.box[x][y].done = true;
@@ -186,7 +186,7 @@ void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9
 						{
 							finalize(sudoku_ans, sudoku_q, n, j, i);
 							if (print_steps)
-								std::cout << GREEN << "Column : " << PINK << static_cast<char> (j + 65) << i + 1 
+								std::cout << GREEN << "Single : " << PINK << static_cast<char> (j + 65) << i + 1 
 									<< RESET << " set to " << GREEN << n + 1 << RESET << " : unique in column\n";
 						}
 					}
@@ -197,7 +197,8 @@ void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], 
 {
 	bool only_pos[9];
 
-	for (int i = 0; i < 9; ++i){
+	for (int i = 0; i < 9; ++i)
+	{
 		for (auto& elem : only_pos)		
 			elem = true;
 		for (int j = 0; j < 9; ++j) 
@@ -215,7 +216,7 @@ void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], 
 						{
 							finalize(sudoku_ans, sudoku_q, n, i, j);
 							if (print_steps)
-								std::cout << GREEN << "Row : " << PINK << static_cast<char> (i + 65) << j + 1 
+								std::cout << GREEN << "Single : " << PINK << static_cast<char> (i + 65) << j + 1 
 									<< RESET <<" set to " << GREEN << n + 1 << RESET << " : unique in row\n";
 						}
 					}
@@ -252,8 +253,8 @@ void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], b
 								{
 									finalize(sudoku_ans, sudoku_q, n, k, l);
 									if (print_steps)
-										std::cout << GREEN << "Box : " << PINK << static_cast<char> (k + 65) << l + 1 
-											<< RESET << " set to " << GREEN << n + 1 << RESET << " : unique in  3x3 box\n";
+										std::cout << GREEN << "Single : " << PINK << static_cast<char> (k + 65) << l + 1 
+											<< RESET << " set to " << GREEN << n + 1 << RESET << " : unique in 3x3 box\n";
 								}
 							}
 		}
@@ -338,10 +339,12 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							}
 							if (sudoku_ans.changed)
 							{
-								std::cout << GREEN << "Naked Pair Column : ";
+								std::cout << GREEN << "Naked Pair (Column) : " << PINK;
+								for (auto row : rows)
+									std::cout << static_cast<char> (row + 65) << i << ' ';
 								for (auto num : nums)
-									std::cout << ' ' << num + 1;
-								std::cout << RESET << " are present only in column " << PINK << i + 1 << RESET << '\n';
+									std::cout << num + 1 << ' ';
+								std::cout << RESET << '\n';
 								return;
 							}
 						}
@@ -349,7 +352,7 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 				}
 			}
 		}
-	}
+	}	
 
 	std::list<int> columns;
 	for (int i = 0; i < 9; ++i)
@@ -389,10 +392,13 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							}
 							if (sudoku_ans.changed)
 							{
-								std::cout << GREEN << "Naked Pair Row : ";
+								std::cout << GREEN << "Naked Pair (Row) : " << PINK;
+								for (auto column : columns)
+									std::cout << static_cast<char> (i + 65) << column + 1 << ' ';
+								std::cout << RESET << " removes " << GREEN;
 								for (auto num : nums)
-									std::cout << ' ' << num + 1;
-								std::cout << RESET << " are present only in row " << PINK << static_cast<char> (i + 65) << RESET << '\n';
+									std::cout << num + 1 << ' ';
+								std::cout << RESET << '\n';
 								return;
 							}
 						}
@@ -440,6 +446,7 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_ste
 									}
 								}
 							}
+
 		}
 }
 
@@ -580,7 +587,6 @@ void CSudokuSolver::hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 	bool hidden_pair = true;
 	int num1[2] = {-1, -1};
 	int num2[2] = {-1, -1};
-
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 			if (counter[i][j] == 2)
@@ -698,10 +704,13 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									}
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Naked Triple Column : ";
+										std::cout << GREEN << "Naked Triple (Column) : ";
+										for (auto row : rows)
+											std::cout << static_cast<char> (row + 65) << i + 1 << ' ';
+										std::cout << RESET << " removes " << GREEN;
 										for (auto num : nums)
-											std::cout << ' ' << num + 1;
-										std::cout << RESET << " are present only in column " << PINK << i + 1 << RESET << '\n';
+											std::cout << num + 1 << ' ';
+										std::cout << RESET << '\n';
 										return;
 									}
 								}
@@ -757,7 +766,13 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									}
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Naked Triple Row\n" << RESET;
+										std::cout << GREEN << "Naked Triple (Row) : ";
+										for (auto column : columns)
+											std::cout << static_cast<char> (i + 65) << column + 1 << ' ';
+										std::cout << RESET << " removes " << GREEN;
+										for (auto num : nums)
+											std::cout << num + 1 << ' ';
+										std::cout << RESET << '\n';
 										return;
 									}
 								}

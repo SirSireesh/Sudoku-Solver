@@ -108,10 +108,10 @@ int main(int argc, char *argv[])
 		checkRows(sudoku_ans, sudoku_a, print_steps);
 		nakedSingle(sudoku_ans, sudoku_a, print_steps);
 		checkBox(sudoku_ans, sudoku_a, print_steps);
-		if (!sudoku_ans.changed) 
-			boxLineReduceRow(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
-			boxLineReduceColumn(sudoku_ans, print_steps);
+		//if (!sudoku_ans.changed) 
+			//boxLineReduceRow(sudoku_ans, print_steps);
+		//if (!sudoku_ans.changed)
+			//boxLineReduceColumn(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
 			nakedPair(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
