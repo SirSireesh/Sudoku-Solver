@@ -481,7 +481,6 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									return;
 								}
 							}
-
 						}
 					}
 				}
@@ -799,7 +798,6 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 					}
 				}
 			}
-
 		}
 	}
 
@@ -861,9 +859,88 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 					}
 				}
 			}
-
 		}
 	}
+
+	struct POINT
+	{
+		int x;
+		int y;
+	};
+	POINT temp;
+	std::list<POINT> positions;
+
+	for (int i = 0; i <= 6; i += 3)
+	{
+		for (int j = 0; j <= 6; j += 3)
+		{
+			positions.clear();
+			for (int k = i; k < i + 3; ++k)
+			{
+				for (int l = j; l < j + 3; ++l)
+				{
+					if (counter[k][l] == 2)
+					{
+						temp.x = k;
+						temp.y = l;
+						positions.push_back(temp);
+					}
+				}
+			}
+			if (positions.size() >= 3)
+			{
+				for (auto pos1 : positions)
+				{
+					for (auto pos2 : positions)
+					{
+						if (pos2.x > pos1.x || pos2.y > pos1.y)
+						{
+							for (auto pos3 : positions)
+							{
+								nums.clear();
+								for (int n = 0; n < 9; ++n)
+								{
+									if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
+											(sudoku_ans.box[pos1.x][pos1.y].num[n]
+											 || sudoku_ans.box[pos2.x][pos2.y].num[n]
+											 || sudoku_ans.box[pos3.x][pos3.y].num[n]))
+										nums.push_back(n);
+								}
+								if (nums.size() == 3)
+								{
+									for (int k = i; k < i + 3; ++k)
+									{
+										for (int l = j; l < j + 3; ++l)
+										{
+											if ((k != pos3.x || l != pos3.y) 
+													&& (k != pos2.x || l != pos2.y) 
+													&& (k != pos1.x || l != pos1.y) 
+													&& sudoku_ans.box[k][l].done == false)
+											{
+												for (auto num : nums)
+													disablePos(sudoku_ans, num, k, l);
+											}
+										}
+									}
+									if (sudoku_ans.changed)
+									{
+										std::cout << GREEN << "Naked Triple (Box) : " << PINK;
+										std::cout << static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1
+											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << RESET << " removes " << GREEN;
+										for (auto num : nums)
+											std::cout << num + 1 << ' ';
+										std::cout << RESET << '\n';
+										return;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 }
 
 void CSudokuSolver::xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
@@ -925,6 +1002,7 @@ void CSudokuSolver::xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 			}
 		}
 	}
+
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 			counter[i][j] = 0;
