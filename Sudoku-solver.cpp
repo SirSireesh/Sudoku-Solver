@@ -27,9 +27,12 @@
 
 const char *RED = "\033[31m";
 const char *GREEN = "\033[32m";
+const char *YELLOW = "\033[33m";
 const char *BLUE = "\033[34m";
 const char *PINK = "\033[35m";
 const char *RESET = "\033[0m";
+const char *BG_YELLOW = "\033[43;1m";
+const char *BG_WHITE = "\033[47m";
 
 bool CSudokuSolver::inputSudoku(int sudoku_q[9][9])
 {
@@ -84,15 +87,21 @@ void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 	std::cout << "\t\t   " << PINK << "1 2 3 4 5 6 7 8 9\n";
 	for (int i = 0; i < 9; ++i) 
 	{
-		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << BLUE << " |"; 
+		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << GREEN << " |"; 
 		for (int j = 0; j < 9; ++j)
 		{
+			if (j - j % 3 == i - i % 3)
+				std::cout << BG_YELLOW;
+			else if (6 - (i - i % 3) == j - j % 3)
+				std::cout << BG_YELLOW;
+			else 
+				std::cout << BG_WHITE;
 			if (!sudoku_q[i][j] && sudoku_a[i][j])
-				std::cout << RED << sudoku_a[i][j] << BLUE << "|";
+				std::cout << RED << sudoku_a[i][j] << GREEN << "|";
 			else if (!sudoku_q[i][j] && !sudoku_a[i][j])
-				std::cout << BLUE <<" |" << RESET;
+				std::cout << GREEN <<" |" << RESET;
 			else if (sudoku_q[i][j])
-				std::cout << GREEN << sudoku_q[i][j] << BLUE << "|";
+				std::cout << BLUE << sudoku_q[i][j] << GREEN << "|";
 		}
 		std::cout << RESET << '\n';
 	}
