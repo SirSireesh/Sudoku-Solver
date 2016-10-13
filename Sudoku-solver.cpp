@@ -440,8 +440,8 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_ste
 										disablePos(sudoku_ans, n, k, m);
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Pointing Box Rows : " << n + 1 << RESET << 
-											" is unique to 3x3 box in row " << PINK << static_cast<char> (k + 65) << RESET << '\n';
+										std::cout << GREEN << "Pointing Box (Rows) : " << PINK << static_cast<char> (k + 65) << l + 1 << 
+											RESET << " removes " << GREEN << n + 1 << RESET << '\n';
 										return;
 									}
 								}
@@ -454,8 +454,8 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_
 {
 	bool only_column[9];
 
-	for (int i = 0; i < 9; i += 3)
-		for (int j = 0; j < 9; j += 3) 
+	for (int i = 0; i <= 6; i += 3)
+		for (int j = 0; j <= 6; j += 3) 
 		{
 			for (auto& elem : only_column)
 				elem = true;
@@ -473,7 +473,7 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_
 												only_column[n] = false;
 												break;
 											}
-								if (only_column[n]) 
+								if (only_column[n])
 								{
 									for (int m = 0; m < j; ++m)
 										disablePos(sudoku_ans, n, m, k);
@@ -481,8 +481,8 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_
 										disablePos(sudoku_ans, n, m, k);
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Pointing Box Columns : " << n + 1 << RESET << 
-											" is unique to 3x3 box in column " << PINK << l + 1 << RESET << '\n';
+										std::cout << GREEN << "Pointing Box (Columns) : " << PINK << static_cast<char> (l + 65) << k + 1 << 
+											RESET << " removes " << GREEN << n + 1 << RESET << '\n';
 										return;
 									}
 								}
@@ -526,8 +526,8 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_st
 						if (sudoku_ans.changed)
 						{
 							if (print_steps)
-								std::cout << GREEN << "Box Line Reduce Row : " << PINK << static_cast<char> (i + 65) << RESET << " : " << GREEN
-									<< n + 1 << RESET << " is only possible within a box\n";
+								std::cout << GREEN << "Box Line Reduce (Row) : " << PINK << static_cast<char> (i + 65) << j + 1<< RESET << " : removes " << GREEN
+									<< n + 1 << RESET << " for rest of the box\n";
 							return;
 						}
 					}
@@ -563,8 +563,8 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print
 						if (sudoku_ans.changed)
 						{
 							if (print_steps)
-								std::cout << GREEN << "Box Line Reduce Column : " << PINK << static_cast<char> (i + 65) << RESET << " : " << GREEN 
-									<< n + 1 << RESET << " is only possible within a box\n";
+								std::cout << GREEN << "Box Line Reduce (Column) : " << PINK << static_cast<char> (i + 65) << i + 1 << RESET << " : removes " << GREEN 
+									<< n + 1 << RESET << " for rest of box\n";
 							return;
 						}
 					}
