@@ -81,9 +81,10 @@ bool CSudokuSolver::initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudok
 
 void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 {
+	std::cout << "\t\t   " << PINK << "1 2 3 4 5 6 7 8 9\n";
 	for (int i = 0; i < 9; ++i) 
 	{
-		std::cout << BLUE << "\t\t|";
+		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << BLUE << " |";
 		for (int j = 0; j < 9; ++j)
 		{
 			if (!sudoku_q[i][j] && sudoku_a[i][j])
@@ -306,7 +307,7 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 		rows.clear();
 		for (int j = 0; j < 9; ++j)
 		{
-			if (counter[j][i] == 2 || counter[j][i] == 3)
+			if (counter[j][i] == 2)
 				rows.push_back(j);
 		}
 		if (rows.size() >= 2)
@@ -337,7 +338,7 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							}
 							if (sudoku_ans.changed)
 							{
-								std::cout << GREEN << "Naked Row Column : ";
+								std::cout << GREEN << "Naked Pair Column : ";
 								for (auto num : nums)
 									std::cout << ' ' << num + 1;
 								std::cout << RESET << " are present only in column " << PINK << i + 1 << RESET << '\n';
@@ -357,7 +358,7 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 		columns.clear();
 		for (int j = 0; j < 9; ++j)
 		{
-			if (counter[i][j] == 2 || counter[i][j] == 3)
+			if (counter[i][j] == 2)
 				columns.push_back(j);
 		}
 		if (columns.size() >= 2)
@@ -380,7 +381,7 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 						{
 							for (int j = 0; j < 9; ++j)
 							{
-								if (std::find(columns.begin(), columns.end(), j) == columns.end() && sudoku_ans.box[j][i].done == false)
+								if (std::find(columns.begin(), columns.end(), j) == columns.end() && sudoku_ans.box[i][j].done == false)
 								{
 									for (auto num : nums)
 										disablePos(sudoku_ans, num, i, j);
@@ -432,8 +433,11 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_ste
 									for (int m = j + 3; m < 9; ++m)
 										disablePos(sudoku_ans, n, k, m);
 									if (sudoku_ans.changed)
+									{
 										std::cout << GREEN << "Pointing Box Rows : " << n + 1 << RESET << 
 											" is unique to 3x3 box in row " << PINK << static_cast<char> (k + 65) << RESET << '\n';
+										return;
+									}
 								}
 							}
 		}
@@ -469,8 +473,11 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_
 									for (int m = j + 3; m < 9; ++m)
 										disablePos(sudoku_ans, n, m, k);
 									if (sudoku_ans.changed)
-										std::cout << GREEN << "Pointing Box Colums : " << n + 1 << RESET << 
+									{
+										std::cout << GREEN << "Pointing Box Columns : " << n + 1 << RESET << 
 											" is unique to 3x3 box in column " << PINK << l + 1 << RESET << '\n';
+										return;
+									}
 								}
 							}
 		}
@@ -482,6 +489,8 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_st
 
 	for (int i = 0; i < 9; ++i)
 	{
+		for (auto& elem : only_box_row)
+			elem = true;
 		for (int j = 0; j < 9; ++j)
 		{
 			if (sudoku_ans.box[i][j].done == false) 
@@ -681,7 +690,7 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 								{
 									for (int j = 0; j < 9; ++j)
 									{
-										if (std::find(rows.begin(), rows.end(), j) == rows.end() && sudoku_ans.box[j][i].done == false)
+										if (std::find(rows.begin(), rows.end(), j) == rows.end() && sudoku_ans.box[i][j].done == false)
 										{
 											for (auto num : nums)
 												disablePos(sudoku_ans, num, j, i);

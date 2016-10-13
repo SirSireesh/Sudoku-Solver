@@ -117,8 +117,6 @@ int main(int argc, char *argv[])
 		if (!sudoku_ans.changed)
 			boxLineReduceColumn(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
-			hiddenPair(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
 			nakedPair(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
 			nakedTriple(sudoku_ans, print_steps);
