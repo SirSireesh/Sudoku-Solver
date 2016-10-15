@@ -25,6 +25,7 @@
 #include <string>
 #include "Sudoku-solver.h"
 
+#if !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)))
 const char *BLACK = "\033[30m";
 const char *RED = "\033[31m";
 const char *GREEN = "\033[32m";
@@ -33,6 +34,16 @@ const char *PINK = "\033[35m";
 const char *RESET = "\033[0m";
 const char *BG_YELLOW = "\033[;43m";
 const char *BG_WHITE = "\033[;47m";
+#else
+const char *BLACK = "";
+const char *RED = "";
+const char *GREEN = "";
+const char *BLUE = "";
+const char *PINK = "";
+const char *RESET = "";
+const char *BG_YELLOW = "";
+const char *BG_WHITE = "";
+#endif
 
 bool CSudokuSolver::inputSudoku(int sudoku_q[9][9])
 {
