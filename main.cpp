@@ -27,7 +27,7 @@ using namespace CSudokuSolver;
 
 int main(int argc, char *argv[])
 {
-	bool print_steps = false;
+	bool print_steps = false, silent = false;
 	while (--argc > 0 && (*++argv)[0] == '-')
 	{
 		char c;
@@ -41,31 +41,48 @@ int main(int argc, char *argv[])
 					std::cout << "certain conditions; check license.txt for more details\n\n";
 					return 0;
 				case 'h':
-					std::cout << "Sudoku-solver : version 0.7 (Batman)\n\n";
+					std::cout << "Sudoku-solver : version 0.8.1 (Calvin)\n\n";
 					std::cout << "usage : Sudoku-solver [arguments] < [sudoku]\n";
-					std::cout << "Arguments: ";
+					std::cout << "Arguments:\n";
 					std::cout << " -l\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
 					std::cout << " -i\t Read input from stdin (default)\n";
+					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving sudokus)\n";
 					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
 					std::cout << " -v\t Print version info and exit\n";
 					return 0;
 				case 'i' :
 					break;
 				case 't' :
-					print_steps = true;
+					if (!silent)
+						print_steps = true;
+					else
+					{
+						std::cout << termcolor::red << "Conflicting options! -s and -t can not be used together!\nExiting!\n" << termcolor::reset;
+						return 1;
+					}
 					break;
 				case 'v' :
 					std::cout << "Sudoku-solver : version 0.8.1 (Calvin)\n";
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
+				case 's' :
+					if (!print_steps)
+						silent = true;
+					else
+					{
+						std::cout << termcolor::red << "Conflicting options! -s and -t can not be used together\nExiting!\n" << termcolor::reset;
+						return 1;
+					}
+					break;
 				default :
 					std::cout << termcolor::red << "Invalid Option : " << c << termcolor::reset << '\n';
 					std::cout << "usage : Sudoku-solver [arguments] < [sudoku]\n";
-					std::cout << "Arguments: ";
+					std::cout << "Arguments:\n";
 					std::cout << " -l\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
 					std::cout << " -i\t Read input from stdin (default)\n";
+					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving sudokus)\n";
 					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
 					std::cout << " -v\t Print version info and exit\n";
 					return -1;
@@ -88,16 +105,18 @@ int main(int argc, char *argv[])
 
 	if (!initialiseSudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
 	{ 
-		std::cerr<< "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
-		printSudoku(sudoku_q, sudoku_a);
+		std::cerr << "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
+		printSudoku(sudoku_q, sudoku_a, true);
 		std::cout << termcolor::red << "The sudoku contains " << count(sudoku_q) << " clues.\n" << termcolor::reset;
 		return -1;
 	}
 
-	std::cout << "The given sudoku is :\n";
-	printSudoku(sudoku_q, sudoku_q);
+	if (!silent)
+		std::cout << "The given sudoku is :\n";
+	printSudoku(sudoku_q, sudoku_q, silent);
 
-	std::cout << "Given : " << termcolor::red << count(sudoku_q) << termcolor::reset << '\n';
+	if (!silent)
+		std::cout << "Given : " << termcolor::red << count(sudoku_q) << termcolor::reset << '\n';
 
 	auto sTime = std::chrono::high_resolution_clock::now();
 
@@ -129,14 +148,17 @@ int main(int argc, char *argv[])
 	if (checkError(sudoku_ans, sudoku_a)) 
 	{
 		std::cerr << "Something went wrong!\n";
-		printSudoku(sudoku_q, sudoku_a);
+		printSudoku(sudoku_q, sudoku_a, false);
 		return -3;
 	}
 
-	printSudoku(sudoku_q, sudoku_a);
+	printSudoku(sudoku_q, sudoku_a, silent);
 
-	std::cout << "Answered : " << termcolor::green << count(sudoku_a) << termcolor::reset << '\n';
-	std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
+	if (!silent)
+	{
+		std::cout << "Answered : " << termcolor::green << count(sudoku_a) << termcolor::reset << '\n';
+		std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
+	}
 
 	return 0;
 }
