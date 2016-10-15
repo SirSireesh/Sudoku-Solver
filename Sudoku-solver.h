@@ -56,12 +56,4 @@ namespace CSudokuSolver
 	void nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//search for naked triples
 	void hiddenTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//TODO:Search for hidden triples
 	void xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//TODO:Apply the x-wing algorithm
-
-	//NOTE - the functions that solve a sudoku are sorted in the order of complexity and speed. The lower a function is, the lesser it should be used!
 }
-extern const char *RED;
-extern const char *GREEN;
-extern const char *BLUE;
-extern const char *PINK;
-extern const char *RESET;
-

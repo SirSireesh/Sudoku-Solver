@@ -21,6 +21,7 @@
 #include <chrono>
 #include <iostream>
 #include "Sudoku-solver.h"
+#include "termcolor.hpp"
 
 using namespace CSudokuSolver;
 
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
 				default :
-					std::cout << RED << "Invalid Option : " << c << RESET << '\n';
+					std::cout << termcolor::red << "Invalid Option : " << c << termcolor::reset << '\n';
 					std::cout << "usage : Sudoku-solver [arguments] < [sudoku]\n";
 					std::cout << "Arguments: ";
 					std::cout << " -l\t Print license info and exit\n";
@@ -89,14 +90,14 @@ int main(int argc, char *argv[])
 	{ 
 		std::cerr<< "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
 		printSudoku(sudoku_q, sudoku_a);
-		std::cout << RED << "The sudoku contains " << count(sudoku_q) << " clues.\n" << RESET;
+		std::cout << termcolor::red << "The sudoku contains " << count(sudoku_q) << " clues.\n" << termcolor::reset;
 		return -1;
 	}
 
 	std::cout << "The given sudoku is :\n";
 	printSudoku(sudoku_q, sudoku_q);
 
-	std::cout << "Given : " << RED << count(sudoku_q) << RESET << '\n';
+	std::cout << "Given : " << termcolor::red << count(sudoku_q) << termcolor::reset << '\n';
 
 	auto sTime = std::chrono::high_resolution_clock::now();
 
@@ -134,7 +135,7 @@ int main(int argc, char *argv[])
 
 	printSudoku(sudoku_q, sudoku_a);
 
-	std::cout << "Answered : " << GREEN << count(sudoku_a) << RESET << '\n';
+	std::cout << "Answered : " << termcolor::green << count(sudoku_a) << termcolor::reset << '\n';
 	std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
 
 	return 0;

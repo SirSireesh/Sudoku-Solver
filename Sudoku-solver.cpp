@@ -24,26 +24,7 @@
 #include <algorithm>
 #include <string>
 #include "Sudoku-solver.h"
-
-#if !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)))
-const char *BLACK = "\033[30m";
-const char *RED = "\033[31m";
-const char *GREEN = "\033[32m";
-const char *BLUE = "\033[34m";
-const char *PINK = "\033[35m";
-const char *RESET = "\033[0m";
-const char *BG_YELLOW = "\033[;43m";
-const char *BG_WHITE = "\033[;47m";
-#else
-const char *BLACK = "";
-const char *RED = "";
-const char *GREEN = "";
-const char *BLUE = "";
-const char *PINK = "";
-const char *RESET = "";
-const char *BG_YELLOW = "";
-const char *BG_WHITE = "";
-#endif
+#include "termcolor.hpp"
 
 bool CSudokuSolver::inputSudoku(int sudoku_q[9][9])
 {
@@ -52,12 +33,12 @@ bool CSudokuSolver::inputSudoku(int sudoku_q[9][9])
 
 	if (input.length() < 81)
 	{
-		std::cout << RED << "The input was too small! Check your input and try again!\n";
+		std::cout << termcolor::red << "The input was too small! Check your input and try again!\n";
 		return false;
 	}
 	if (input.length() > 81)
 	{
-		std::cout << RED << "The input was too large! Check your input and try again!\n";
+		std::cout << termcolor::red << "The input was too large! Check your input and try again!\n";
 		return false;
 	}
 
@@ -95,26 +76,26 @@ bool CSudokuSolver::initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudok
 
 void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 {
-	std::cout << "\t\t   " << PINK << "1 2 3 4 5 6 7 8 9\n";
+	std::cout << "\t\t   " << termcolor::magenta << "1 2 3 4 5 6 7 8 9\n";
 	for (int i = 0; i < 9; ++i) 
 	{
-		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << BLUE << " |"; 
+		std::cout << "\t\t" << termcolor::magenta << static_cast<char> (i + 65) << termcolor::blue << " |"; 
 		for (int j = 0; j < 9; ++j)
 		{
 			if (j - j % 3 == i - i % 3)
-				std::cout << BG_YELLOW;
+				std::cout << termcolor::on_yellow;
 			else if (6 - (i - i % 3) == j - j % 3)
-				std::cout << BG_YELLOW;
+				std::cout << termcolor::on_yellow;
 			else
-				std::cout << BG_WHITE;
+				std::cout << termcolor::on_white;
 			if (!sudoku_q[i][j] && sudoku_a[i][j])
-				std::cout << RED << sudoku_a[i][j] << BLUE << "|";
+				std::cout << termcolor::red << sudoku_a[i][j] << termcolor::blue << "|";
 			else if (!sudoku_q[i][j] && !sudoku_a[i][j])
-				std::cout << BLUE <<" |" << RESET;
+				std::cout << termcolor::blue <<" |" << termcolor::reset;
 			else if (sudoku_q[i][j])
-				std::cout << BLACK << sudoku_q[i][j] << BLUE << "|";
+				std::cout << termcolor::grey << sudoku_q[i][j] << termcolor::blue << "|";
 		}
-		std::cout << RESET << '\n';
+		std::cout << termcolor::reset << '\n';
 	}
 }
 
@@ -163,12 +144,12 @@ void CSudokuSolver::finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], i
 {
 	if (sudoku_ans.box[x][y].num[n] == false) 
 	{
-		std::cout << RED << "error : The number " << n + 1 << " was set to false at " << x << ' ' << y << "!\n";
+		std::cout << termcolor::red << "error : The number " << n + 1 << " was set to false at " << x << ' ' << y << "!\n";
 		return;
 	}
 	if (sudoku_ans.box[x][y].done) 
 	{
-		std::cout << RED << "error : The position " << x << ' ' << y << " was set to done!" << " Number " << sudoku_q[x][y] << " is already there!\n";
+		std::cout << termcolor::red << "error : The position " << x << ' ' << y << " was set to done!" << " Number " << sudoku_q[x][y] << " is already there!\n";
 		return;
 	}
 	sudoku_ans.box[x][y].done = true;
@@ -206,8 +187,8 @@ void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9
 						{
 							finalize(sudoku_ans, sudoku_q, n, j, i);
 							if (print_steps)
-								std::cout << GREEN << "Single : " << PINK << static_cast<char> (j + 65) << i + 1 
-									<< RESET << " set to " << GREEN << n + 1 << RESET << " : unique in column\n";
+								std::cout << termcolor::green << "Single : " << termcolor::magenta << static_cast<char> (j + 65) << i + 1 
+									<< termcolor::reset << " set to " << termcolor::green << n + 1 << termcolor::reset << " : unique in column\n";
 						}
 					}
 	}
@@ -236,8 +217,8 @@ void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], 
 						{
 							finalize(sudoku_ans, sudoku_q, n, i, j);
 							if (print_steps)
-								std::cout << GREEN << "Single : " << PINK << static_cast<char> (i + 65) << j + 1 
-									<< RESET <<" set to " << GREEN << n + 1 << RESET << " : unique in row\n";
+								std::cout << termcolor::green << "Single : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1 
+									<< termcolor::reset <<" set to " << termcolor::green << n + 1 << termcolor::reset << " : unique in row\n";
 						}
 					}
 	}
@@ -273,8 +254,8 @@ void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], b
 								{
 									finalize(sudoku_ans, sudoku_q, n, k, l);
 									if (print_steps)
-										std::cout << GREEN << "Single : " << PINK << static_cast<char> (k + 65) << l + 1 
-											<< RESET << " set to " << GREEN << n + 1 << RESET << " : unique in 3x3 box\n";
+										std::cout << termcolor::green << "Single : " << termcolor::magenta << static_cast<char> (k + 65) << l + 1 
+											<< termcolor::reset << " set to " << termcolor::green << n + 1 << termcolor::reset << " : unique in 3x3 box\n";
 								}
 							}
 		}
@@ -300,8 +281,8 @@ void CSudokuSolver::nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9]
 			{
 				finalize(sudoku_ans, sudoku_q, num, i, j);
 				if (print_steps)
-					std::cout << GREEN << "Single : " << PINK << static_cast<char> (i + 65) << j + 1 
-						<< RESET << " set to " << GREEN << num + 1 <<  RESET << " : unique in box\n";
+					std::cout << termcolor::green << "Single : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1 
+						<< termcolor::reset << " set to " << termcolor::green << num + 1 <<  termcolor::reset << " : unique in box\n";
 			}
 		}
 }
@@ -361,12 +342,12 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							{
 								if (print_steps)
 								{
-									std::cout << GREEN << "Naked Pair (Column) : " << PINK;
+									std::cout << termcolor::green << "Naked Pair (Column) : " << termcolor::magenta;
 									std::cout << static_cast<char> (row1 + 65) << i + 1 << ' ' << static_cast<char> (row2 + 65) << i + 1
-										<< RESET << " removes " << GREEN;
+										<< termcolor::reset << " removes " << termcolor::green;
 									for (auto num : nums)
 										std::cout << num + 1 << ' ';
-									std::cout << RESET << '\n';
+									std::cout << termcolor::reset << '\n';
 									return;
 								}
 							}
@@ -417,12 +398,12 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							{
 								if (print_steps)
 								{
-									std::cout << GREEN << "Naked Pair (Row) : " << PINK;
+									std::cout << termcolor::green << "Naked Pair (Row) : " << termcolor::magenta;
 									std::cout << static_cast<char> (i + 65) << column1 + 1 << ' ' << static_cast<char> (i + 65) << column2 + 1
-										<< RESET << " removes " << GREEN;
+										<< termcolor::reset << " removes " << termcolor::green;
 									for (auto num : nums)
 										std::cout << num + 1 << ' ';
-									std::cout << RESET << '\n';
+									std::cout << termcolor::reset << '\n';
 								}
 								return;
 							}
@@ -491,12 +472,12 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 								{
 									if (print_steps)
 									{
-										std::cout << GREEN << "Naked Pair (Box) : " << PINK;
+										std::cout << termcolor::green << "Naked Pair (Box) : " << termcolor::magenta;
 										std::cout << static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1
-											<< RESET << " removes " << GREEN;
+											<< termcolor::reset << " removes " << termcolor::green;
 										for (auto num : nums)
 											std::cout << num + 1 << ' ';
-										std::cout << RESET << '\n';
+										std::cout << termcolor::reset << '\n';
 									}
 									return;
 								}
@@ -541,8 +522,8 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_ste
 									if (sudoku_ans.changed)
 									{
 										if (print_steps)
-											std::cout << GREEN << "Pointing Box (Rows) : " << PINK << static_cast<char> (k + 65) << l + 1 << 
-												RESET << " removes " << GREEN << n + 1 << RESET << '\n';
+											std::cout << termcolor::green << "Pointing Box (Rows) : " << termcolor::magenta << static_cast<char> (k + 65) << l + 1 << 
+												termcolor::reset << " removes " << termcolor::green << n + 1 << termcolor::reset << '\n';
 										return;
 									}
 								}
@@ -583,8 +564,8 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_
 									if (sudoku_ans.changed)
 									{
 										if (print_steps)
-											std::cout << GREEN << "Pointing Box (Columns) : " << PINK << static_cast<char> (l + 65) << k + 1 << 
-												RESET << " removes " << GREEN << n + 1 << RESET << '\n';
+											std::cout << termcolor::green << "Pointing Box (Columns) : " << termcolor::magenta << static_cast<char> (l + 65) << k + 1 << 
+												termcolor::reset << " removes " << termcolor::green << n + 1 << termcolor::reset << '\n';
 										return;
 									}
 								}
@@ -628,8 +609,8 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_st
 						if (sudoku_ans.changed)
 						{
 							if (print_steps)
-								std::cout << GREEN << "Box Line Reduce (Row) : " << PINK << static_cast<char> (i + 65) << j + 1<< RESET << " : removes " << GREEN
-									<< n + 1 << RESET << " for rest of the box\n";
+								std::cout << termcolor::green << "Box Line Reduce (Row) : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1<< termcolor::reset << " : removes " << termcolor::green
+									<< n + 1 << termcolor::reset << " for rest of the box\n";
 							return;
 						}
 					}
@@ -665,8 +646,8 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print
 						if (sudoku_ans.changed)
 						{
 							if (print_steps)
-								std::cout << GREEN << "Box Line Reduce (Column) : " << PINK << static_cast<char> (i + 65) << i + 1 << RESET << " : removes " << GREEN 
-									<< n + 1 << RESET << " for rest of box\n";
+								std::cout << termcolor::green << "Box Line Reduce (Column) : " << termcolor::magenta << static_cast<char> (i + 65) << i + 1 
+									<< termcolor::reset << " : removes " << termcolor::green << n + 1 << termcolor::reset << " for rest of box\n";
 							return;
 						}
 					}
@@ -808,12 +789,12 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									{
 										if (print_steps)
 										{
-											std::cout << GREEN << "Naked Triple (Column) : " << PINK;
+											std::cout << termcolor::green << "Naked Triple (Column) : " << termcolor::magenta;
 											std::cout << static_cast<char> (row1 + 65) << i + 1 << ' ' << static_cast<char> (row2 + 65) << i + 1 << ' '
-												<< static_cast<char> (row3 + 65) << i + 1 << RESET << " removes " << GREEN;
+												<< static_cast<char> (row3 + 65) << i + 1 << termcolor::reset << " removes " << termcolor::green;
 											for (auto num : nums)
 												std::cout << num + 1 << ' ';
-											std::cout << RESET << '\n';
+											std::cout << termcolor::reset << '\n';
 										}
 										return;
 									}
@@ -871,13 +852,13 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									{
 										if (print_steps)
 										{
-											std::cout << GREEN << "Naked Triple (Row) : ";
+											std::cout << termcolor::green << "Naked Triple (Row) : ";
 											for (auto column : columns)
 												std::cout << static_cast<char> (i + 65) << column + 1 << ' ';
-											std::cout << RESET << "removes " << GREEN;
+											std::cout << termcolor::reset << "removes " << termcolor::green;
 											for (auto num : nums)
 												std::cout << num + 1 << ' ';
-											std::cout << RESET << '\n';
+											std::cout << termcolor::reset << '\n';
 										}
 										return;
 									}
@@ -954,12 +935,12 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									{
 										if (print_steps)
 										{
-											std::cout << GREEN << "Naked Triple (Box) : " << PINK;
+											std::cout << termcolor::green << "Naked Triple (Box) : " << termcolor::magenta;
 											std::cout << static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1
-												<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << RESET << " removes " << GREEN;
+												<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " removes " << termcolor::green;
 											for (auto num : nums)
 												std::cout << num + 1 << ' ';
-											std::cout << RESET << '\n';
+											std::cout << termcolor::reset << '\n';
 										}
 										return;
 									}
@@ -1018,13 +999,13 @@ void CSudokuSolver::xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							{
 								if (print_steps)
 								{
-									std::cout << GREEN << "X Wing (Rows) : " << PINK;
+									std::cout << termcolor::green << "X Wing (Rows) : " << termcolor::magenta;
 									for (auto column : columns)
 									{
 										std::cout << static_cast<char> (i + 65) << column + 1 << ' ';
 										std::cout << static_cast<char> (k + 65) << column + 1 << ' ';
 									}
-									std::cout << RESET << "removes " << GREEN << j + 1 << RESET << '\n';
+									std::cout << termcolor::reset << "removes " << termcolor::green << j + 1 << termcolor::reset << '\n';
 								}
 								return;
 							}
@@ -1075,13 +1056,13 @@ void CSudokuSolver::xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							{
 								if (print_steps)
 								{
-									std::cout << GREEN << "X Wing (Columns) : " << PINK;
+									std::cout << termcolor::green << "X Wing (Columns) : " << termcolor::magenta;
 									for (auto row : rows)
 									{
 										std::cout << static_cast<char> (row + 65) << i + 1 << ' ';
 										std::cout << static_cast<char> (row + 65) << k + 1 << ' ';
 									}
-									std::cout << RESET << "removes " << GREEN << j + 1 << RESET << '\n';
+									std::cout << termcolor::reset << "removes " << termcolor::green << j + 1 << termcolor::reset << '\n';
 								}
 								return;
 							}
