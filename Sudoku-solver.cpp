@@ -25,14 +25,14 @@
 #include <string>
 #include "Sudoku-solver.h"
 
+const char *BLACK = "\033[30m";
 const char *RED = "\033[31m";
 const char *GREEN = "\033[32m";
-const char *YELLOW = "\033[33m";
 const char *BLUE = "\033[34m";
 const char *PINK = "\033[35m";
 const char *RESET = "\033[0m";
-const char *BG_YELLOW = "\033[43;1m";
-const char *BG_WHITE = "\033[47m";
+const char *BG_YELLOW = "\033[;43m";
+const char *BG_WHITE = "\033[;47m";
 
 bool CSudokuSolver::inputSudoku(int sudoku_q[9][9])
 {
@@ -41,12 +41,12 @@ bool CSudokuSolver::inputSudoku(int sudoku_q[9][9])
 
 	if (input.length() < 81)
 	{
-		std::cout << "The input was too small! Check your input and try again!\n";
+		std::cout << RED << "The input was too small! Check your input and try again!\n";
 		return false;
 	}
 	if (input.length() > 81)
 	{
-		std::cout << "The input was too large! Check your input and try again!\n";
+		std::cout << RED << "The input was too large! Check your input and try again!\n";
 		return false;
 	}
 
@@ -87,21 +87,21 @@ void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
 	std::cout << "\t\t   " << PINK << "1 2 3 4 5 6 7 8 9\n";
 	for (int i = 0; i < 9; ++i) 
 	{
-		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << GREEN << " |"; 
+		std::cout << "\t\t" << PINK << static_cast<char> (i + 65) << BLUE << " |"; 
 		for (int j = 0; j < 9; ++j)
 		{
 			if (j - j % 3 == i - i % 3)
 				std::cout << BG_YELLOW;
 			else if (6 - (i - i % 3) == j - j % 3)
 				std::cout << BG_YELLOW;
-			else 
+			else
 				std::cout << BG_WHITE;
 			if (!sudoku_q[i][j] && sudoku_a[i][j])
-				std::cout << RED << sudoku_a[i][j] << GREEN << "|";
+				std::cout << RED << sudoku_a[i][j] << BLUE << "|";
 			else if (!sudoku_q[i][j] && !sudoku_a[i][j])
-				std::cout << GREEN <<" |" << RESET;
+				std::cout << BLUE <<" |" << RESET;
 			else if (sudoku_q[i][j])
-				std::cout << BLUE << sudoku_q[i][j] << GREEN << "|";
+				std::cout << BLACK << sudoku_q[i][j] << BLUE << "|";
 		}
 		std::cout << RESET << '\n';
 	}
@@ -348,13 +348,16 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							}
 							if (sudoku_ans.changed)
 							{
-								std::cout << GREEN << "Naked Pair (Column) : " << PINK;
-								std::cout << static_cast<char> (row1 + 65) << i + 1 << ' ' << static_cast<char> (row2 + 65) << i + 1
-									<< RESET << " removes " << GREEN;
-								for (auto num : nums)
-									std::cout << num + 1 << ' ';
-								std::cout << RESET << '\n';
-								return;
+								if (print_steps)
+								{
+									std::cout << GREEN << "Naked Pair (Column) : " << PINK;
+									std::cout << static_cast<char> (row1 + 65) << i + 1 << ' ' << static_cast<char> (row2 + 65) << i + 1
+										<< RESET << " removes " << GREEN;
+									for (auto num : nums)
+										std::cout << num + 1 << ' ';
+									std::cout << RESET << '\n';
+									return;
+								}
 							}
 						}
 					}
@@ -401,12 +404,15 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							}
 							if (sudoku_ans.changed)
 							{
-								std::cout << GREEN << "Naked Pair (Row) : " << PINK;
-								std::cout << static_cast<char> (i + 65) << column1 + 1 << ' ' << static_cast<char> (i + 65) << column2 + 1
-									<< RESET << " removes " << GREEN;
-								for (auto num : nums)
-									std::cout << num + 1 << ' ';
-								std::cout << RESET << '\n';
+								if (print_steps)
+								{
+									std::cout << GREEN << "Naked Pair (Row) : " << PINK;
+									std::cout << static_cast<char> (i + 65) << column1 + 1 << ' ' << static_cast<char> (i + 65) << column2 + 1
+										<< RESET << " removes " << GREEN;
+									for (auto num : nums)
+										std::cout << num + 1 << ' ';
+									std::cout << RESET << '\n';
+								}
 								return;
 							}
 						}
@@ -415,7 +421,7 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 			}
 		}
 	}
-	
+
 	struct POINT
 	{
 		int x;
@@ -453,9 +459,9 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							for (int n = 0; n < 9; ++n)
 							{
 								if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
-									(sudoku_ans.box[pos1.x][pos1.y].num[n]
-									 || sudoku_ans.box[pos2.x][pos2.y].num[n]))
-								nums.push_back(n);
+										(sudoku_ans.box[pos1.x][pos1.y].num[n]
+										 || sudoku_ans.box[pos2.x][pos2.y].num[n]))
+									nums.push_back(n);
 							}
 							if (nums.size() == 2)
 							{
@@ -472,12 +478,15 @@ void CSudokuSolver::nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 								}
 								if (sudoku_ans.changed)
 								{
-									std::cout << GREEN << "Naked Pair (Box) : " << PINK;
-									std::cout << static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1
-										<< RESET << " removes " << GREEN;
-									for (auto num : nums)
-										std::cout << num + 1 << ' ';
-									std::cout << RESET << '\n';
+									if (print_steps)
+									{
+										std::cout << GREEN << "Naked Pair (Box) : " << PINK;
+										std::cout << static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1
+											<< RESET << " removes " << GREEN;
+										for (auto num : nums)
+											std::cout << num + 1 << ' ';
+										std::cout << RESET << '\n';
+									}
 									return;
 								}
 							}
@@ -520,8 +529,9 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_ste
 										disablePos(sudoku_ans, n, k, m);
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Pointing Box (Rows) : " << PINK << static_cast<char> (k + 65) << l + 1 << 
-											RESET << " removes " << GREEN << n + 1 << RESET << '\n';
+										if (print_steps)
+											std::cout << GREEN << "Pointing Box (Rows) : " << PINK << static_cast<char> (k + 65) << l + 1 << 
+												RESET << " removes " << GREEN << n + 1 << RESET << '\n';
 										return;
 									}
 								}
@@ -561,8 +571,9 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_
 										disablePos(sudoku_ans, n, m, k);
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Pointing Box (Columns) : " << PINK << static_cast<char> (l + 65) << k + 1 << 
-											RESET << " removes " << GREEN << n + 1 << RESET << '\n';
+										if (print_steps)
+											std::cout << GREEN << "Pointing Box (Columns) : " << PINK << static_cast<char> (l + 65) << k + 1 << 
+												RESET << " removes " << GREEN << n + 1 << RESET << '\n';
 										return;
 									}
 								}
@@ -784,12 +795,15 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									}
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Naked Triple (Column) : " << PINK;
-										std::cout << static_cast<char> (row1 + 65) << i + 1 << ' ' << static_cast<char> (row2 + 65) << i + 1 << ' '
-											<< static_cast<char> (row3 + 65) << i + 1 << RESET << " removes " << GREEN;
-										for (auto num : nums)
-											std::cout << num + 1 << ' ';
-										std::cout << RESET << '\n';
+										if (print_steps)
+										{
+											std::cout << GREEN << "Naked Triple (Column) : " << PINK;
+											std::cout << static_cast<char> (row1 + 65) << i + 1 << ' ' << static_cast<char> (row2 + 65) << i + 1 << ' '
+												<< static_cast<char> (row3 + 65) << i + 1 << RESET << " removes " << GREEN;
+											for (auto num : nums)
+												std::cout << num + 1 << ' ';
+											std::cout << RESET << '\n';
+										}
 										return;
 									}
 								}
@@ -844,13 +858,16 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									}
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Naked Triple (Row) : ";
-										for (auto column : columns)
-											std::cout << static_cast<char> (i + 65) << column + 1 << ' ';
-										std::cout << RESET << "removes " << GREEN;
-										for (auto num : nums)
-											std::cout << num + 1 << ' ';
-										std::cout << RESET << '\n';
+										if (print_steps)
+										{
+											std::cout << GREEN << "Naked Triple (Row) : ";
+											for (auto column : columns)
+												std::cout << static_cast<char> (i + 65) << column + 1 << ' ';
+											std::cout << RESET << "removes " << GREEN;
+											for (auto num : nums)
+												std::cout << num + 1 << ' ';
+											std::cout << RESET << '\n';
+										}
 										return;
 									}
 								}
@@ -924,12 +941,15 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									}
 									if (sudoku_ans.changed)
 									{
-										std::cout << GREEN << "Naked Triple (Box) : " << PINK;
-										std::cout << static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1
-											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << RESET << " removes " << GREEN;
-										for (auto num : nums)
-											std::cout << num + 1 << ' ';
-										std::cout << RESET << '\n';
+										if (print_steps)
+										{
+											std::cout << GREEN << "Naked Triple (Box) : " << PINK;
+											std::cout << static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1
+												<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << RESET << " removes " << GREEN;
+											for (auto num : nums)
+												std::cout << num + 1 << ' ';
+											std::cout << RESET << '\n';
+										}
 										return;
 									}
 								}
