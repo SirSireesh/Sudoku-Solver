@@ -41,18 +41,15 @@ int main(int argc, char *argv[])
 					std::cout << "certain conditions; check license.txt for more details\n\n";
 					return 0;
 				case 'h':
-					std::cout << "Sudoku-solver : version 0.8.1 (Calvin)\n\n";
-					std::cout << "usage : Sudoku-solver [arguments] < [sudoku]\n";
+					std::cout << "Sudoku-solver : version 0.9 (Dharma)\n\n";
+					std::cout << "usage : Sudoku-solver [arguments]\n";
 					std::cout << "Arguments:\n";
 					std::cout << " -l\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
-					std::cout << " -i\t Read input from stdin (default)\n";
 					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
 					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
 					std::cout << " -v\t Print version info and exit\n";
 					return 0;
-				case 'i' :
-					break;
 				case 't' :
 					if (!silent)
 						print_steps = true;
@@ -63,7 +60,7 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case 'v' :
-					std::cout << "Sudoku-solver : version 0.8.1 (Calvin)\n";
+					std::cout << "Sudoku-solver : version 0.9 (Dharma)\n";
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
 				case 's' :
@@ -77,11 +74,10 @@ int main(int argc, char *argv[])
 					break;
 				default :
 					std::cout << termcolor::red << "Invalid Option : " << c << termcolor::reset << '\n';
-					std::cout << "usage : Sudoku-solver [arguments] < [sudoku]\n";
+					std::cout << "usage : Sudoku-solver [arguments]\n";
 					std::cout << "Arguments:\n";
 					std::cout << " -l\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
-					std::cout << " -i\t Read input from stdin (default)\n";
 					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
 					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
 					std::cout << " -v\t Print version info and exit\n";
