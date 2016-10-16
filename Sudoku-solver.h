@@ -32,7 +32,7 @@ namespace CSudokuSolver
 		struct SUDOKU_ANS box[9][9];
 	};
 
-	void printSudoku(int sudoku_q[9][9]);							//unformatted pront a sudoku
+	void printSudoku(int sudoku_q[9][9]);							//unformatted print a sudoku
 	void printfSudoku(int sudoku_q[9][9], int sudoku_a[9][9]);				//formatted print a given sudoku and its repective answer board
 	bool initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudoku_ans);		//initialse a sudoku from a given question board
 	void disableRow(SUDOKU_ANS_BOARD &sudoku_ans, int n, int row);				//disable every instance of n in a given row
@@ -56,5 +56,5 @@ namespace CSudokuSolver
 	void hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//search for hidden pairs TODO:Test if it truly works 
 	void nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//search for naked triples
 	void hiddenTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//TODO:Search for hidden triples
-	void xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//TODO:Apply the x-wing algorithm
+	void xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//x-wing algorithm
 }
