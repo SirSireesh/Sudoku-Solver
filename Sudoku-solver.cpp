@@ -530,8 +530,8 @@ void CSudokuSolver::pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_ste
 									if (sudoku_ans.changed)
 									{
 										if (print_steps)
-											std::cout << termcolor::green << "Pointing Box (Rows) : " << termcolor::magenta << static_cast<char> (k + 65) << l + 1 << 
-												termcolor::reset << " removes " << termcolor::green << n + 1 << termcolor::reset << '\n';
+											std::cout << termcolor::green << "Pointing Box (Rows) : " << termcolor::magenta << static_cast<char> (k + 65) 
+												<< l + 1 << termcolor::reset << " removes " << termcolor::green << n + 1 << termcolor::reset << '\n';
 										return;
 									}
 								}
@@ -572,8 +572,8 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_
 									if (sudoku_ans.changed)
 									{
 										if (print_steps)
-											std::cout << termcolor::green << "Pointing Box (Columns) : " << termcolor::magenta << static_cast<char> (l + 65) << k + 1 << 
-												termcolor::reset << " removes " << termcolor::green << n + 1 << termcolor::reset << '\n';
+											std::cout << termcolor::green << "Pointing Box (Columns) : " << termcolor::magenta << static_cast<char> (l + 65) 
+												<< k + 1 << termcolor::reset << " removes " << termcolor::green << n + 1 << termcolor::reset << '\n';
 										return;
 									}
 								}
@@ -617,8 +617,8 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_st
 						if (sudoku_ans.changed)
 						{
 							if (print_steps)
-								std::cout << termcolor::green << "Box Line Reduce (Row) : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1<< termcolor::reset << " : removes " << termcolor::green
-									<< n + 1 << termcolor::reset << " for rest of the box\n";
+								std::cout << termcolor::green << "Box Line Reduce (Row) : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1<< termcolor::reset 
+									<< " : removes " << termcolor::green << n + 1 << termcolor::reset << " for rest of the box\n";
 							return;
 						}
 					}
