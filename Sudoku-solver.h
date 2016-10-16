@@ -57,4 +57,5 @@ namespace CSudokuSolver
 	void nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//search for naked triples
 	void hiddenTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//TODO:Search for hidden triples
 	void xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//x-wing algorithm
+	void bruteForce(SUDOKU_ANS_BOARD &sudoku_q, int sudoku_a[9][9], bool print_steps);	//brute force the solution (Bowman's Bingo')
 }

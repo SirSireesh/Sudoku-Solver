@@ -584,48 +584,38 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_
 void CSudokuSolver::boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 {
 	bool only_box_row[9];
-
 	for (int i = 0; i < 9; ++i)
 	{
-		for (auto& elem : only_box_row)
-			elem = true;
+		for (auto& num : only_box_row)
+			num = true;
 		for (int j = 0; j < 9; ++j)
-		{
 			if (sudoku_ans.box[i][j].done == false) 
-			{
 				for (int n = 0; n < 9; ++n)
-				{
 					if (sudoku_ans.box[i][j].num[n] && only_box_row[n])
 					{
 						for (int k = j - (j % 3) + 3; k < 9; ++k)
-						{
 							if (sudoku_ans.box[i][k].num[n])
 							{
 								only_box_row[n] = false;
 								break;
 							}
-						}
 						if (only_box_row[n])
 						{
-							for (int k = i - (i % 3); k < i - (i % 3) + 3; ++k)
-							{
-								for (int l = j - (j % 3); l < j - (j % 3) + 3; ++l)
+							for (int k = i - (i % 3); k < i - (i % 3) + 3 && k < 9; ++k)
+								for (int l = j - (j % 3); l < j - (j % 3) + 3 && l < 9; ++l)
 									if (k != i)
 										disablePos(sudoku_ans, n, k, l);
-							}
 						}
 						if (sudoku_ans.changed)
 						{
 							if (print_steps)
-								std::cout << termcolor::green << "Box Line Reduce (Row) : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1<< termcolor::reset 
-									<< " : removes " << termcolor::green << n + 1 << termcolor::reset << " for rest of the box\n";
+								std::cout << termcolor::green << "Box Line Reduce (Row) : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1 
+									<< termcolor::reset << " : removes " << termcolor::green << n + 1 << termcolor::reset << " for rest of box\n";
 							return;
 						}
 					}
-				}
-			}
-		}
 	}
+
 }
 
 void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
@@ -633,6 +623,9 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print
 	bool only_box_column[9];
 
 	for (int i = 0; i < 9; ++i)
+	{
+		for (auto& num : only_box_column)
+			num = true;
 		for (int j = 0; j < 9; ++j)
 			if (sudoku_ans.box[j][i].done == false) 
 				for (int n = 0; n < 9; ++n)
@@ -646,19 +639,20 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print
 							}
 						if (only_box_column[n])
 						{
-							for (int k = i - (i % 3); k < i - (i % 3) + 3; ++k)
-								for (int l = j - (j % 3); l < j - (j % 3) + 3; ++l)
+							for (int k = i - (i % 3); k < i - (i % 3) + 3 && k < 9; ++k)
+								for (int l = j - (j % 3); l < j - (j % 3) + 3 && l < 9; ++l)
 									if (k != i)
-										disablePos(sudoku_ans, n, k, l);
+										disablePos(sudoku_ans, n, l, k);
 						}
 						if (sudoku_ans.changed)
 						{
 							if (print_steps)
-								std::cout << termcolor::green << "Box Line Reduce (Column) : " << termcolor::magenta << static_cast<char> (i + 65) << i + 1 
+								std::cout << termcolor::green << "Box Line Reduce (Column) : " << termcolor::magenta << static_cast<char> (j + 65) << i + 1 
 									<< termcolor::reset << " : removes " << termcolor::green << n + 1 << termcolor::reset << " for rest of box\n";
 							return;
 						}
 					}
+	}
 }
 
 void CSudokuSolver::hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
@@ -914,43 +908,47 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 						{
 							for (auto pos3 : positions)
 							{
-								nums.clear();
-								for (int n = 0; n < 9; ++n)
+								if ((pos3.x > pos2.x || pos3.y > pos2.y) && (pos3.x > pos1.x || pos3.y > pos1.y)) 
 								{
-									if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
-											(sudoku_ans.box[pos1.x][pos1.y].num[n]
-											 || sudoku_ans.box[pos2.x][pos2.y].num[n]
-											 || sudoku_ans.box[pos3.x][pos3.y].num[n]))
-										nums.push_back(n);
-								}
-								if (nums.size() == 3)
-								{
-									for (int k = i; k < i + 3; ++k)
+									nums.clear();
+									for (int n = 0; n < 9; ++n)
 									{
-										for (int l = j; l < j + 3; ++l)
+										if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
+												(sudoku_ans.box[pos1.x][pos1.y].num[n]
+												 || sudoku_ans.box[pos2.x][pos2.y].num[n]
+												 || sudoku_ans.box[pos3.x][pos3.y].num[n]))
+											nums.push_back(n);
+									}
+									if (nums.size() == 3)
+									{
+										for (int k = i; k < i + 3; ++k)
 										{
-											if ((k != pos3.x || l != pos3.y) 
-													&& (k != pos2.x || l != pos2.y) 
-													&& (k != pos1.x || l != pos1.y) 
-													&& sudoku_ans.box[k][l].done == false)
+											for (int l = j; l < j + 3; ++l)
 											{
-												for (auto num : nums)
-													disablePos(sudoku_ans, num, k, l);
+												if ((k != pos3.x || l != pos3.y) 
+														&& (k != pos2.x || l != pos2.y) 
+														&& (k != pos1.x || l != pos1.y) 
+														&& sudoku_ans.box[k][l].done == false)
+												{
+													for (auto num : nums)
+														disablePos(sudoku_ans, num, k, l);
+												}
 											}
 										}
-									}
-									if (sudoku_ans.changed)
-									{
-										if (print_steps)
+										if (sudoku_ans.changed)
 										{
-											std::cout << termcolor::green << "Naked Triple (Box) : " << termcolor::magenta;
-											std::cout << static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1
-												<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " removes " << termcolor::green;
-											for (auto num : nums)
-												std::cout << num + 1 << ' ';
-											std::cout << termcolor::reset << '\n';
+											if (print_steps)
+											{
+												std::cout << termcolor::green << "Naked Triple (Box) : " << termcolor::magenta;
+												std::cout << static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' '  << static_cast<char> (pos2.x + 65) 
+													<< pos2.y + 1 << ' ' << static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset 
+													<< " removes " << termcolor::green;
+												for (auto num : nums)
+													std::cout << num + 1 << ' ';
+												std::cout << termcolor::reset << '\n';
+											}
+											return;
 										}
-										return;
 									}
 								}
 							}
@@ -1082,6 +1080,64 @@ void CSudokuSolver::xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 
 }
 
+void CSudokuSolver::bruteForce(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_a[9][9], bool print_steps)
+{
+	int copy_sudoku_a[9][9];
+	SUDOKU_ANS_BOARD copy_sudoku_ans = sudoku_ans;
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			copy_sudoku_a[i][j] = sudoku_a[i][j];
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+		{
+			if (copy_sudoku_ans.box[i][j].done == false)
+				for (int n = 0; n < 9; ++n)
+				{
+					if (copy_sudoku_ans.box[i][j].num[n])
+					{
+						finalize(copy_sudoku_ans, copy_sudoku_a, n, i, j);
+						while (count(copy_sudoku_a) < 81 && copy_sudoku_ans.changed) 
+						{
+							copy_sudoku_ans.changed = false;
+							checkColumns(copy_sudoku_ans, copy_sudoku_a, false);
+							checkRows(copy_sudoku_ans, copy_sudoku_a, false);
+							nakedSingle(copy_sudoku_ans, copy_sudoku_a, false);
+							checkBox(copy_sudoku_ans, copy_sudoku_a, false);
+							if (!copy_sudoku_ans.changed) 
+								boxLineReduceRow(copy_sudoku_ans, false);
+							if (!copy_sudoku_ans.changed)
+								boxLineReduceColumn(copy_sudoku_ans, false);
+							if (!copy_sudoku_ans.changed)
+								pointingBoxColumns(copy_sudoku_ans, false);
+							if (!copy_sudoku_ans.changed)
+								pointingBoxRows(copy_sudoku_ans, false);
+							if (!copy_sudoku_ans.changed)
+								nakedPair(copy_sudoku_ans, false);
+							if (!copy_sudoku_ans.changed)
+								nakedTriple(copy_sudoku_ans, false);
+							if (!copy_sudoku_ans.changed)
+								xWing(copy_sudoku_ans, false);
+						}
+						if (checkError(copy_sudoku_ans, copy_sudoku_a))
+						{
+							disablePos(sudoku_ans, n, i, j);
+							if (print_steps)
+								std::cout << termcolor::green << "Bowman's Bingo " << termcolor::reset << " : " << termcolor::magenta << static_cast<char> (i + 65) 
+									<< j + 1 << termcolor::reset << " removes " << termcolor::green << n + 1 << termcolor::reset << "\n";
+							return;
+						}
+						else
+						{
+							copy_sudoku_ans = sudoku_ans;
+							for (int i = 0; i < 9; ++i)
+								for (int j = 0; j < 9; ++j)
+									copy_sudoku_a[i][j] = sudoku_a[i][j];
+						}
+					}
+				}
+		}
+}
+
 bool CSudokuSolver::checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 {
 	int poss = 0;
@@ -1094,7 +1150,9 @@ bool CSudokuSolver::checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9])
 					if (sudoku_ans.box[i][j].num[n])
 						++poss;	
 				if (poss == 0)
+				{
 					return true;
+				}
 			}
 	return false;
 }
