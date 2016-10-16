@@ -908,7 +908,7 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 						{
 							for (auto pos3 : positions)
 							{
-								if (pos3.x > pos2.x || pos3.y > pos2.y)
+								if ((pos3.x > pos2.x || pos3.y > pos2.y) && (pos3.x > pos1.x || pos3.y > pos1.y)) 
 								{
 									nums.clear();
 									for (int n = 0; n < 9; ++n)
