@@ -6,13 +6,13 @@ You should compile it with `clang -std=c++11 -O3 Sudoku-solver.cpp main.cpp -o S
 You need a compiler capable of c++11
 
 ###Supported Fuctions :
-*Naked Singles/Pairs/Triples
+* Naked Singles/Pairs/Triples
 
-*Hidden Singles
+* Hidden Singles
 
-*Pointing Box Columns/Rows
+* Pointing Box Columns/Rows
 
-*Box Line Reduction
+* Box Line Reduction
 
 ###Usage
 Sudoku-solver [options] 
