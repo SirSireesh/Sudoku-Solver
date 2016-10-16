@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 					std::cout << "Sudoku-solver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
 					std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
 					std::cout << "This program is free software, and you are welcome to redistribute it under\n";
-					std::cout << "certain conditions; check license.txt for more details\n\n";
+					std::cout << "certain conditions; check license.txt for more details\n";
 					return 0;
 				case 'h':
 					std::cout << "Sudoku-solver : version 0.9 (Dharma)\n\n";
