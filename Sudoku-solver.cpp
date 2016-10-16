@@ -33,12 +33,12 @@ bool CSudokuSolver::inputSudoku(int sudoku_q[9][9])
 
 	if (input.length() < 81)
 	{
-		std::cout << termcolor::red << "The input was too small! Check your input and try again!\n";
+		std::cout << termcolor::red << "The input was too small! Check your input and try again!\n" << termcolor::reset;
 		return false;
 	}
 	if (input.length() > 81)
 	{
-		std::cout << termcolor::red << "The input was too large! Check your input and try again!\n";
+		std::cout << termcolor::red << "The input was too large! Check your input and try again!\n" << termcolor::reset;
 		return false;
 	}
 
