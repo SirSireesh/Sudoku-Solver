@@ -14,10 +14,12 @@ You need a compiler capable of c++11
 
 * Box Line Reduction
 
+* Trial and Error
+
 ###Usage
 Sudoku-solver [options] 
 
-The program accepts Sudokus from `stdin`. Blank boxes can be represented by spcaces, 0s or '.'s.
+The program accepts Sudokus from `stdin`. Blank boxes can be represented by spaces, 0s or '.'s.
 
 The options allowed are 
 
