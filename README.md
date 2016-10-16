@@ -14,6 +14,8 @@ You need a compiler capable of c++11
 
 * Box Line Reduction
 
+* X-Wing
+
 * Trial and Error
 
 ###Usage
