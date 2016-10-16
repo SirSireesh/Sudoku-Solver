@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 					std::cout << " -l\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
 					std::cout << " -i\t Read input from stdin (default)\n";
-					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving sudokus)\n";
+					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
 					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
 					std::cout << " -v\t Print version info and exit\n";
 					return 0;
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 					std::cout << " -l\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
 					std::cout << " -i\t Read input from stdin (default)\n";
-					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving sudokus)\n";
+					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
 					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
 					std::cout << " -v\t Print version info and exit\n";
 					return -1;
@@ -106,14 +106,16 @@ int main(int argc, char *argv[])
 	if (!initialiseSudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
 	{ 
 		std::cerr << "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
-		printSudoku(sudoku_q, sudoku_a, true);
+		printSudoku(sudoku_q);
 		std::cout << termcolor::red << "The sudoku contains " << count(sudoku_q) << " clues.\n" << termcolor::reset;
 		return -1;
 	}
 
 	if (!silent)
+	{
 		std::cout << "The given sudoku is :\n";
-	printSudoku(sudoku_q, sudoku_q, silent);
+		printfSudoku(sudoku_q, sudoku_a);
+	}
 
 	if (!silent)
 		std::cout << "Given : " << termcolor::red << count(sudoku_q) << termcolor::reset << '\n';
@@ -148,17 +150,18 @@ int main(int argc, char *argv[])
 	if (checkError(sudoku_ans, sudoku_a)) 
 	{
 		std::cerr << "Something went wrong!\n";
-		printSudoku(sudoku_q, sudoku_a, false);
+		printSudoku(sudoku_a);
 		return -3;
 	}
 
-	printSudoku(sudoku_q, sudoku_a, silent);
-
 	if (!silent)
 	{
+		printfSudoku(sudoku_q, sudoku_a);
 		std::cout << "Answered : " << termcolor::green << count(sudoku_a) << termcolor::reset << '\n';
 		std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
 	}
+	else 
+		printSudoku(sudoku_a);
 
 	return 0;
 }

@@ -32,7 +32,8 @@ namespace CSudokuSolver
 		struct SUDOKU_ANS box[9][9];
 	};
 
-	void printSudoku(int sudoku_q[9][9], int sudoku_a[9][9], bool print_min);		//print a given sudoku
+	void printSudoku(int sudoku_q[9][9]);							//unformatted pront a sudoku
+	void printfSudoku(int sudoku_q[9][9], int sudoku_a[9][9]);				//formatted print a given sudoku and its repective answer board
 	bool initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudoku_ans);		//initialse a sudoku from a given question board
 	void disableRow(SUDOKU_ANS_BOARD &sudoku_ans, int n, int row);				//disable every instance of n in a given row
 	void disableColumn(SUDOKU_ANS_BOARD &sudoku_ans, int n, int column);			//disable every instance of n in a given column

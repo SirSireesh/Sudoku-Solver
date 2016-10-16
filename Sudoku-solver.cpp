@@ -74,38 +74,36 @@ bool CSudokuSolver::initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudok
 	return true;
 }
 
-void CSudokuSolver::printSudoku(int sudoku_q[9][9], int sudoku_a[9][9], bool print_min)
+void CSudokuSolver::printSudoku(int sudoku_q[9][9])
 {
-	if (print_min)
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			std::cout << sudoku_q[i][j];
+	std::cout << '\n';
+}
+
+void CSudokuSolver::printfSudoku(int sudoku_q[9][9], int sudoku_a[9][9])
+{
+	std::cout << "\t\t   " << termcolor::magenta << "1 2 3 4 5 6 7 8 9\n";
+	for (int i = 0; i < 9; ++i) 
 	{
-		for (int i = 0; i < 9; ++i)
-			for (int j = 0; j < 9; ++j)
-				std::cout << sudoku_a[i][j];
-		std::cout << '\n';
-	}
-	else
-	{
-		std::cout << "\t\t   " << termcolor::magenta << "1 2 3 4 5 6 7 8 9\n";
-		for (int i = 0; i < 9; ++i) 
+		std::cout << "\t\t" << termcolor::magenta << static_cast<char> (i + 65) << termcolor::blue << " |"; 
+		for (int j = 0; j < 9; ++j)
 		{
-			std::cout << "\t\t" << termcolor::magenta << static_cast<char> (i + 65) << termcolor::blue << " |"; 
-			for (int j = 0; j < 9; ++j)
-			{
-				if (j - j % 3 == i - i % 3)
-					std::cout << termcolor::on_yellow;
-				else if (6 - (i - i % 3) == j - j % 3)
-					std::cout << termcolor::on_yellow;
-				else
-					std::cout << termcolor::on_white;
-				if (!sudoku_q[i][j] && sudoku_a[i][j])
-					std::cout << termcolor::red << sudoku_a[i][j] << termcolor::blue << "|";
-				else if (!sudoku_q[i][j] && !sudoku_a[i][j])
-					std::cout << termcolor::blue <<" |" << termcolor::reset;
-				else if (sudoku_q[i][j])
-					std::cout << termcolor::grey << sudoku_q[i][j] << termcolor::blue << "|";
-			}
-			std::cout << termcolor::reset << '\n';
+			if (j - j % 3 == i - i % 3)
+				std::cout << termcolor::on_yellow;
+			else if (6 - (i - i % 3) == j - j % 3)
+				std::cout << termcolor::on_yellow;
+			else
+				std::cout << termcolor::on_white;
+			if (!sudoku_q[i][j] && sudoku_a[i][j])
+				std::cout << termcolor::red << sudoku_a[i][j] << termcolor::blue << "|";
+			else if (!sudoku_q[i][j] && !sudoku_a[i][j])
+				std::cout << termcolor::blue <<" |" << termcolor::reset;
+			else if (sudoku_q[i][j])
+				std::cout << termcolor::grey << sudoku_q[i][j] << termcolor::blue << "|";
 		}
+		std::cout << termcolor::reset << '\n';
 	}
 }
 
