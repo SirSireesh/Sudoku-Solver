@@ -27,25 +27,26 @@ using namespace CSudokuSolver;
 
 int main(int argc, char *argv[])
 {
-	bool print_steps = false, silent = false;
+	bool print_steps = false, silent = false, logical = false;
 	while (--argc > 0 && (*++argv)[0] == '-')
 	{
 		char c;
 		while((c = *++argv[0]))
 			switch (c)
 			{
-				case 'l':
+				case 'a':
 					std::cout << "Sudoku-solver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
 					std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
 					std::cout << "This program is free software, and you are welcome to redistribute it under\n";
 					std::cout << "certain conditions; check license.txt for more details\n";
 					return 0;
 				case 'h':
-					std::cout << "Sudoku-solver : version 0.9 (Dharma)\n\n";
+					std::cout << "Sudoku-solver : version 0.9.1 (Dharma)\n\n";
 					std::cout << "usage : Sudoku-solver [arguments]\n";
 					std::cout << "Arguments:\n";
-					std::cout << " -l\t Print license info and exit\n";
+					std::cout << " -a\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
+					std::cout << " -l\t Sove the sudoku logically (no guesses/trial and error)\n";
 					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
 					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
 					std::cout << " -v\t Print version info and exit\n";
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case 'v' :
-					std::cout << "Sudoku-solver : version 0.9 (Dharma)\n";
+					std::cout << "Sudoku-solver : version 0.9.1 (Dharma)\n";
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
 				case 's' :
@@ -72,12 +73,16 @@ int main(int argc, char *argv[])
 						return 1;
 					}
 					break;
+				case 'l' :
+					logical = true;
+					break;
 				default :
 					std::cout << termcolor::red << "Invalid Option : " << c << termcolor::reset << '\n';
 					std::cout << "usage : Sudoku-solver [arguments]\n";
 					std::cout << "Arguments:\n";
-					std::cout << " -l\t Print license info and exit\n";
+					std::cout << " -a\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
+					std::cout << " -l\t Sove the sudoku logically (no guesses/trial and error)\n";
 					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
 					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
 					std::cout << " -v\t Print version info and exit\n";
@@ -139,7 +144,7 @@ int main(int argc, char *argv[])
 			boxLineReduceColumn(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
 			xWing(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
+		if (!sudoku_ans.changed && !logical)
 			bruteForce(sudoku_ans, sudoku_a, print_steps);
 	}
 
