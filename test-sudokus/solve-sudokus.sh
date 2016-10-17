@@ -4,4 +4,4 @@ testSudokus=~/Documents/School/11B/Computers/Sudoku-Solver/test-sudokus/test.sud
 
 echo "This program will solve all sudokus listed in test.sudoku using $program"
 
-while read in; do echo $in | $program -t; done < "$testSudokus"
+while read in; do echo $in | $program $*; done < "$testSudokus"
