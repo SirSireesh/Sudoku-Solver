@@ -1,7 +1,9 @@
 #Sudoku Solver
 This is a sudoku solving program.
 
-You should compile it with `clang -std=c++11 -O3 Sudoku-solver.cpp main.cpp -o Sudoku-solver` 
+You should compile it with `clang -std=c++11 -O3 -march=native Sudoku-solver.cpp main.cpp -o Sudoku-solver` 
+
+Note : gcc users must compile with `g++ -std=gnu++11 -O3 -march=native Sudoku-solver.cpp main.cpp -o Sudoku-solver`
 
 You need a compiler capable of c++11
 
@@ -25,7 +27,11 @@ The program accepts Sudokus from `stdin`. Blank boxes can be represented by spac
 
 The options allowed are 
 
+-a -- print license
+
 -h -- Print help menu
+
+-l -- Use logic only to solve a sudoku (no trial and error)
 
 -t -- Print the method used to solve the Sudoku
 
