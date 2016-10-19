@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 		if (!sudoku_ans.changed)
 			xWing(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed && !logical)
-			bruteForce(sudoku_ans, sudoku_a, print_steps);
+			trialError(sudoku_ans, sudoku_a, print_steps);
 	}
 
 	auto eTime = std::chrono::high_resolution_clock::now();	

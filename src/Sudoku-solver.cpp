@@ -1080,7 +1080,7 @@ void CSudokuSolver::xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 
 }
 
-void CSudokuSolver::bruteForce(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_a[9][9], bool print_steps)
+void CSudokuSolver::trialError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_a[9][9], bool print_steps)
 {
 	int copy_sudoku_a[9][9];
 	SUDOKU_ANS_BOARD copy_sudoku_ans = sudoku_ans;
@@ -1122,9 +1122,21 @@ void CSudokuSolver::bruteForce(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_a[9][9],
 						{
 							disablePos(sudoku_ans, n, i, j);
 							if (print_steps)
-								std::cout << termcolor::green << "Bowman's Bingo " << termcolor::reset << ": " << termcolor::magenta << static_cast<char> (i + 65) 
+								std::cout << termcolor::green << "Trial and Error " << termcolor::reset << ": " << termcolor::magenta << static_cast<char> (i + 65) 
 									<< j + 1 << termcolor::reset << ' ' << termcolor::green << n + 1 << termcolor::reset << " is not possible here\n";
 							return;
+						}
+						else if (count(copy_sudoku_a) == 81)
+						{
+							sudoku_ans = copy_sudoku_ans;
+							for (int i = 0; i < 9; ++i)
+								for (int j = 0; j < 9; ++j)
+									sudoku_a[i][j] = copy_sudoku_a[i][j];
+							if (print_steps)
+								std::cout << termcolor::green << "Trial and Error " << termcolor::reset << ": Guessing " << termcolor::green << n + 1 << termcolor::reset
+									<< " at " << termcolor::magenta << static_cast<char> (i + 65) << j + 1 << termcolor::reset << "-> Arrived at solution!\n";
+							return;
+
 						}
 						else
 						{
