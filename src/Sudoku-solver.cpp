@@ -854,10 +854,9 @@ void CSudokuSolver::nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									{
 										if (print_steps)
 										{
-											std::cout << termcolor::green << "Naked Triple (Row) : ";
-											for (auto column : columns)
-												std::cout << static_cast<char> (i + 65) << column + 1 << ' ';
-											std::cout << termcolor::reset << "removes " << termcolor::green;
+											std::cout << termcolor::green << "Naked Triple (Row) : " << termcolor::magenta << 
+												static_cast<char> (i + 65) << column1 + 1 << ' ' << static_cast<char> (i + 65) << column2 + 1 << ' ' <<
+												static_cast<char> (i + 65) << column3 + 1 << termcolor::reset << "removes " << termcolor::green;
 											for (auto num : nums)
 												std::cout << num + 1 << ' ';
 											std::cout << termcolor::reset << '\n';
