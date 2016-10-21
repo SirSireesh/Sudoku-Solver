@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F030A4FB1DAFD00C00D8783A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F030A4F61DAFD00C00D8783A /* main.cpp */; };
-		F030A4FC1DAFD00C00D8783A /* Sudoku-solver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F030A4F81DAFD00C00D8783A /* Sudoku-solver.cpp */; };
+		F06C433B1DBA546700D38A7A /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = F06C433A1DBA546700D38A7A /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,11 +24,9 @@
 
 /* Begin PBXFileReference section */
 		F030A4F51DAFD00C00D8783A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		F030A4F61DAFD00C00D8783A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		F030A4F71DAFD00C00D8783A /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		F030A4F81DAFD00C00D8783A /* Sudoku-solver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Sudoku-solver.cpp"; sourceTree = "<group>"; };
-		F030A4F91DAFD00C00D8783A /* Sudoku-solver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Sudoku-solver.h"; sourceTree = "<group>"; };
-		F030A4FA1DAFD00C00D8783A /* sudoku.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sudoku.txt; sourceTree = "<group>"; };
+		F06C43381DBA546200D38A7A /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		F06C43391DBA546200D38A7A /* test-sudokus */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "test-sudokus"; sourceTree = "<group>"; };
+		F06C433A1DBA546700D38A7A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		F07F4D6E1DAFCD3F00209F66 /* Sudoku-solver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Sudoku-solver"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -48,11 +45,9 @@
 			isa = PBXGroup;
 			children = (
 				F030A4F51DAFD00C00D8783A /* LICENSE */,
-				F030A4F61DAFD00C00D8783A /* main.cpp */,
-				F030A4F71DAFD00C00D8783A /* README */,
-				F030A4F81DAFD00C00D8783A /* Sudoku-solver.cpp */,
-				F030A4F91DAFD00C00D8783A /* Sudoku-solver.h */,
-				F030A4FA1DAFD00C00D8783A /* sudoku.txt */,
+				F06C433A1DBA546700D38A7A /* README.md */,
+				F06C43381DBA546200D38A7A /* src */,
+				F06C43391DBA546200D38A7A /* test-sudokus */,
 				F07F4D701DAFCD3F00209F66 /* Sudoku-solver */,
 				F07F4D6F1DAFCD3F00209F66 /* Products */,
 			);
@@ -131,8 +126,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F030A4FB1DAFD00C00D8783A /* main.cpp in Sources */,
-				F030A4FC1DAFD00C00D8783A /* Sudoku-solver.cpp in Sources */,
+				F06C433B1DBA546700D38A7A /* README.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,8 +175,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wextra",
+				);
 			};
 			name = Debug;
 		};
@@ -208,7 +206,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
-				CONFIGURATION_BUILD_DIR = ./bin/release;
+				CONFIGURATION_BUILD_DIR = bin/release;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -230,19 +228,25 @@
 		F07F4D761DAFCD3F00209F66 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = "0.8 (Calvin)";
+				CURRENT_PROJECT_VERSION = "0.9.1 (Doctor)";
 				DEVELOPMENT_TEAM = 2M2HP8X3QP;
+				INSTALL_PATH = /opt/local/bin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "";
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wextra",
+				);
 			};
 			name = Debug;
 		};
 		F07F4D771DAFCD3F00209F66 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CONFIGURATION_BUILD_DIR = ./bin/release;
-				CURRENT_PROJECT_VERSION = "0.8 (Calvin)";
+				CONFIGURATION_BUILD_DIR = bin/release;
+				CURRENT_PROJECT_VERSION = "0.9.1 (Doctor)";
 				DEVELOPMENT_TEAM = 2M2HP8X3QP;
+				INSTALL_PATH = /opt/local/bin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "";
 			};
