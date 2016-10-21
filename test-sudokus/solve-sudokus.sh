@@ -1,6 +1,6 @@
 #!/bin/bash
-program=~/Documents/School/11B/Computers/Sudoku-Solver/bin/Sudoku-solver
-testSudokus=~/Documents/School/11B/Computers/Sudoku-Solver/test-sudokus/test.sudoku
+program=${BASH_SOURCE%/*}/../bin/Sudoku-solver
+testSudokus=${BASH_SOURCE%/*}/test.sudoku
 
 echo "This program will solve all sudokus listed in test.sudoku using $program"
 
