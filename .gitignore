@@ -2,3 +2,8 @@
 /bin
 /.DS_STORE
 autom4te.cache
+missing
+install-sh
+compile
+aclocal.m4
+configure
