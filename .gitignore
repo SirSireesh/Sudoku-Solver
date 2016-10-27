@@ -1,3 +1,4 @@
 #ignore bin directory
 /bin
 /.DS_STORE
+autom4te.cache
