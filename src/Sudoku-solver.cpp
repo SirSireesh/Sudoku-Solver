@@ -196,7 +196,7 @@ void CSudokuSolver::checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9
 						{
 							finalize(sudoku_ans, sudoku_q, n, j, i);
 							if (print_steps)
-								std::cout << termcolor::green << "Hidden Single : " << termcolor::magenta << static_cast<char> (j + 65) << i + 1 
+								std::cout << termcolor::green << "Single : " << termcolor::magenta << static_cast<char> (j + 65) << i + 1 
 									<< termcolor::reset << " set to " << termcolor::green << n + 1 << termcolor::reset << " : unique in column\n";
 						}
 					}
@@ -226,7 +226,7 @@ void CSudokuSolver::checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], 
 						{
 							finalize(sudoku_ans, sudoku_q, n, i, j);
 							if (print_steps)
-								std::cout << termcolor::green << "Hidden Single : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1 
+								std::cout << termcolor::green << "Single : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1 
 									<< termcolor::reset <<" set to " << termcolor::green << n + 1 << termcolor::reset << " : unique in row\n";
 						}
 					}
@@ -263,7 +263,7 @@ void CSudokuSolver::checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], b
 								{
 									finalize(sudoku_ans, sudoku_q, n, k, l);
 									if (print_steps)
-										std::cout << termcolor::green << "Hidden Single : " << termcolor::magenta << static_cast<char> (k + 65) << l + 1 
+										std::cout << termcolor::green << "Single : " << termcolor::magenta << static_cast<char> (k + 65) << l + 1 
 											<< termcolor::reset << " set to " << termcolor::green << n + 1 << termcolor::reset << " : unique in 3x3 box\n";
 								}
 							}
