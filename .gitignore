@@ -10,3 +10,5 @@ config.log
 decomp
 install-sh
 missing
+aclocal.m4
+depcomp
