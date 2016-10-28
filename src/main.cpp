@@ -35,13 +35,13 @@ int main(int argc, char *argv[])
 			switch (c)
 			{
 				case 'a':
-					std::cout << "Sudoku-solver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
+					std::cout << "ssolver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
 					std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
 					std::cout << "This program is free software, and you are welcome to redistribute it under\n";
 					std::cout << "certain conditions; check license.txt for more details\n";
 					return 0;
 				case 'h':
-					std::cout << "Sudoku-solver : version 0.9.1 (Doctor)\n\n";
+					std::cout << "ssolver : version 0.9.1 (Doctor)\n\n";
 					std::cout << "usage : Sudoku-solver [arguments]\n";
 					std::cout << "Arguments:\n";
 					std::cout << " -a\t Print license info and exit\n";
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case 'v' :
-					std::cout << "Sudoku-solver : version 0.9.1 (Doctor)\n";
+					std::cout << "ssolver : version 0.9.1 (Doctor)\n";
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
 				case 's' :
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 					break;
 				default :
 					std::cout << termcolor::red << "Invalid Option : " << c << termcolor::reset << '\n';
-					std::cout << "usage : Sudoku-solver [arguments]\n";
+					std::cout << "usage : ssolver [arguments]\n";
 					std::cout << "Arguments:\n";
 					std::cout << " -a\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
