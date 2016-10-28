@@ -1,1 +1,1 @@
-man_MANS = sudoku-solver.6
+man_MANS = ssolver.6
