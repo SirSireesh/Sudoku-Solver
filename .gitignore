@@ -18,3 +18,4 @@ docs/Makefile
 src/.deps
 src/Makefile
 stamp-h1
+src/Makefile.in

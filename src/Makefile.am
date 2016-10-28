@@ -4,5 +4,5 @@ LDFLAGS =
 
 # this lists the binaries to produce, the (non-PHONY, binary) targets in
 # the previous manual Makefile
-bin_PROGRAMS = "ssolver"
+bin_PROGRAMS = ssolver
 ssolver_SOURCES = main.cpp Sudoku-solver.cpp
