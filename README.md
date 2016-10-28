@@ -53,3 +53,5 @@ The options allowed are
 -s -- Silently solve the sudoku and print unformatted output (i.e. output is in a single line)
 
 -v -- Print version and exit
+
+If you installed using the above instructions, you can always run `man ssolver`
