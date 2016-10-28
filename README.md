@@ -20,6 +20,19 @@ You need a compiler capable of c++11
 
 * Trial and Error
 
+###Installing
+You can run 
+
+`autoconf` 
+
+`automake` 
+
+`make` 
+
+`make install` 
+
+in that order to istall the program to `/opt/local/bin`
+
 ###Usage
 ssolver [options] 
 
