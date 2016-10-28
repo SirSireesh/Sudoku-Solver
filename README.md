@@ -27,6 +27,8 @@ You can run
 
 `automake` 
 
+`./configure`
+
 `make` 
 
 `make install` 
