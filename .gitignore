@@ -12,3 +12,9 @@ install-sh
 missing
 aclocal.m4
 depcomp
+Makefile
+config.h
+docs/Makefile
+src/.deps
+src/Makefile
+stamp-h1

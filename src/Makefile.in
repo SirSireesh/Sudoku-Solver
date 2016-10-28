@@ -86,8 +86,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = targetbinary1$(EXEEXT) targetbinary2$(EXEEXT) \
-	[...]$(EXEEXT) targetbinaryN$(EXEEXT)
+bin_PROGRAMS = "sudoku-solver"$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -100,18 +99,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-______SOURCES = [...c
-______OBJECTS = [...$(OBJEXT)
-______LDADD = $(LDADD)
-am_targetbinary1_OBJECTS = targetbinary1.$(OBJEXT)
-targetbinary1_OBJECTS = $(am_targetbinary1_OBJECTS)
-targetbinary1_LDADD = $(LDADD)
-am_targetbinary2_OBJECTS = targetbinary2.$(OBJEXT)
-targetbinary2_OBJECTS = $(am_targetbinary2_OBJECTS)
-targetbinary2_LDADD = $(LDADD)
-am_targetbinaryN_OBJECTS =
-targetbinaryN_OBJECTS = $(am_targetbinaryN_OBJECTS)
-targetbinaryN_LDADD = $(LDADD)
+_sudoku_solver__SOURCES = "sudoku-solver".c
+_sudoku_solver__OBJECTS = "sudoku-solver".$(OBJEXT)
+_sudoku_solver__LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -140,10 +130,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = [...c $(targetbinary1_SOURCES) $(targetbinary2_SOURCES) \
-	$(targetbinaryN_SOURCES)
-DIST_SOURCES = [...c $(targetbinary1_SOURCES) $(targetbinary2_SOURCES) \
-	$(targetbinaryN_SOURCES)
+SOURCES = "sudoku-solver".c
+DIST_SOURCES = "sudoku-solver".c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -263,9 +251,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-targetbinary1_SOURCES = targetbinary1.c myheader.h [...]
-targetbinary2_SOURCES = targetbinary2.c
-targetbinaryN_SOURCES = targetbinaryN.c]])
+sudoku_solver_SOURCES = main.cpp Sudoku-solver.cpp
 all: all-am
 
 .SUFFIXES:
@@ -342,21 +328,9 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
-[...]$(EXEEXT): $(______OBJECTS) $(______DEPENDENCIES) $(EXTRA_______DEPENDENCIES) 
-	@rm -f [...]$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(______OBJECTS) $(______LDADD) $(LIBS)
-
-targetbinary1$(EXEEXT): $(targetbinary1_OBJECTS) $(targetbinary1_DEPENDENCIES) $(EXTRA_targetbinary1_DEPENDENCIES) 
-	@rm -f targetbinary1$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(targetbinary1_OBJECTS) $(targetbinary1_LDADD) $(LIBS)
-
-targetbinary2$(EXEEXT): $(targetbinary2_OBJECTS) $(targetbinary2_DEPENDENCIES) $(EXTRA_targetbinary2_DEPENDENCIES) 
-	@rm -f targetbinary2$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(targetbinary2_OBJECTS) $(targetbinary2_LDADD) $(LIBS)
-
-targetbinaryN$(EXEEXT): $(targetbinaryN_OBJECTS) $(targetbinaryN_DEPENDENCIES) $(EXTRA_targetbinaryN_DEPENDENCIES) 
-	@rm -f targetbinaryN$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(targetbinaryN_OBJECTS) $(targetbinaryN_LDADD) $(LIBS)
+"sudoku-solver"$(EXEEXT): $(_sudoku_solver__OBJECTS) $(_sudoku_solver__DEPENDENCIES) $(EXTRA__sudoku_solver__DEPENDENCIES) 
+	@rm -f "sudoku-solver"$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(_sudoku_solver__OBJECTS) $(_sudoku_solver__LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -364,9 +338,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/[...Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/targetbinary1.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/targetbinary2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/"sudoku-solver".Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -588,8 +560,6 @@ uninstall-am: uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
 
-.
-.
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
