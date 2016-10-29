@@ -127,9 +127,12 @@ int main(int argc, char *argv[])
 	{
 		sudoku_ans.changed = false;
 		nakedSingle(sudoku_ans, sudoku_a, print_steps);
-		checkColumns(sudoku_ans, sudoku_a, print_steps);
-		checkRows(sudoku_ans, sudoku_a, print_steps);
-		checkBox(sudoku_ans, sudoku_a, print_steps);
+		if (!sudoku_ans.changed)
+		{
+			checkColumns(sudoku_ans, sudoku_a, print_steps);
+			checkRows(sudoku_ans, sudoku_a, print_steps);
+			checkBox(sudoku_ans, sudoku_a, print_steps);
+		}
 		if (!sudoku_ans.changed) 
 			nakedPair(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
