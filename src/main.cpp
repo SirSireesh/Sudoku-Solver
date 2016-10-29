@@ -126,9 +126,9 @@ int main(int argc, char *argv[])
 	while (count(sudoku_a) < 81 && sudoku_ans.changed) 
 	{
 		sudoku_ans.changed = false;
+		nakedSingle(sudoku_ans, sudoku_a, print_steps);
 		checkColumns(sudoku_ans, sudoku_a, print_steps);
 		checkRows(sudoku_ans, sudoku_a, print_steps);
-		nakedSingle(sudoku_ans, sudoku_a, print_steps);
 		checkBox(sudoku_ans, sudoku_a, print_steps);
 		if (!sudoku_ans.changed) 
 			nakedPair(sudoku_ans, print_steps);
@@ -144,6 +144,8 @@ int main(int argc, char *argv[])
 			boxLineReduceColumn(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed)
 			xWing(sudoku_ans, print_steps);
+		if (!sudoku_ans.changed)
+			yWing(sudoku_ans, print_steps);
 		if (!sudoku_ans.changed && !logical)
 			trialError(sudoku_ans, sudoku_a, print_steps);
 	}
