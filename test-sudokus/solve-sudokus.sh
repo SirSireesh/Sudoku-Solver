@@ -1,5 +1,5 @@
 #!/bin/bash
-program=${BASH_SOURCE%/*}/../bin/Sudoku-solver
+program=${BASH_SOURCE%/*}/../bin/ssolver
 testSudokus=${BASH_SOURCE%/*}/test.sudoku
 
 echo "This program will solve all sudokus listed in test.sudoku using $program"
