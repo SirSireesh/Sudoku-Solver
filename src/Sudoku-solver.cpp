@@ -985,7 +985,7 @@ void CSudokuSolver::xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							{
 								if (print_steps)
 								{
-									std::cout << termcolor::green << "X Wing (Rows) : " << termcolor::magenta;
+									std::cout << termcolor::cyan << "X-Wing (Rows) : " << termcolor::magenta;
 									for (auto column : columns)
 									{
 										std::cout << static_cast<char> (i + 65) << column + 1 << ' ';
@@ -1042,7 +1042,7 @@ void CSudokuSolver::xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 							{
 								if (print_steps)
 								{
-									std::cout << termcolor::green << "X Wing (Columns) : " << termcolor::magenta;
+									std::cout << termcolor::cyan << "X-Wing (Columns)" << termcolor::reset << " : " << termcolor::magenta;
 									for (auto row : rows)
 									{
 										std::cout << static_cast<char> (row + 65) << i + 1 << ' ';
@@ -1245,10 +1245,10 @@ void CSudokuSolver::yWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									{
 										std::cout << termcolor::cyan << "Y-Wing (Columns)" << termcolor::reset << " : " << termcolor::magenta 
 											<< static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1 << ' ' 
-											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " made of " << termcolor::green;
+											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " containing " << termcolor::green;
 										for (auto num : nums)
 											std::cout << num + 1 << ' ';
-										std::cout << termcolor::reset << '\n';
+										std::cout << termcolor::reset << "removes " << common_num + 1 << '\n';
 									}
 									return;
 								}
@@ -1269,10 +1269,10 @@ void CSudokuSolver::yWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									{
 										std::cout << termcolor::cyan << "Y-Wing (Columns)" << termcolor::reset << " : " << termcolor::magenta 
 											<< static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1 << ' ' 
-											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " made of " << termcolor::green;
+											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " containing " << termcolor::green;
 										for (auto num : nums)
 											std::cout << num + 1 << ' ';
-										std::cout << termcolor::reset << '\n';
+										std::cout << termcolor::reset << "removes " << common_num + 1 << '\n';
 									}
 									return;
 								}
@@ -1312,10 +1312,10 @@ void CSudokuSolver::yWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									{
 										std::cout << termcolor::cyan << "Y-Wing (Rows)" << termcolor::reset << " : " << termcolor::magenta 
 											<< static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1 << ' ' 
-											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " made of " << termcolor::green;
+											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " containing " << termcolor::green;
 										for (auto num : nums)
 											std::cout << num + 1 << ' ';
-										std::cout << termcolor::reset << '\n';
+										std::cout << termcolor::reset << "removes " << common_num + 1 << '\n';
 									}
 									return;
 								}
@@ -1335,10 +1335,10 @@ void CSudokuSolver::yWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 									{
 										std::cout << termcolor::cyan << "Y-Wing (Rows)" << termcolor::reset << " : " << termcolor::magenta 
 											<< static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1 << ' ' 
-											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " made of " << termcolor::green;
+											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " containing " << termcolor::green;
 										for (auto num : nums)
 											std::cout << num + 1 << ' ';
-										std::cout << termcolor::reset << '\n';
+										std::cout << termcolor::reset << "removes " << common_num + 1 << '\n';
 									}
 									return;
 								}
