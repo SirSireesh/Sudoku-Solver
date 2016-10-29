@@ -18,6 +18,8 @@ You need a compiler capable of c++11
 
 * X-Wing
 
+* Y-Wing
+
 * Trial and Error
 
 ###Installing

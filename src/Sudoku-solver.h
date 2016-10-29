@@ -31,6 +31,10 @@ namespace CSudokuSolver
 		bool changed;
 		struct SUDOKU_ANS box[9][9];
 	};
+	struct POINT {
+		int x;
+		int y;
+	};
 
 	void printSudoku(int sudoku_q[9][9]);							//unformatted print a sudoku
 	void printfSudoku(int sudoku_q[9][9], int sudoku_a[9][9]);				//formatted print a given sudoku and its repective answer board
@@ -43,6 +47,8 @@ namespace CSudokuSolver
 	int count(int sudoku_q[9][9]);								//count the number of determined answers in a given sudoku
 	bool checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_a[9][9]);			//check if something went wrong
 	bool inputSudoku(int sudoku_q[9][9]);							//take a sudoku for stdin
+	int numCommon(SUDOKU_ANS_BOARD sudoku_ans, POINT pos1, POINT pos2);			//return the number of common possibilities
+	int getCommon(SUDOKU_ANS_BOARD sudoku_ans, POINT pos1, POINT pos2);			//return the common number between 2 positions
 
 	void checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check the rows of a given sudoku for a number only possible in one place in the row
 	void checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check the columns of a given sudoku for a number only possible in one place in the column
@@ -57,5 +63,6 @@ namespace CSudokuSolver
 	void nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//search for naked triples
 	void hiddenTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//TODO:Search for hidden triples
 	void xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//x-wing algorithm
+	void yWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//y-wing algorithm
 	void trialError(SUDOKU_ANS_BOARD &sudoku_q, int sudoku_a[9][9], bool print_steps);	//brute force the solution (Bowman's Bingo')
 }
