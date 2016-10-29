@@ -1310,7 +1310,7 @@ void CSudokuSolver::yWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps)
 								{
 									if (print_steps)
 									{
-										std::cout << termcolor::cyan << "Y-Wing 1 (Rows)" << termcolor::reset << " : " << termcolor::magenta 
+										std::cout << termcolor::cyan << "Y-Wing (Rows)" << termcolor::reset << " : " << termcolor::magenta 
 											<< static_cast<char> (pos1.x + 65) << pos1.y + 1 << ' ' << static_cast<char> (pos2.x + 65) << pos2.y + 1 << ' ' 
 											<< static_cast<char> (pos3.x + 65) << pos3.y + 1 << termcolor::reset << " made of " << termcolor::green;
 										for (auto num : nums)
