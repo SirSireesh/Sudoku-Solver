@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 					std::cout << "certain conditions; check license.txt for more details\n";
 					return 0;
 				case 'h':
-					std::cout << "ssolver : version 0.10.1 (Eliza)\n\n";
+					std::cout << "ssolver : version 0.10.2 (Eliza)\n\n";
 					std::cout << "usage : Sudoku-solver [arguments]\n";
 					std::cout << "Arguments:\n";
 					std::cout << " -a\t Print license info and exit\n";
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case 'v' :
-					std::cout << "ssolver : version 0.10.1 (Eliza)\n";
+					std::cout << "ssolver : version 0.10.2 (Eliza)\n";
 					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
 					return 0;
 				case 's' :
@@ -90,86 +90,80 @@ int main(int argc, char *argv[])
 			}
 	}
 
-	SUDOKU_ANS_BOARD sudoku_ans;
-	int sudoku_q[9][9];
+	SUDOKU sudoku;
 
-	if (!inputSudoku(sudoku_q))
+	if (!getSudoku(sudoku))
 	{
 		std::cout << "Exiting ...\n";
 		return -2;
 	}
 
-	int sudoku_a[9][9];
-	for (int i = 0; i < 9; ++i)
-		for (int j = 0; j < 9; ++j)
-			sudoku_a[i][j] = sudoku_q[i][j];
-
-	if (!initialiseSudoku(sudoku_q, sudoku_ans) || count(sudoku_q) < 17) 
+	if (!initialiseSudoku(sudoku) || count(sudoku.sudoku_q) < 17) 
 	{ 
-		std::cerr << "The input sudoku is invalid! It contains too few numbers or an impossible question.\n";
-		printSudoku(sudoku_q);
-		std::cout << termcolor::red << "The sudoku contains " << count(sudoku_q) << " clues.\n" << termcolor::reset;
+		std::cerr << "The input sudoku is invalid! It contains too few clues or an impossible question.\n";
+		printSudoku(sudoku.sudoku_q);
+		std::cout << termcolor::red << "The sudoku contains " << count(sudoku.sudoku_q) << " clues.\n" << termcolor::reset;
 		return -1;
 	}
 
 	if (!silent)
 	{
 		std::cout << "The given sudoku is :\n";
-		printfSudoku(sudoku_q, sudoku_a);
+		printfSudoku(sudoku);
 	}
 
 	if (!silent)
-		std::cout << "Given : " << termcolor::red << count(sudoku_q) << termcolor::reset << '\n';
+		std::cout << "Given : " << termcolor::red << count(sudoku.sudoku_q) << termcolor::reset << '\n';
 
 	auto sTime = std::chrono::high_resolution_clock::now();
 
-	while (count(sudoku_a) < 81 && sudoku_ans.changed) 
+	while (count(sudoku.sudoku_a) < 81 && sudoku.changed) 
 	{
-		sudoku_ans.changed = false;
-		nakedSingle(sudoku_ans, sudoku_a, print_steps);
-		if (!sudoku_ans.changed)
+		sudoku.changed = false;
+		nakedSingle(sudoku, print_steps);
+		if (!sudoku.changed)
 		{
-			checkColumns(sudoku_ans, sudoku_a, print_steps);
-			checkRows(sudoku_ans, sudoku_a, print_steps);
-			checkBox(sudoku_ans, sudoku_a, print_steps);
+			checkColumns(sudoku, print_steps);
+			checkRows(sudoku, print_steps);
+			checkBox(sudoku, print_steps);
 		}
-		if (!sudoku_ans.changed) 
-			nakedPair(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
-			nakedTriple(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
-			pointingBoxColumns(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
-			pointingBoxRows(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
-			boxLineReduceRow(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
-			boxLineReduceColumn(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
-			xWing(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed)
-			yWing(sudoku_ans, print_steps);
-		if (!sudoku_ans.changed && !logical)
-			trialError(sudoku_ans, sudoku_a, print_steps);
+		if (!sudoku.changed) 
+			nakedPair(sudoku, print_steps);
+		if (!sudoku.changed)
+			nakedTriple(sudoku, print_steps);
+		if (!sudoku.changed)
+			pointingBoxColumns(sudoku, print_steps);
+		if (!sudoku.changed)
+			pointingBoxRows(sudoku, print_steps);
+		if (!sudoku.changed)
+			boxLineReduceRow(sudoku, print_steps);
+		if (!sudoku.changed)
+			boxLineReduceColumn(sudoku, print_steps);
+		if (!sudoku.changed)
+			xWing(sudoku, print_steps);
+		if (!sudoku.changed)
+			yWing(sudoku, print_steps);
+		if (!sudoku.changed && !logical)
+			trialError(sudoku, print_steps);
 	}
 
 	auto eTime = std::chrono::high_resolution_clock::now();	
 
-	if (checkError(sudoku_ans, sudoku_a)) 
+	if (checkError(sudoku)) 
 	{
 		std::cerr << "Something went wrong!\n";
-		printSudoku(sudoku_a);
+		printSudoku(sudoku.sudoku_a);
 		return -3;
 	}
 
 	if (!silent)
 	{
-		printfSudoku(sudoku_q, sudoku_a);
-		std::cout << "Answered : " << termcolor::green << count(sudoku_a) << termcolor::reset << '\n';
+		printfSudoku(sudoku);
+		std::cout << "Answered : " << termcolor::green << count(sudoku.sudoku_a) << termcolor::reset << '\n';
 		std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
 	}
 	else 
-		printSudoku(sudoku_a);
+		printSudoku(sudoku.sudoku_a);
 
 	return 0;
 }

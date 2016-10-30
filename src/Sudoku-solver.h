@@ -28,41 +28,46 @@ namespace CSudokuSolver
 		bool num[9] = {true, true, true, true, true, true, true, true, true};
 	};
 	struct SUDOKU_ANS_BOARD {
-		bool changed;
 		struct SUDOKU_ANS box[9][9];
+	};
+	struct SUDOKU {
+		bool changed = true;
+		int sudoku_q[9][9];
+		int sudoku_a[9][9];
+		SUDOKU_ANS_BOARD sudoku_ans;
 	};
 	struct POINT {
 		int x;
 		int y;
 	};
 
+	bool getSudoku(SUDOKU &sudoku);								//take a sudoku for stdin
+	bool initialiseSudoku(SUDOKU &sudoku);							//initialse a sudoku from a given question board
 	void printSudoku(int sudoku_q[9][9]);							//unformatted print a sudoku
-	void printfSudoku(int sudoku_q[9][9], int sudoku_a[9][9]);				//formatted print a given sudoku and its repective answer board
-	bool initialiseSudoku(int sudoku_q[9][9], SUDOKU_ANS_BOARD &sudoku_ans);		//initialse a sudoku from a given question board
-	void disableRow(SUDOKU_ANS_BOARD &sudoku_ans, int n, int row);				//disable every instance of n in a given row
-	void disableColumn(SUDOKU_ANS_BOARD &sudoku_ans, int n, int column);			//disable every instance of n in a given column
-	void disableBox(SUDOKU_ANS_BOARD &sudoku_ans, int n, int x, int y);			//disable every instance of n in a given box
-	void disablePos(SUDOKU_ANS_BOARD &sudoku_ans, int n, int x, int y);			//disable n for a given position
-	void finalize(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], int n, int x, int y);	//finalize n for a given position
+	void printfSudoku(SUDOKU sudoku);							//formatted print a given sudoku and its repective answer board
+	void disablePos(SUDOKU &sudoku, int n, int x, int y);					//disable n for a given position
+	void disableRow(SUDOKU &sudoku, int n, int row);						//disable every instance of n in a given row
+	void disableColumn(SUDOKU &sudoku, int n, int column);					//disable every instance of n in a given column
+	void disableBox(SUDOKU &sudoku, int n, int x, int y);					//disable every instance of n in a given box
+	void finalize(SUDOKU &sudoku, int n, int x, int y, bool init);				//finalize n for a given position
 	int count(int sudoku_q[9][9]);								//count the number of determined answers in a given sudoku
-	bool checkError(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_a[9][9]);			//check if something went wrong
-	bool inputSudoku(int sudoku_q[9][9]);							//take a sudoku for stdin
-	int numCommon(SUDOKU_ANS_BOARD sudoku_ans, POINT pos1, POINT pos2);			//return the number of common possibilities
-	int getCommon(SUDOKU_ANS_BOARD sudoku_ans, POINT pos1, POINT pos2);			//return the common number between 2 positions
+	bool checkError(SUDOKU sudoku);								//check if something went wrong
+	int numCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the number of common possibilities
+	int getCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the common number between 2 positions
 
-	void checkRows(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check the rows of a given sudoku for a number only possible in one place in the row
-	void checkColumns(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check the columns of a given sudoku for a number only possible in one place in the column
-	void nakedSingle(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check all the positions in a sudoku for a number that is the sole possibility in the box
-	void checkBox(SUDOKU_ANS_BOARD &sudoku_ans, int sudoku_q[9][9], bool print_steps);	//check each 3x3 box of a sudoku for a number who has only one spot
-	void pointingBoxRows(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//check each 3x3 box of sudoku's rows for a number whose sole possiblities lie in that row
-	void pointingBoxColumns(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);		//check each 3x3 box of sudoku's columns for a number whose sole possiblities lie in that column
-	void boxLineReduceRow(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
-	void boxLineReduceColumn(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);		//check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
-	void nakedPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//look for a naked pair
-	void hiddenPair(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//search for hidden pairs TODO:Test if it truly works 
-	void nakedTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//search for naked triples
-	void hiddenTriple(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);			//TODO:Search for hidden triples
-	void xWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//x-wing algorithm
-	void yWing(SUDOKU_ANS_BOARD &sudoku_ans, bool print_steps);				//y-wing algorithm
-	void trialError(SUDOKU_ANS_BOARD &sudoku_q, int sudoku_a[9][9], bool print_steps);	//brute force the solution (Bowman's Bingo')
+	void nakedSingle(SUDOKU &sudoku, bool print_steps);					//check all the positions in a sudoku for a number that is the sole possibility in the box
+	void checkRows(SUDOKU &sudoku, bool print_steps);					//check the rows of a given sudoku for a number only possible in one place in the row
+	void checkColumns(SUDOKU &sudoku, bool print_steps);					//check the columns of a given sudoku for a number only possible in one place in the column
+	void checkBox(SUDOKU &sudoku, bool print_steps);					//check each 3x3 box of a sudoku for a number who has only one spot
+	void nakedPair(SUDOKU &sudoku, bool print_steps);					//look for a naked pair
+	void nakedTriple(SUDOKU &sudoku, bool print_steps);					//search for naked triples
+	void hiddenPair(SUDOKU &sudoku, bool print_steps);					//search for hidden pairs TODO:Test if it truly works 
+	void hiddenTriple(SUDOKU &sudoku, bool print_steps);					//TODO:Search for hidden triples
+	void pointingBoxRows(SUDOKU &sudoku, bool print_steps);					//check each 3x3 box of sudoku's rows for a number whose sole possiblities lie in that row
+	void pointingBoxColumns(SUDOKU &sudoku, bool print_steps);				//check each 3x3 box of sudoku's columns for a number whose sole possiblities lie in that column
+	void boxLineReduceRow(SUDOKU &sudoku, bool print_steps);				//check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
+	void boxLineReduceColumn(SUDOKU &sudoku, bool print_steps);				//check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
+	void xWing(SUDOKU &sudoku, bool print_steps);						//x-wing algorithm
+	void yWing(SUDOKU &sudoku, bool print_steps);						//y-wing algorithm
+	void trialError(SUDOKU &sudoku, bool print_steps);					//brute force the solution (Bowman's Bingo')
 }
