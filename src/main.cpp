@@ -28,7 +28,7 @@ using namespace CSudokuSolver;
 int main(int argc, char *argv[])
 {
 	bool print_steps = false, silent = false, logical = false;
-	char *name = argv[0];
+	const char *prog_name = argv[0];
 	while (--argc > 0 && (*++argv)[0] == '-')
 	{
 		char c;
@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
 					std::cout << "certain conditions; check license.txt for more details\n";
 					return 0;
 				case 'h':
-					std::cout << name << " : version 0.10.2 (Eliza)\n\n";
-					std::cout << "Usage : " << name << " [arguments]\n";
+					std::cout << prog_name << " : version 0.10.2 (Eliza)\n\n";
+					std::cout << "Usage : " << prog_name << " [arguments]\n";
 					std::cout << "Arguments:\n";
 					std::cout << " -a\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case 'v' :
-					std::cout << name << " : version 0.10.2 (Eliza)\n";
+					std::cout << prog_name << " : version 0.10.2 (Eliza)\n";
 					return 0;
 				case 's' :
 					if (!print_steps)
@@ -77,9 +77,9 @@ int main(int argc, char *argv[])
 					logical = true;
 					break;
 				default :
-					std::cerr << name << " invalid option : " << c << '\n';
-					std::cerr << "Usage : " << name << " [arguments]\n";
-					std::cerr << "Try \'" << name << " -h\' for more information\n";
+					std::cerr << prog_name << " invalid option : " << c << '\n';
+					std::cerr << "Usage : " << prog_name << " [arguments]\n";
+					std::cerr << "Try \'" << prog_name << " -h\' for more information\n";
 					return 1;
 			}
 	}
@@ -88,14 +88,14 @@ int main(int argc, char *argv[])
 
 	if (!getSudoku(sudoku))
 	{
-		std::cerr << name << " : The input string was too short, too long or contained invalid characters\n";
+		std::cerr << prog_name << " : The input string was too short, too long or contained invalid characters\n";
 		std::cout << "Check your input and try agin!\nExiting ...\n";
 		return 2;
 	}
 
 	if (!initialiseSudoku(sudoku) || count(sudoku.sudoku_q) < 17) 
 	{ 
-		std::cerr << name <<  "The input sudoku is invalid! It contains too few clues or an invalid question.\n";
+		std::cerr << prog_name <<  "The input sudoku is invalid! It contains too few clues or an invalid question.\n";
 		printSudoku(sudoku.sudoku_q);
 		return 2;
 	}
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
 
 	if (checkError(sudoku)) 
 	{
-		std::cerr << name << "Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
+		std::cerr << prog_name << "Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
 		printSudoku(sudoku.sudoku_a);
 		return 3;
 	}
