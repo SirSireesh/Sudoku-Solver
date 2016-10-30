@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
 					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
 					std::cout << " -v\t Print version info and exit\n";
-					return -1;
+					return 1;
 			}
 	}
 
@@ -94,26 +94,25 @@ int main(int argc, char *argv[])
 
 	if (!getSudoku(sudoku))
 	{
-		std::cout << "Exiting ...\n";
-		return -2;
+		std::cerr << argv[0] << " : The input string was too short, too long or contained invalid characters\n";
+		std::cout << "Check your input and try agin!\nExiting ...\n";
+		return 2;
 	}
 
 	if (!initialiseSudoku(sudoku) || count(sudoku.sudoku_q) < 17) 
 	{ 
-		std::cerr << "The input sudoku is invalid! It contains too few clues or an impossible question.\n";
+		std::cerr << argv[0] <<  "The input sudoku is invalid! It contains too few clues or an impossible question.\n";
 		printSudoku(sudoku.sudoku_q);
-		std::cout << termcolor::red << "The sudoku contains " << count(sudoku.sudoku_q) << " clues.\n" << termcolor::reset;
-		return -1;
+		std::cout << "The sudoku contains " << count(sudoku.sudoku_q) << " clues.\n";
+		return 2;
 	}
 
 	if (!silent)
 	{
 		std::cout << "The given sudoku is :\n";
 		printfSudoku(sudoku);
-	}
-
-	if (!silent)
 		std::cout << "Given : " << termcolor::red << count(sudoku.sudoku_q) << termcolor::reset << '\n';
+	}
 
 	auto sTime = std::chrono::high_resolution_clock::now();
 
@@ -151,9 +150,9 @@ int main(int argc, char *argv[])
 
 	if (checkError(sudoku)) 
 	{
-		std::cerr << "Something went wrong!\n";
+		std::cerr << argv[0] << "Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
 		printSudoku(sudoku.sudoku_a);
-		return -3;
+		return 3;
 	}
 
 	if (!silent)
