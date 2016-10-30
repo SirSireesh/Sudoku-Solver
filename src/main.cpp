@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
 					return 0;
 				case 'h':
 					std::cout << prog_name << " : version 0.10.2 (Eliza)\n\n";
-					std::cout << "Usage : " << prog_name << " [arguments]\n";
-					std::cout << "Arguments:\n";
+					std::cout << "Usage : " << prog_name << " [options]\n";
+					std::cout << "Options:\n";
 					std::cout << " -a\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
 					std::cout << " -l\t Sove the sudoku logically (no guesses/trial and error)\n";
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 					break;
 				default :
 					std::cerr << prog_name << " invalid option : " << c << '\n';
-					std::cerr << "Usage : " << prog_name << " [arguments]\n";
+					std::cerr << "Usage : " << prog_name << " [options]\n";
 					std::cerr << "Try \'" << prog_name << " -h\' for more information\n";
 					return 1;
 			}
