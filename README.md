@@ -44,16 +44,16 @@ The program accepts Sudokus from `stdin`. Blank boxes can be represented by spac
 
 The options allowed are 
 
--a -- print license
+-a --about   -- Print license
 
--h -- Print help menu
+-h --help    -- Print help menu
 
--l -- Use logic only to solve a sudoku (no trial and error)
+-l --logical -- Use logic only to solve a sudoku (no trial and error)
 
--t -- Print the method used to solve the Sudoku
+-t --trace   -- Print the method used to solve the Sudoku
 
--s -- Silently solve the sudoku and print unformatted output (i.e. output is in a single line)
+-s --silent  -- Silently solve the sudoku and print unformatted output (i.e. output is in a single line)
 
--v -- Print version and exit
+-v --version -- Print version and exit
 
 If you installed using the above instructions, you can always run `man ssolver`
