@@ -31,6 +31,11 @@ namespace CSudokuSolver
 		bool changed;
 		struct SUDOKU_ANS box[9][9];
 	};
+	struct SUDOKU {
+		int sudoku_q[9][9];
+		int sudoku_a[9][9];
+		SUDOKU_ANS_BOARD sudoku_ans;
+	};
 	struct POINT {
 		int x;
 		int y;
