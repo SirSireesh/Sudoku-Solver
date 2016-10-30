@@ -28,6 +28,7 @@ using namespace CSudokuSolver;
 int main(int argc, char *argv[])
 {
 	bool print_steps = false, silent = false, logical = false;
+	char *name = argv[0];
 	while (--argc > 0 && (*++argv)[0] == '-')
 	{
 		char c;
@@ -41,8 +42,8 @@ int main(int argc, char *argv[])
 					std::cout << "certain conditions; check license.txt for more details\n";
 					return 0;
 				case 'h':
-					std::cout << argv[0] << " : version 0.10.2 (Eliza)\n\n";
-					std::cout << "Usage : Sudoku-solver [arguments]\n";
+					std::cout << name << " : version 0.10.2 (Eliza)\n\n";
+					std::cout << "Usage : " << name << " [arguments]\n";
 					std::cout << "Arguments:\n";
 					std::cout << " -a\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
@@ -56,20 +57,19 @@ int main(int argc, char *argv[])
 						print_steps = true;
 					else
 					{
-						std::cout << termcolor::red << "Conflicting options! -s and -t can not be used together!\nExiting!\n" << termcolor::reset;
+						std::cerr << "Conflicting options! -s and -t can not be used together!\nExiting!\n";
 						return 1;
 					}
 					break;
 				case 'v' :
-					std::cout << "ssolver : version 0.10.2 (Eliza)\n";
-					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
+					std::cout << name << " : version 0.10.2 (Eliza)\n";
 					return 0;
 				case 's' :
 					if (!print_steps)
 						silent = true;
 					else
 					{
-						std::cout << termcolor::red << "Conflicting options! -s and -t can not be used together\nExiting!\n" << termcolor::reset;
+						std::cerr << "Conflicting options! -s and -t can not be used together\nExiting!\n"; 
 						return 1;
 					}
 					break;
@@ -77,9 +77,9 @@ int main(int argc, char *argv[])
 					logical = true;
 					break;
 				default :
-					std::cerr << argv[0] << "invalid option : " << c << '\n';
-					std::cerr << "Usage : " << argv[0] << " [arguments]\n";
-					std::cerr << "Try \'" << argv[0] << " -h\' for more information";
+					std::cerr << name << " invalid option : " << c << '\n';
+					std::cerr << "Usage : " << name << " [arguments]\n";
+					std::cerr << "Try \'" << name << " -h\' for more information\n";
 					return 1;
 			}
 	}
@@ -88,16 +88,15 @@ int main(int argc, char *argv[])
 
 	if (!getSudoku(sudoku))
 	{
-		std::cerr << argv[0] << " : The input string was too short, too long or contained invalid characters\n";
+		std::cerr << name << " : The input string was too short, too long or contained invalid characters\n";
 		std::cout << "Check your input and try agin!\nExiting ...\n";
 		return 2;
 	}
 
 	if (!initialiseSudoku(sudoku) || count(sudoku.sudoku_q) < 17) 
 	{ 
-		std::cerr << argv[0] <<  "The input sudoku is invalid! It contains too few clues or an impossible question.\n";
+		std::cerr << name <<  "The input sudoku is invalid! It contains too few clues or an invalid question.\n";
 		printSudoku(sudoku.sudoku_q);
-		std::cout << "The sudoku contains " << count(sudoku.sudoku_q) << " clues.\n";
 		return 2;
 	}
 
@@ -144,7 +143,7 @@ int main(int argc, char *argv[])
 
 	if (checkError(sudoku)) 
 	{
-		std::cerr << argv[0] << "Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
+		std::cerr << name << "Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
 		printSudoku(sudoku.sudoku_a);
 		return 3;
 	}
