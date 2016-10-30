@@ -212,12 +212,12 @@ void printHelp(const char name[])
 	printVersion(name);
 	std::cout << "Usage : " << name << " [options]\n";
 	std::cout << "Options:\n";
-	std::cout << " -a\t Print license info and exit\n";
-	std::cout << " -h\t Print this help menu and exit\n";
-	std::cout << " -l\t Sove the sudoku logically (no guesses/trial and error)\n";
-	std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
-	std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
-	std::cout << " -v\t Print version info and exit\n";
+	std::cout << " -a  --about  \t Print license info and exit\n";
+	std::cout << " -h  --help   \t Print this help menu and exit\n";
+	std::cout << " -l  --logical\t Sove the sudoku logically (no guesses/trial and error)\n";
+	std::cout << " -s  --silent \t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
+	std::cout << " -t  --trace  \t Print how to solve the given sudoku (step by step solution!)\n";
+	std::cout << " -v  --version\t Print version info and exit\n";
 }
 
 void printVersion(const char name[])
