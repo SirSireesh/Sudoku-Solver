@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
 					std::cout << "certain conditions; check license.txt for more details\n";
 					return 0;
 				case 'h':
-					std::cout << "ssolver : version 0.10.2 (Eliza)\n\n";
-					std::cout << "usage : Sudoku-solver [arguments]\n";
+					std::cout << argv[0] << " : version 0.10.2 (Eliza)\n\n";
+					std::cout << "Usage : Sudoku-solver [arguments]\n";
 					std::cout << "Arguments:\n";
 					std::cout << " -a\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
@@ -77,15 +77,9 @@ int main(int argc, char *argv[])
 					logical = true;
 					break;
 				default :
-					std::cout << termcolor::red << "Invalid Option : " << c << termcolor::reset << '\n';
-					std::cout << "usage : ssolver [arguments]\n";
-					std::cout << "Arguments:\n";
-					std::cout << " -a\t Print license info and exit\n";
-					std::cout << " -h\t Print this help menu and exit\n";
-					std::cout << " -l\t Sove the sudoku logically (no guesses/trial and error)\n";
-					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
-					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
-					std::cout << " -v\t Print version info and exit\n";
+					std::cerr << argv[0] << "invalid option : " << c << '\n';
+					std::cerr << "Usage : " << argv[0] << " [arguments]\n";
+					std::cerr << "Try \'" << argv[0] << " -h\' for more information";
 					return 1;
 			}
 	}
