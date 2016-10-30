@@ -4,4 +4,7 @@ testSudokus=${BASH_SOURCE%/*}/test.sudoku
 
 echo "This program will solve all sudokus listed in test.sudoku using $program"
 
-while read in; do echo $in | $program $*; done < "$testSudokus"
+line=0
+while read in; do 
+	(echo $in | $program $* && line += 1) || echo $line && exit;
+done < "$testSudokus"
