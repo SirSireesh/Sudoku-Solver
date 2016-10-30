@@ -28,6 +28,7 @@ using namespace CSudokuSolver;
 int main(int argc, char *argv[])
 {
 	bool print_steps = false, silent = false, logical = false;
+	const char *prog_name = argv[0];
 	while (--argc > 0 && (*++argv)[0] == '-')
 	{
 		char c;
@@ -41,8 +42,8 @@ int main(int argc, char *argv[])
 					std::cout << "certain conditions; check license.txt for more details\n";
 					return 0;
 				case 'h':
-					std::cout << "ssolver : version 0.10.2 (Eliza)\n\n";
-					std::cout << "usage : Sudoku-solver [arguments]\n";
+					std::cout << prog_name << " : version 0.10.2 (Eliza)\n\n";
+					std::cout << "Usage : " << prog_name << " [arguments]\n";
 					std::cout << "Arguments:\n";
 					std::cout << " -a\t Print license info and exit\n";
 					std::cout << " -h\t Print this help menu and exit\n";
@@ -56,20 +57,19 @@ int main(int argc, char *argv[])
 						print_steps = true;
 					else
 					{
-						std::cout << termcolor::red << "Conflicting options! -s and -t can not be used together!\nExiting!\n" << termcolor::reset;
+						std::cerr << "Conflicting options! -s and -t can not be used together!\nExiting!\n";
 						return 1;
 					}
 					break;
 				case 'v' :
-					std::cout << "ssolver : version 0.10.2 (Eliza)\n";
-					std::cout << "Built with command: $ clang++ -I. Sudoku-solver.cpp main.cpp -o ./bin/Sudoku-solver -std=c++11 -O3 -march=native\n";
+					std::cout << prog_name << " : version 0.10.2 (Eliza)\n";
 					return 0;
 				case 's' :
 					if (!print_steps)
 						silent = true;
 					else
 					{
-						std::cout << termcolor::red << "Conflicting options! -s and -t can not be used together\nExiting!\n" << termcolor::reset;
+						std::cerr << "Conflicting options! -s and -t can not be used together\nExiting!\n"; 
 						return 1;
 					}
 					break;
@@ -77,16 +77,10 @@ int main(int argc, char *argv[])
 					logical = true;
 					break;
 				default :
-					std::cout << termcolor::red << "Invalid Option : " << c << termcolor::reset << '\n';
-					std::cout << "usage : ssolver [arguments]\n";
-					std::cout << "Arguments:\n";
-					std::cout << " -a\t Print license info and exit\n";
-					std::cout << " -h\t Print this help menu and exit\n";
-					std::cout << " -l\t Sove the sudoku logically (no guesses/trial and error)\n";
-					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
-					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
-					std::cout << " -v\t Print version info and exit\n";
-					return -1;
+					std::cerr << prog_name << " invalid option : " << c << '\n';
+					std::cerr << "Usage : " << prog_name << " [arguments]\n";
+					std::cerr << "Try \'" << prog_name << " -h\' for more information\n";
+					return 1;
 			}
 	}
 
@@ -94,26 +88,24 @@ int main(int argc, char *argv[])
 
 	if (!getSudoku(sudoku))
 	{
-		std::cout << "Exiting ...\n";
-		return -2;
+		std::cerr << prog_name << " : The input string was too short, too long or contained invalid characters\n";
+		std::cout << "Check your input and try agin!\nExiting ...\n";
+		return 2;
 	}
 
 	if (!initialiseSudoku(sudoku) || count(sudoku.sudoku_q) < 17) 
 	{ 
-		std::cerr << "The input sudoku is invalid! It contains too few clues or an impossible question.\n";
+		std::cerr << prog_name <<  "The input sudoku is invalid! It contains too few clues or an invalid question.\n";
 		printSudoku(sudoku.sudoku_q);
-		std::cout << termcolor::red << "The sudoku contains " << count(sudoku.sudoku_q) << " clues.\n" << termcolor::reset;
-		return -1;
+		return 2;
 	}
 
 	if (!silent)
 	{
 		std::cout << "The given sudoku is :\n";
 		printfSudoku(sudoku);
-	}
-
-	if (!silent)
 		std::cout << "Given : " << termcolor::red << count(sudoku.sudoku_q) << termcolor::reset << '\n';
+	}
 
 	auto sTime = std::chrono::high_resolution_clock::now();
 
@@ -151,9 +143,9 @@ int main(int argc, char *argv[])
 
 	if (checkError(sudoku)) 
 	{
-		std::cerr << "Something went wrong!\n";
+		std::cerr << prog_name << "Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
 		printSudoku(sudoku.sudoku_a);
-		return -3;
+		return 3;
 	}
 
 	if (!silent)

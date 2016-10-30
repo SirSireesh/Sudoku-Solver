@@ -32,16 +32,8 @@ bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 	std::string input;
 	std::getline(std::cin, input);
 
-	if (input.length() < 81)
-	{
-		std::cout << termcolor::red << "The input was too small! Check your input and try again!\n" << termcolor::reset;
+	if (input.length() != 81)
 		return false;
-	}
-	if (input.length() > 81)
-	{
-		std::cout << termcolor::red << "The input was too large! Check your input and try again!\n" << termcolor::reset;
-		return false;
-	}
 
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
@@ -55,7 +47,6 @@ bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 					sudoku.sudoku_q[i][j] = sudoku.sudoku_a[i][j] = 0;
 					break;
 				default :
-					std::cout << "Invalid input : " << input[(i * 9) + j] << "\n";
 					return false;
 			}
 		}
