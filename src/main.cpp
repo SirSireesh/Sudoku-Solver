@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
 	if (!initialiseSudoku(sudoku) || count(sudoku.sudoku_q) < 17) 
 	{ 
-		std::cerr << prog_name <<  "The input sudoku is invalid! It contains too few clues or an invalid question.\n";
+		std::cerr << prog_name <<  " : The input sudoku is invalid! It contains too few clues or an invalid question.\n";
 		printSudoku(sudoku.sudoku_q);
 		return 2;
 	}
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
 
 	if (checkError(sudoku)) 
 	{
-		std::cerr << prog_name << "Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
+		std::cerr << prog_name << " : Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
 		printSudoku(sudoku.sudoku_a);
 		return 3;
 	}
