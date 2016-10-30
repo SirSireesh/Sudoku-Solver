@@ -20,69 +20,25 @@
     */
 #include <chrono>
 #include <iostream>
+#include <cstring>
+#include <cstdlib>
+
 #include "Sudoku-solver.h"
 #include "termcolor.hpp"
 
 using namespace CSudokuSolver;
 
+void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logical);
+void printVersion(const char name[]);
+void printLicense();
+void printHelp(const char name[]);
+
 int main(int argc, char *argv[])
 {
 	bool print_steps = false, silent = false, logical = false;
 	const char *prog_name = argv[0];
-	while (--argc > 0 && (*++argv)[0] == '-')
-	{
-		char c;
-		while((c = *++argv[0]))
-			switch (c)
-			{
-				case 'a':
-					std::cout << "ssolver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
-					std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
-					std::cout << "This program is free software, and you are welcome to redistribute it under\n";
-					std::cout << "certain conditions; check license.txt for more details\n";
-					return 0;
-				case 'h':
-					std::cout << prog_name << " : version 0.10.2 (Eliza)\n\n";
-					std::cout << "Usage : " << prog_name << " [arguments]\n";
-					std::cout << "Arguments:\n";
-					std::cout << " -a\t Print license info and exit\n";
-					std::cout << " -h\t Print this help menu and exit\n";
-					std::cout << " -l\t Sove the sudoku logically (no guesses/trial and error)\n";
-					std::cout << " -s\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
-					std::cout << " -t\t Print how to solve the given sudoku (step by step solution!)\n";
-					std::cout << " -v\t Print version info and exit\n";
-					return 0;
-				case 't' :
-					if (!silent)
-						print_steps = true;
-					else
-					{
-						std::cerr << "Conflicting options! -s and -t can not be used together!\nExiting!\n";
-						return 1;
-					}
-					break;
-				case 'v' :
-					std::cout << prog_name << " : version 0.10.2 (Eliza)\n";
-					return 0;
-				case 's' :
-					if (!print_steps)
-						silent = true;
-					else
-					{
-						std::cerr << "Conflicting options! -s and -t can not be used together\nExiting!\n"; 
-						return 1;
-					}
-					break;
-				case 'l' :
-					logical = true;
-					break;
-				default :
-					std::cerr << prog_name << " invalid option : " << c << '\n';
-					std::cerr << "Usage : " << prog_name << " [arguments]\n";
-					std::cerr << "Try \'" << prog_name << " -h\' for more information\n";
-					return 1;
-			}
-	}
+
+	getOpt(argc, argv, print_steps, silent, logical);
 
 	SUDOKU sudoku;
 
@@ -158,4 +114,121 @@ int main(int argc, char *argv[])
 		printSudoku(sudoku.sudoku_a);
 
 	return 0;
+}
+
+void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logical)
+{
+	for (int i = 1; i < argc; ++i)
+	{
+		if (strcmp(argv[i], "--about") == 0)
+		{
+			printLicense();
+			exit(0);
+		}
+		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-help") == 0)
+		{
+			printHelp(argv[0]);
+			exit(0);
+		}
+		else if (strcmp(argv[i], "--trace") == 0)
+		{
+			if (!silent)
+				print_steps = true;
+			else
+			{
+				std::cerr << "Conflicting options! --silent and --trace can not be used together!\nExiting!\n";
+				exit(1);
+			}
+		}
+		else if (strcmp(argv[i], "--silent") == 0)
+		{
+			if (!print_steps)
+				silent = true;
+			else 
+			{
+				std::cerr << "Conflicting options! --silent and --trace can not be used together!\nExiting!\n";
+				exit(1);
+			}
+		}
+		else if (strcmp(argv[i], "--version") == 0)
+		{
+			printLicense();
+			exit(0);
+		}
+		else if (argv[i][0] == '-')
+		{
+			for (int j = 1; argv[i][j] != '\0'; ++j)
+				switch (argv[i][j])
+				{
+					case 'a':
+						printLicense();
+						exit(0);
+					case 'h':
+						printHelp(argv[0]);
+						exit(0);
+					case 't' :
+						if (!silent)
+							print_steps = true;
+						else
+						{
+							std::cerr << "Conflicting options! -s and -t can not be used together!\nExiting!\n";
+							exit(1);
+						}
+						break;
+					case 'v' :
+						printVersion(argv[0]);
+						exit(0);
+					case 's' :
+						if (!print_steps)
+							silent = true;
+						else
+						{
+							std::cerr << "Conflicting options! -s and -t can not be used together\nExiting!\n"; 
+							exit(1);
+						}
+						break;
+					case 'l' :
+						logical = true;
+						break;
+					default :
+						std::cerr << argv[0] << " invalid option : " << argv[i][j] << '\n';
+						std::cerr << "Usage : " << argv[0] << " [options]\n";
+						std::cerr << "Try \'" << argv[0] << " -h\' for more information\n";
+						exit(1);
+				}
+		}
+		else
+		{
+			std::cerr << argv[0] << " invalid option : " << argv[i] << '\n';
+			std::cerr << "Usage : " << argv[0] << " [options]\n";
+			std::cerr << "Try \'" << argv[0] << " -h\' for more information\n";
+			exit(1);
+		}
+	}
+}
+
+void printHelp(const char name[])
+{
+	printVersion(name);
+	std::cout << "Usage : " << name << " [options]\n";
+	std::cout << "Options:\n";
+	std::cout << " -a  --about  \t Print license info and exit\n";
+	std::cout << " -h  --help   \t Print this help menu and exit\n";
+	std::cout << " -l  --logical\t Sove the sudoku logically (no guesses/trial and error)\n";
+	std::cout << " -s  --silent \t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
+	std::cout << " -t  --trace  \t Print how to solve the given sudoku (step by step solution!)\n";
+	std::cout << " -v  --version\t Print version info and exit\n";
+}
+
+void printVersion(const char name[])
+{
+	std::cout << name << " : version 0.10.2 (Eliza)\n\n";
+}
+
+void printLicense()
+{
+	std::cout << "ssolver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
+	std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
+	std::cout << "This program is free software, and you are welcome to redistribute it under\n";
+	std::cout << "certain conditions; check license.txt for more details\n";
 }
