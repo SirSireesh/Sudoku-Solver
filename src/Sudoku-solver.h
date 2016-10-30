@@ -46,7 +46,7 @@ namespace CSudokuSolver
 	void printSudoku(int sudoku_q[9][9]);							//unformatted print a sudoku
 	void printfSudoku(SUDOKU sudoku);							//formatted print a given sudoku and its repective answer board
 	void disablePos(SUDOKU &sudoku, int n, int x, int y);					//disable n for a given position
-	void disableRow(SUDOKU &sudoku, int n, int row);						//disable every instance of n in a given row
+	void disableRow(SUDOKU &sudoku, int n, int row);					//disable every instance of n in a given row
 	void disableColumn(SUDOKU &sudoku, int n, int column);					//disable every instance of n in a given column
 	void disableBox(SUDOKU &sudoku, int n, int x, int y);					//disable every instance of n in a given box
 	void finalize(SUDOKU &sudoku, int n, int x, int y, bool init);				//finalize n for a given position
