@@ -6,7 +6,10 @@
 .Nd Solve a given sudoku
 .Sh SYNOPSIS
 .Nm
-.Ar arguments ...
+.Bk -words
+.Op Fl ahlstv
+.Op Fl Fl logical
+.Op Fl Fl trace
 .Sh DESCRIPTION
 The
 .Nm
@@ -44,32 +47,36 @@ must contain 81 characters, each for a box. Blank boxes are represented by space
 .Sh OPTIONS
 By default, the program prints the question, unsolved, and then prints the solution. The following options may be specified to modify the behaviour of the program:
 .Pp
-.Bl -tag -width Ds -offset indent -compact
-.It Ns Ar -a
+.Bl -tag -width indent 
+.It Fl a , Fl Fl about
 Print license info and exit 
-.It Ns Ar -h
+.It Fl h , Fl Fl help
 Print list of supported arguments and exit.
-.It Ns Ar -l
+.It Fl l , Fl Fl logical
 Solve the
 .Ar sudoku 
 logically only (no trial and error).
-.It Ns Ar -s
+.It Fl s , Fl Fl silent
 Print the least possible to
 .Ar stdout
 (silent). It will only print the 
 .Ar sudoku 
 in a single line, not as a grid
-.It Ns Ar -t
+.It Fl t , Fl Fl trace
 Print the steps to solve a
 .Ar sudoku.
-.It Ns Ar -v
+.It Fl v , Fl Fl version
 Print the version
 .El
 .Pp
 Note that 
-.Ar -s 
+.Fl s 
+or
+.Fl Fl silent 
 and 
-.Ar -t 
+.Fl t 
+or
+.Fl Fl trace
 are mutually independent of each other. The program will exit if both are used simultaneously.
 .Sh EXIT STATUS
 .Ex -std
