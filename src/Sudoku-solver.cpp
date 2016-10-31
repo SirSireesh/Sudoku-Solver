@@ -19,6 +19,8 @@
     dkiran100@gmail.com
     */
 
+//#define DEBUG
+
 #include <iostream>
 #include <list>
 #include <algorithm>
@@ -182,6 +184,7 @@ void CSudokuSolver::disableBox(SUDOKU &sudoku, int n, int x, int y)
 void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = false)
 {
 	//finalize a given number at a position
+#ifdef DEBUG
 	if (sudoku.sudoku_ans.box[x][y].num[n] == false) 
 	{
 		//this should not happen, but no harm done preventing errors
@@ -196,6 +199,7 @@ void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = fa
 		std::cout << termcolor::red << "error : The position " << x << ' ' << y << " was set to done!" << " Number " << sudoku.sudoku_q[x][y] << " is already there!\n";
 		return;
 	}
+#endif
 	sudoku.sudoku_ans.box[x][y].done = true;
 	sudoku.changed = true;
 	if (init)
