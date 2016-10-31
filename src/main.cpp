@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 
-	if (!initialiseSudoku(sudoku) || count(sudoku.sudoku_q) < 17) 
+	if (!initialiseSudoku(sudoku) || sudoku.num_solved < 17) 
 	{ 
 		//input string has invalid question or the sudoku has too few clues 
 		std::cerr << argv[0] <<  " : The input sudoku is invalid! It contains too few clues or an invalid question.\n";
@@ -62,12 +62,12 @@ int main(int argc, char *argv[])
 		//print extra only if silent is not set
 		std::cout << "The given sudoku is :\n";
 		printfSudoku(sudoku);
-		std::cout << "Given : " << termcolor::red << count(sudoku.sudoku_q) << termcolor::reset << '\n';
+		std::cout << "Given : " << termcolor::red << sudoku.num_solved << termcolor::reset << '\n';
 	}
 
 	auto sTime = std::chrono::high_resolution_clock::now();		//get current time for printing time take
 
-	while (count(sudoku.sudoku_a) < 81 && sudoku.changed) 
+	while (sudoku.num_solved < 81 && sudoku.changed) 
 	{
 		sudoku.changed = false;					//reset changed status - allows us to know if the sudoku is no longer solvable
 		nakedSingle(sudoku, print_steps);
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 	{
 		//print the fancy stuff if silent is not set
 		printfSudoku(sudoku);
-		std::cout << "Answered : " << termcolor::green << count(sudoku.sudoku_a) << termcolor::reset << '\n';
+		std::cout << "Answered : " << termcolor::green << sudoku.num_solved << termcolor::reset << '\n';
 		std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n"; //print time in milliseconds
 	}
 	else 

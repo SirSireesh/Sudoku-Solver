@@ -38,10 +38,12 @@ namespace CSudokuSolver
 		//this contains 2 9x9 sudokus that store the given question and the answer
 		//it also contains the board of possibilities
 		//lastly it has a bool that keeps tells us if a change was made to the sudoku answer
+		//contains an int which keeps track of the number of solved cells
 		bool changed = true;
 		int sudoku_q[9][9];
 		int sudoku_a[9][9];
 		SUDOKU_ANS_BOARD sudoku_ans;
+		int num_solved = 0;
 	};
 	struct POINT {
 		//points, makes it easier to pass params to functions and makes some code neater
@@ -58,7 +60,6 @@ namespace CSudokuSolver
 	void disableColumn(SUDOKU &sudoku, int n, int column);					//disable every instance of n in a given column
 	void disableBox(SUDOKU &sudoku, int n, int x, int y);					//disable every instance of n in a given box
 	void finalize(SUDOKU &sudoku, int n, int x, int y, bool init);				//finalize n for a given position
-	int count(int sudoku_q[9][9]);								//count the number of determined answers in a given sudoku
 	bool checkError(SUDOKU sudoku);								//check if something went wrong
 	int numCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the number of common possibilities
 	int getCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the common number between 2 positions

@@ -48,6 +48,7 @@ bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 			{
 				case '1': case '2' : case '3' : case '4' : case '5' : case '6' : case '7' : case '8' : case '9' :
 					sudoku.sudoku_q[i][j] = sudoku.sudoku_a[i][j] = static_cast<int> (input[(i * 9) + j] - '0');
+					++sudoku.num_solved;
 					break;
 				case '0' : case '.' : case ' ' : 
 					sudoku.sudoku_q[i][j] = sudoku.sudoku_a[i][j] = 0;
@@ -108,17 +109,6 @@ void CSudokuSolver::printfSudoku(SUDOKU sudoku)
 		}
 		std::cout << termcolor::reset << '\n';
 	}
-}
-
-int CSudokuSolver::count(int sudoku_q[9][9])
-{
-	//return the number of places filled in the 9x9 sudoku
-	int num_answered = 0;
-	for (int i = 0; i < 9; ++i)
-		for (int j = 0; j < 9; ++j) 
-			if (sudoku_q[i][j])
-				++num_answered;
-	return num_answered;
 }
 
 int CSudokuSolver::numCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
@@ -1427,7 +1417,7 @@ void CSudokuSolver::trialError(SUDOKU &sudoku, bool print_steps)
 					if (copy_sudoku.sudoku_ans.box[i][j].num[n])
 					{
 						finalize(copy_sudoku, n, i, j);
-						while (count(copy_sudoku.sudoku_a) < 81 && copy_sudoku.changed) 
+						while (sudoku.num_solved < 81 && copy_sudoku.changed) 
 						{
 							copy_sudoku.changed = false;
 							checkColumns(copy_sudoku);
@@ -1459,7 +1449,7 @@ void CSudokuSolver::trialError(SUDOKU &sudoku, bool print_steps)
 									<< j + 1 << termcolor::reset << ' ' << termcolor::green << n + 1 << termcolor::reset << " is not possible here\n";
 							return;
 						}
-						else if (count(copy_sudoku.sudoku_a) == 81)
+						else if (sudoku.num_solved == 81)
 						{
 							sudoku= copy_sudoku;
 							if (print_steps)
