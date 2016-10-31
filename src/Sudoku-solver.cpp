@@ -64,7 +64,7 @@ bool CSudokuSolver::initialiseSudoku(SUDOKU &sudoku)
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j) 
 		{
-			if (sudoku.sudoku_ans.box[i][j].done == true || (sudoku.sudoku_q[i][j] && sudoku.sudoku_ans.box[i][j].num[sudoku.sudoku_q[i][j] - 1] == false)) 
+			if (sudoku.sudoku_q[i][j] && sudoku.sudoku_ans.box[i][j].num[sudoku.sudoku_q[i][j] - 1] == false) 
 				return false;
 			if (sudoku.sudoku_q[i][j])
 				finalize(sudoku, sudoku.sudoku_q[i][j] - 1, i, j, true);
