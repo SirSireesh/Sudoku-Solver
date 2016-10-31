@@ -24,11 +24,15 @@
 #include <algorithm>
 #include <iterator>
 #include <string>
+
 #include "Sudoku-solver.h"
 #include "termcolor.hpp"
 
 bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 {
+	//get the input as string from stdin,
+	//read store in the 9x9 sudokus in struct SUDOKU
+	//return false if something went wrong
 	std::string input;
 	std::getline(std::cin, input);
 
@@ -55,10 +59,12 @@ bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 
 bool CSudokuSolver::initialiseSudoku(SUDOKU &sudoku)
 {
+	//from the given 9x9 sudokus in struct SUDOKU, initialize the possibilities 
+	//return false if the question is not valid
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j) 
 		{
-			if (sudoku.sudoku_ans.box[i][j].done == true || (sudoku.sudoku_q[i][j] && sudoku.sudoku_ans.box[i][j].num[sudoku.sudoku_q[i][j] - 1] == false)) 
+			if (sudoku.sudoku_q[i][j] && sudoku.sudoku_ans.box[i][j].num[sudoku.sudoku_q[i][j] - 1] == false) 
 				return false;
 			if (sudoku.sudoku_q[i][j])
 				finalize(sudoku, sudoku.sudoku_q[i][j] - 1, i, j, true);
@@ -68,6 +74,7 @@ bool CSudokuSolver::initialiseSudoku(SUDOKU &sudoku)
 
 void CSudokuSolver::printSudoku(int sudoku_q[9][9])
 {
+	//print the sudoku, unformatted, as a single line string
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 			std::cout << sudoku_q[i][j];
@@ -76,6 +83,8 @@ void CSudokuSolver::printSudoku(int sudoku_q[9][9])
 
 void CSudokuSolver::printfSudoku(SUDOKU sudoku)
 {
+	//print the sudoku with all the fancy extras
+	//prints black chars for given q and red for nums solved by the program
 	std::cout << "\t\t   " << termcolor::magenta << "1 2 3 4 5 6 7 8 9\n";
 	for (int i = 0; i < 9; ++i) 
 	{
@@ -101,6 +110,7 @@ void CSudokuSolver::printfSudoku(SUDOKU sudoku)
 
 int CSudokuSolver::count(int sudoku_q[9][9])
 {
+	//return the number of places filled in the 9x9 sudoku
 	int num_answered = 0;
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j) 
@@ -111,6 +121,7 @@ int CSudokuSolver::count(int sudoku_q[9][9])
 
 int CSudokuSolver::numCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
 {
+	//return the number of common numbers between 2 positions
 	int commmon = 0;
 	for (int n = 0; n < 9; ++n)
 		if (sudoku.sudoku_ans.box[pos1.x][pos1.y].num[n] && sudoku.sudoku_ans.box[pos2.x][pos2.y].num[n])
@@ -120,6 +131,8 @@ int CSudokuSolver::numCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
 
 int CSudokuSolver::getCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
 {
+	//return the first common number between 2 positions
+	//return -1 if none were found
 	for (int n = 0; n < 9; ++n)
 		if (sudoku.sudoku_ans.box[pos1.x][pos1.y].num[n] && sudoku.sudoku_ans.box[pos2.x][pos2.y].num[n])
 			return n;
@@ -128,6 +141,9 @@ int CSudokuSolver::getCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
 
 void CSudokuSolver::disablePos(SUDOKU &sudoku, int n, int x, int y)
 {
+	//disable a number at a poition on the possibilities board
+	//POINT struct is not used as the performance loss is significant and more unnecessay variables 'temp' variable are created
+	//don't change anything if the box is already solved or the num is already marked as false in that position
 	if (sudoku.sudoku_ans.box[x][y].num[n] == true && sudoku.sudoku_ans.box[x][y].done == false) 
 	{
 		sudoku.changed = true;
@@ -137,6 +153,8 @@ void CSudokuSolver::disablePos(SUDOKU &sudoku, int n, int x, int y)
 
 void CSudokuSolver::disableColumn(SUDOKU &sudoku, int n, int column)
 {
+	//disable a given number for a column
+	//calls disablePos to do the dirty work
 	for (int i = 0; i < 9; ++i) 
 		if (sudoku.sudoku_ans.box[i][column].done == false)
 			disablePos(sudoku, n, i, column);
@@ -144,6 +162,8 @@ void CSudokuSolver::disableColumn(SUDOKU &sudoku, int n, int column)
 
 void CSudokuSolver::disableRow(SUDOKU &sudoku, int n, int row)
 {
+	//disable a given number for a row
+	//calls disablePos to do the dirty work
 	for (int j = 0; j < 9; ++j) 
 		if (sudoku.sudoku_ans.box[row][j].done == false)
 			disablePos(sudoku, n, row, j);
@@ -151,6 +171,8 @@ void CSudokuSolver::disableRow(SUDOKU &sudoku, int n, int row)
 
 void CSudokuSolver::disableBox(SUDOKU &sudoku, int n, int x, int y)
 {
+	//disable a given number for a box
+	//calls disablePos to do the dirty work
 	for (int i = x - (x%3); i < (x - (x%3) + 3); ++i)
 		for (int j = y - (y%3); j < (y  - (y%3) + 3); ++j) 
 			if (sudoku.sudoku_ans.box[i][j].done == false)
@@ -159,28 +181,33 @@ void CSudokuSolver::disableBox(SUDOKU &sudoku, int n, int x, int y)
 
 void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = false)
 {
+	//finalize a given number at a position
 	if (sudoku.sudoku_ans.box[x][y].num[n] == false) 
 	{
+		//this should not happen, but no harm done preventing errors
+		//diabling this might give a slight boost on performance
 		std::cout << termcolor::red << "error : The number " << n + 1 << " was set to false at " << x << ' ' << y << "!\n";
 		return;
 	}
 	if (sudoku.sudoku_ans.box[x][y].done) 
 	{
+		//again, this should not happen, but no harm done preventing
+		//disabling this might give a slight boost in performance
 		std::cout << termcolor::red << "error : The position " << x << ' ' << y << " was set to done!" << " Number " << sudoku.sudoku_q[x][y] << " is already there!\n";
 		return;
 	}
 	sudoku.sudoku_ans.box[x][y].done = true;
 	sudoku.changed = true;
 	if (init)
-	{
 		sudoku.sudoku_q[x][y] = sudoku.sudoku_a[x][y] = n + 1;
-	}
 	else
 		sudoku.sudoku_a[x][y] = n + 1;
 
+	//disable all numbers in the cell to prevent silly bugs
 	for (int i = 0; i < 9; ++i) 
 		sudoku.sudoku_ans.box[x][y].num[i] = false;
 
+	//disable the number for all cells that it 'sees'
 	disableRow(sudoku, n, x);
 	disableColumn(sudoku, n, y);
 	disableBox(sudoku, n, x, y);
@@ -188,6 +215,8 @@ void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = fa
 
 void CSudokuSolver::checkColumns(SUDOKU &sudoku, bool print_steps = false)
 {
+	//check the columns of the possiblities board
+	//if a number fits in only one place for a column, it is its final place
 	bool only_pos[9];
 
 	for (int i = 0; i < 9; ++i) 
@@ -218,6 +247,8 @@ void CSudokuSolver::checkColumns(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::checkRows(SUDOKU &sudoku, bool print_steps = false)
 {
+	//check the rows of the possibilities board
+	//if a number fits in only one place for a row, then that is its final place
 	bool only_pos[9];
 
 	for (int i = 0; i < 9; ++i)
@@ -248,6 +279,8 @@ void CSudokuSolver::checkRows(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::checkBox(SUDOKU &sudoku, bool print_steps = false)
 {
+	//check within a 3x3 box if there is a number that fits only in one place
+	//if there exists such a number, that is its final place
 	bool only_pos[9];
 
 	for (int i = 0; i < 9; i += 3) 
@@ -286,6 +319,7 @@ void CSudokuSolver::checkBox(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::nakedSingle(SUDOKU &sudoku, bool print_steps = false)
 {
+	//in a cell, if there is only one possible number, that is its final place
 	int poss = 0;
 	int num = 0;
 	for (int i = 0; i < 9; ++i)
@@ -311,6 +345,11 @@ void CSudokuSolver::nakedSingle(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::nakedPair(SUDOKU &sudoku, bool print_steps = false)
 {
+	//if there are two numbers such that they ar the only 2 possible numbers
+	//in two separate boxes within the same unit
+	//the same numbes can be disabled everywhere else in the same unit
+	
+	//exit on finding a pair, as our 'counter' becomes outdated
 	int counter[9][9];
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
@@ -500,6 +539,7 @@ void CSudokuSolver::nakedPair(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::nakedTriple(SUDOKU &sudoku, bool print_steps = false)
 {
+	//Similar to naked double, but extended to 3 numbers
 	int counter[9][9];
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
@@ -781,6 +821,9 @@ void CSudokuSolver::hiddenPair(SUDOKU &sudoku, bool print_steps = false)
 }
 void CSudokuSolver::pointingBoxRows(SUDOKU &sudoku, bool print_steps = false)
 {
+	//if a number exits in a 3x3 box such that it is only in one row
+	//then that number must be only in that row
+	//hence it may be disabled for the rest of the row
 	bool only_row[9];
 
 	for (int i = 0; i <= 6; i += 3)
@@ -823,6 +866,9 @@ void CSudokuSolver::pointingBoxRows(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::pointingBoxColumns(SUDOKU &sudoku, bool print_steps = false)
 {
+	//if a number exits in a 3x3 box such that it is only in one column
+	//then that number must be only in that column
+	//hence it may be disabled for the rest of the column
 	bool only_column[9];
 
 	for (int i = 0; i <= 6; i += 3)
@@ -864,6 +910,8 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::boxLineReduceRow(SUDOKU &sudoku, bool print_steps = false)
 {
+	//if a number exists in a row such that it only occurs within a box,
+	//that number may be disabled for the rest of the box
 	bool only_box_row[9];
 	for (int i = 0; i < 9; ++i)
 	{
@@ -901,6 +949,8 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::boxLineReduceColumn(SUDOKU &sudoku, bool print_steps = false)
 {
+	//if a number exists in a column such that it only occurs within a box,
+	//that number may be disabled for the rest of the box
 	bool only_box_column[9];
 
 	for (int i = 0; i < 9; ++i)
@@ -939,6 +989,9 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU &sudoku, bool print_steps = false
 
 void CSudokuSolver::xWing(SUDOKU &sudoku, bool print_steps = false)
 {
+	//if a number's possibilities form a rectangle
+	//under certain conditions,
+	//we may disable some of the numbers
 	int counter[9][9];
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
@@ -1057,6 +1110,8 @@ void CSudokuSolver::xWing(SUDOKU &sudoku, bool print_steps = false)
 
 CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT pos1, CSudokuSolver::POINT pos2, int counter[9][9], std::list<int> nums)
 {
+	//get the third position for the y-wing function, give 2 positions
+	//if none are found, return {-1, -1}
 	std::list<int> nums_t;
 	if (pos1.y == pos2.y)
 	{
@@ -1194,6 +1249,9 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 
 void CSudokuSolver::yWing(SUDOKU &sudoku, bool print_steps = false)
 {
+	//if the numbers occur in a certain pattern, 
+	//under certain conditions, 
+	//they may be disabled
 	int counter[9][9];
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
@@ -1348,6 +1406,13 @@ void CSudokuSolver::yWing(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::trialError(SUDOKU &sudoku, bool print_steps)
 {
+	//use trial and error to solve the sudoku
+	//try a number at a poition
+	//if you reach a mistake,
+	//that must not be its position
+	//or if you reach the solution, great
+	//else
+	//try another number
 	SUDOKU copy_sudoku = sudoku;
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
@@ -1410,6 +1475,9 @@ void CSudokuSolver::trialError(SUDOKU &sudoku, bool print_steps)
 
 bool CSudokuSolver::checkError(SUDOKU sudoku)
 {
+	//check for an error in the solution 
+	//return true if there is an error
+	//return false if there are no errors
 	int poss = 0;
 	for (int i = 0; i < 9; ++i) 
 		for (int j = 0; j < 9; ++j) 

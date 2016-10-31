@@ -35,41 +35,43 @@ void printHelp(const char name[]);
 
 int main(int argc, char *argv[])
 {
-	bool print_steps = false, silent = false, logical = false;
-	const char *prog_name = argv[0];
+	bool print_steps = false, silent = false, logical = false;		//options
 
 	getOpt(argc, argv, print_steps, silent, logical);
 
-	SUDOKU sudoku;
+	SUDOKU sudoku;		//our sudoku board
 
 	if (!getSudoku(sudoku))
 	{
-		std::cerr << prog_name << " : The input string was too short, too long or contained invalid characters\n";
+		//input string error
+		std::cerr << argv[0] << " : The input string was too short, too long or contained invalid characters\n";
 		std::cout << "Check your input and try agin!\nExiting ...\n";
 		return 2;
 	}
 
 	if (!initialiseSudoku(sudoku) || count(sudoku.sudoku_q) < 17) 
 	{ 
-		std::cerr << prog_name <<  " : The input sudoku is invalid! It contains too few clues or an invalid question.\n";
+		//input string has invalid question or the sudoku has too few clues 
+		std::cerr << argv[0] <<  " : The input sudoku is invalid! It contains too few clues or an invalid question.\n";
 		printSudoku(sudoku.sudoku_q);
 		return 2;
 	}
 
 	if (!silent)
 	{
+		//print extra only if silent is not set
 		std::cout << "The given sudoku is :\n";
 		printfSudoku(sudoku);
 		std::cout << "Given : " << termcolor::red << count(sudoku.sudoku_q) << termcolor::reset << '\n';
 	}
 
-	auto sTime = std::chrono::high_resolution_clock::now();
+	auto sTime = std::chrono::high_resolution_clock::now();		//get current time for printing time take
 
 	while (count(sudoku.sudoku_a) < 81 && sudoku.changed) 
 	{
-		sudoku.changed = false;
+		sudoku.changed = false;					//reset changed status - allows us to know if the sudoku is no longer solvable
 		nakedSingle(sudoku, print_steps);
-		if (!sudoku.changed)
+		if (!sudoku.changed)					//don't use any other algorithms unless necessary'
 		{
 			checkColumns(sudoku, print_steps);
 			checkRows(sudoku, print_steps);
@@ -91,24 +93,26 @@ int main(int argc, char *argv[])
 			xWing(sudoku, print_steps);
 		if (!sudoku.changed)
 			yWing(sudoku, print_steps);
-		if (!sudoku.changed && !logical)
+		if (!sudoku.changed && !logical)			//only use trial and error if logical is not set
 			trialError(sudoku, print_steps);
 	}
 
-	auto eTime = std::chrono::high_resolution_clock::now();	
+	auto eTime = std::chrono::high_resolution_clock::now();		//the time after the sudoku solving was completed
 
 	if (checkError(sudoku)) 
 	{
-		std::cerr << prog_name << " : Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
+		//Since the solver can't go wrong, the input sudoku must be invalid if there is an error
+		std::cerr << argv[0] << " : Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
 		printSudoku(sudoku.sudoku_a);
 		return 3;
 	}
 
 	if (!silent)
 	{
+		//print the fancy stuff if silent is not set
 		printfSudoku(sudoku);
 		std::cout << "Answered : " << termcolor::green << count(sudoku.sudoku_a) << termcolor::reset << '\n';
-		std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n";
+		std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n"; //print time in milliseconds
 	}
 	else 
 		printSudoku(sudoku.sudoku_a);
@@ -118,6 +122,7 @@ int main(int argc, char *argv[])
 
 void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logical)
 {
+	//get all the options and list behave accordingly
 	for (int i = 1; i < argc; ++i)
 	{
 		if (strcmp(argv[i], "--about") == 0)
@@ -157,6 +162,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		}
 		else if (argv[i][0] == '-')
 		{
+			//if it was none of the above, it must have been one of the one letter options
 			for (int j = 1; argv[i][j] != '\0'; ++j)
 				switch (argv[i][j])
 				{
@@ -199,6 +205,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		}
 		else
 		{
+			//since we don't suppport file handling for now, any other options must be mistakes
 			std::cerr << argv[0] << " invalid option : " << argv[i] << '\n';
 			std::cerr << "Usage : " << argv[0] << " [options]\n";
 			std::cerr << "Try \'" << argv[0] << " -h\' for more information\n";
@@ -209,6 +216,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 
 void printHelp(const char name[])
 {
+	//print help menu
 	printVersion(name);
 	std::cout << "Usage : " << name << " [options]\n";
 	std::cout << "Options:\n";
@@ -222,11 +230,13 @@ void printHelp(const char name[])
 
 void printVersion(const char name[])
 {
+	//print version
 	std::cout << name << " : version 0.10.2 (Eliza)\n\n";
 }
 
 void printLicense()
 {
+	//print license, as per GPL requirements
 	std::cout << "ssolver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
 	std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
 	std::cout << "This program is free software, and you are welcome to redistribute it under\n";

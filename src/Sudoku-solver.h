@@ -24,19 +24,27 @@
 namespace CSudokuSolver
 {
 	struct SUDOKU_ANS {
+		//this is each individual cell in the 9x9 sudoku
+		//it stores a list of possible numbers
+		//it also store the status of a cell (solved or not)
 		bool done = false;
 		bool num[9] = {true, true, true, true, true, true, true, true, true};
 	};
 	struct SUDOKU_ANS_BOARD {
+		//this is the 9x9 sudoku made from the above
 		struct SUDOKU_ANS box[9][9];
 	};
 	struct SUDOKU {
+		//this contains 2 9x9 sudokus that store the given question and the answer
+		//it also contains the board of possibilities
+		//lastly it has a bool that keeps tells us if a change was made to the sudoku answer
 		bool changed = true;
 		int sudoku_q[9][9];
 		int sudoku_a[9][9];
 		SUDOKU_ANS_BOARD sudoku_ans;
 	};
 	struct POINT {
+		//points, makes it easier to pass params to functions and makes some code neater
 		int x;
 		int y;
 	};
