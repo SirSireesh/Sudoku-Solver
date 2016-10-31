@@ -21,3 +21,4 @@ stamp-h1
 src/Makefile.in
 src/*.o
 src/ssolver
+*.solutions
