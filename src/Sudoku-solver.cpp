@@ -24,11 +24,15 @@
 #include <algorithm>
 #include <iterator>
 #include <string>
+
 #include "Sudoku-solver.h"
 #include "termcolor.hpp"
 
 bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 {
+	//get the input as string from stdin,
+	//read store in the 9x9 sudokus in struct SUDOKU
+	//return false if something went wrong
 	std::string input;
 	std::getline(std::cin, input);
 
@@ -55,6 +59,8 @@ bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 
 bool CSudokuSolver::initialiseSudoku(SUDOKU &sudoku)
 {
+	//from the given 9x9 sudokus in struct SUDOKU, initialize the possibilities 
+	//return false if the question is not valid
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j) 
 		{
