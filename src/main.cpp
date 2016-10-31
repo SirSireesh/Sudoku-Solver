@@ -36,7 +36,6 @@ void printHelp(const char name[]);
 int main(int argc, char *argv[])
 {
 	bool print_steps = false, silent = false, logical = false;
-	const char *prog_name = argv[0];
 
 	getOpt(argc, argv, print_steps, silent, logical);
 
@@ -44,14 +43,14 @@ int main(int argc, char *argv[])
 
 	if (!getSudoku(sudoku))
 	{
-		std::cerr << prog_name << " : The input string was too short, too long or contained invalid characters\n";
+		std::cerr << argv[0] << " : The input string was too short, too long or contained invalid characters\n";
 		std::cout << "Check your input and try agin!\nExiting ...\n";
 		return 2;
 	}
 
 	if (!initialiseSudoku(sudoku) || count(sudoku.sudoku_q) < 17) 
 	{ 
-		std::cerr << prog_name <<  " : The input sudoku is invalid! It contains too few clues or an invalid question.\n";
+		std::cerr << argv[0] <<  " : The input sudoku is invalid! It contains too few clues or an invalid question.\n";
 		printSudoku(sudoku.sudoku_q);
 		return 2;
 	}
@@ -99,7 +98,7 @@ int main(int argc, char *argv[])
 
 	if (checkError(sudoku)) 
 	{
-		std::cerr << prog_name << " : Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
+		std::cerr << argv[0] << " : Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
 		printSudoku(sudoku.sudoku_a);
 		return 3;
 	}
