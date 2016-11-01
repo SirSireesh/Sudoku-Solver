@@ -28,16 +28,16 @@
 
 using namespace CSudokuSolver;
 
-void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logical);
+void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logical, bool &brute_force);
 void printVersion(const char name[]);
 void printLicense();
 void printHelp(const char name[]);
 
 int main(int argc, char *argv[])
 {
-	bool print_steps = false, silent = false, logical = false;		//options
+	bool print_steps = false, silent = false, logical = false, brute_force = false;		//options
 
-	getOpt(argc, argv, print_steps, silent, logical);
+	getOpt(argc, argv, print_steps, silent, logical, brute_force);
 
 	SUDOKU sudoku;		//our sudoku board
 
@@ -66,8 +66,10 @@ int main(int argc, char *argv[])
 	}
 
 	auto sTime = std::chrono::high_resolution_clock::now();		//get current time for printing time take
-	bruteForce(sudoku);
-	solveSudoku(sudoku, print_steps, logical);
+	if (brute_force)
+		bruteForce(sudoku);
+	else
+		solveSudoku(sudoku, print_steps, logical);
 	auto eTime = std::chrono::high_resolution_clock::now();		//the time after the sudoku solving was completed
 
 	if (checkError(sudoku)) 
@@ -91,7 +93,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logical)
+void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logical, bool &brute_force)
 {
 	//get all the options and list behave accordingly
 	for (int i = 1; i < argc; ++i)
@@ -100,6 +102,12 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		{
 			printLicense();
 			exit(0);
+		}
+		else if (strcmp(argv[i], "--brute-force") == 0)
+		{
+			brute_force = true;
+			if (logical)
+				std::cerr << "brute force can't be used with --logical, the sudoku will be solved with brute force only\n";
 		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-help") == 0)
 		{
@@ -140,6 +148,11 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 					case 'a':
 						printLicense();
 						exit(0);
+					case 'b':
+						brute_force = true;
+						if (logical)
+							std::cerr << "Conflicting options! -b and-l can not be used together, the sudoku will be solved with brute force only\n";
+						break;
 					case 'h':
 						printHelp(argv[0]);
 						exit(0);
@@ -165,7 +178,10 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 						}
 						break;
 					case 'l' :
-						logical = true;
+						if (brute_force)
+							std::cerr << "Conflicting options! -b and-l can not be used together, the sudoku will be solved with brute force only\n";
+						else
+							logical = true;
 						break;
 					default :
 						std::cerr << argv[0] << " invalid option : " << argv[i][j] << '\n';
@@ -191,12 +207,13 @@ void printHelp(const char name[])
 	printVersion(name);
 	std::cout << "Usage : " << name << " [options]\n";
 	std::cout << "Options:\n";
-	std::cout << " -a  --about  \t Print license info and exit\n";
-	std::cout << " -h  --help   \t Print this help menu and exit\n";
-	std::cout << " -l  --logical\t Sove the sudoku logically (no guesses/trial and error)\n";
-	std::cout << " -s  --silent \t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
-	std::cout << " -t  --trace  \t Print how to solve the given sudoku (step by step solution!)\n";
-	std::cout << " -v  --version\t Print version info and exit\n";
+	std::cout << " -a  --about	\t Print license info and exit\n";
+	std::cout << " -b  --brute-force\t Solve the sudoku using Brute Force™\n";
+	std::cout << " -h  --help	\t Print this help menu and exit\n";
+	std::cout << " -l  --logical	\t Sove the sudoku logically (no guesses/trial and error)\n";
+	std::cout << " -s  --silent 	\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
+	std::cout << " -t  --trace  	\t Print how to solve the given sudoku (step by step solution!)\n";
+	std::cout << " -v  --version	\t Print version info and exit\n";
 }
 
 void printVersion(const char name[])
