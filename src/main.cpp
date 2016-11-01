@@ -107,12 +107,19 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		{
 			brute_force = true;
 			if (logical)
-				std::cerr << "brute force can't be used with --logical, the sudoku will be solved with brute force only\n";
+				std::cerr << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
 		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-help") == 0)
 		{
 			printHelp(argv[0]);
 			exit(0);
+		}
+		else if (strcmp(argv[i], "--logical") == 0)
+		{
+			if (brute_force)
+				std::cerr << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
+			else
+				logical = true;
 		}
 		else if (strcmp(argv[i], "--trace") == 0)
 		{
@@ -151,7 +158,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 					case 'b':
 						brute_force = true;
 						if (logical)
-							std::cerr << "Conflicting options! -b and-l can not be used together, the sudoku will be solved with brute force only\n";
+							std::cerr << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
 						break;
 					case 'h':
 						printHelp(argv[0]);
