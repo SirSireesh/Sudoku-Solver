@@ -48,7 +48,6 @@ bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 			{
 				case '1': case '2' : case '3' : case '4' : case '5' : case '6' : case '7' : case '8' : case '9' :
 					sudoku.sudoku_q[i][j] = sudoku.sudoku_a[i][j] = static_cast<int> (input[(i * 9) + j] - '0');
-					++sudoku.num_solved;
 					break;
 				case '0' : case '.' : case ' ' : 
 					sudoku.sudoku_q[i][j] = sudoku.sudoku_a[i][j] = 0;
@@ -200,11 +199,11 @@ void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = fa
 	//disable all numbers in the cell to prevent silly bugs
 	for (int i = 0; i < 9; ++i) 
 		sudoku.sudoku_ans.box[x][y].num[i] = false;
-
 	//disable the number for all cells that it 'sees'
 	disableRow(sudoku, n, x);
 	disableColumn(sudoku, n, y);
 	disableBox(sudoku, n, x, y);
+	++sudoku.num_solved;
 }
 
 void CSudokuSolver::checkColumns(SUDOKU &sudoku, bool print_steps = false)
