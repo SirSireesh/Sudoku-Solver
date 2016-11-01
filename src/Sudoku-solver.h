@@ -78,5 +78,6 @@ namespace CSudokuSolver
 	void boxLineReduceColumn(SUDOKU &sudoku, bool print_steps);				//check if numbers manifest themselves in 2 boxes such that in box 3 numbers can be eliminated
 	void xWing(SUDOKU &sudoku, bool print_steps);						//x-wing algorithm
 	void yWing(SUDOKU &sudoku, bool print_steps);						//y-wing algorithm
-	void trialError(SUDOKU &sudoku, bool print_steps);					//brute force the solution (Bowman's Bingo')
+	void trialError(SUDOKU &sudoku, bool print_steps);					//brute force the solution (Bowman's Bingo)
+	void solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical);			//solve the sudoku using the above functions
 }
