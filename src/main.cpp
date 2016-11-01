@@ -66,37 +66,7 @@ int main(int argc, char *argv[])
 	}
 
 	auto sTime = std::chrono::high_resolution_clock::now();		//get current time for printing time take
-
-	while (sudoku.num_solved < 81 && sudoku.changed) 
-	{
-		sudoku.changed = false;					//reset changed status - allows us to know if the sudoku is no longer solvable
-		nakedSingle(sudoku, print_steps);
-		if (!sudoku.changed)					//don't use any other algorithms unless necessary'
-		{
-			checkColumns(sudoku, print_steps);
-			checkRows(sudoku, print_steps);
-			checkBox(sudoku, print_steps);
-		}
-		if (!sudoku.changed) 
-			nakedPair(sudoku, print_steps);
-		if (!sudoku.changed)
-			nakedTriple(sudoku, print_steps);
-		if (!sudoku.changed)
-			pointingBoxColumns(sudoku, print_steps);
-		if (!sudoku.changed)
-			pointingBoxRows(sudoku, print_steps);
-		if (!sudoku.changed)
-			boxLineReduceRow(sudoku, print_steps);
-		if (!sudoku.changed)
-			boxLineReduceColumn(sudoku, print_steps);
-		if (!sudoku.changed)
-			xWing(sudoku, print_steps);
-		if (!sudoku.changed)
-			yWing(sudoku, print_steps);
-		if (!sudoku.changed && !logical)			//only use trial and error if logical is not set
-			trialError(sudoku, print_steps);
-	}
-
+	solveSudoku(sudoku, print_steps, logical);
 	auto eTime = std::chrono::high_resolution_clock::now();		//the time after the sudoku solving was completed
 
 	if (checkError(sudoku)) 

@@ -1417,30 +1417,7 @@ void CSudokuSolver::trialError(SUDOKU &sudoku, bool print_steps)
 					if (copy_sudoku.sudoku_ans.box[i][j].num[n])
 					{
 						finalize(copy_sudoku, n, i, j);
-						while (sudoku.num_solved < 81 && copy_sudoku.changed) 
-						{
-							copy_sudoku.changed = false;
-							checkColumns(copy_sudoku);
-							checkRows(copy_sudoku);
-							nakedSingle(copy_sudoku);
-							checkBox(copy_sudoku);
-							if (!copy_sudoku.changed) 
-								boxLineReduceRow(copy_sudoku);
-							if (!copy_sudoku.changed)
-								boxLineReduceColumn(copy_sudoku);
-							if (!copy_sudoku.changed)
-								pointingBoxColumns(copy_sudoku);
-							if (!copy_sudoku.changed)
-								pointingBoxRows(copy_sudoku);
-							if (!copy_sudoku.changed)
-								nakedPair(copy_sudoku);
-							if (!copy_sudoku.changed)
-								nakedTriple(copy_sudoku);
-							if (!copy_sudoku.changed)
-								xWing(copy_sudoku);
-							if (!copy_sudoku.changed)
-								yWing(copy_sudoku);
-						}
+						solveSudoku(copy_sudoku, /*print_steps = */ false, /*logical = */ true);
 						if (checkError(copy_sudoku))
 						{
 							disablePos(sudoku, n, i, j);
@@ -1465,6 +1442,41 @@ void CSudokuSolver::trialError(SUDOKU &sudoku, bool print_steps)
 					}
 				}
 		}
+}
+
+void CSudokuSolver::solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical)
+{
+	while (sudoku.num_solved < 81 && sudoku.changed)
+	{
+		sudoku.changed = false;
+		nakedSingle(sudoku, print_steps);
+		if (!sudoku.changed)
+		{
+			checkRows(sudoku, print_steps);
+			checkColumns(sudoku, print_steps);
+			checkBox(sudoku, print_steps);
+		}
+		if (!sudoku.changed)
+			nakedPair(sudoku, print_steps);
+		if (!sudoku.changed)
+			nakedTriple(sudoku, print_steps);
+		if (!sudoku.changed)
+		{
+			pointingBoxRows(sudoku, print_steps);
+			pointingBoxColumns(sudoku, print_steps);
+		}
+		if (!sudoku.changed)
+		{
+			boxLineReduceRow(sudoku, print_steps);
+			boxLineReduceColumn(sudoku, print_steps);
+		}
+		if (!sudoku.changed)
+			xWing(sudoku, print_steps);
+		if (!sudoku.changed)
+			yWing(sudoku, print_steps);
+		if (!sudoku.changed && !logical)
+			trialError(sudoku, print_steps);
+	}
 }
 
 bool CSudokuSolver::checkError(SUDOKU sudoku)
