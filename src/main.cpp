@@ -153,7 +153,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 			printLicense();
 			exit(0);
 		}
-		else if (argv[i][0] == '-')
+		else if (argv[i][0] == '-' && argv[i][1] != '-')
 		{
 			//if it was none of the above, it must have been one of the one letter options
 			for (int j = 1; argv[i][j] != '\0'; ++j)
