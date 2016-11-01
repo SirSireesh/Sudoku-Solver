@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 	}
 
 	auto sTime = std::chrono::high_resolution_clock::now();		//get current time for printing time take
+	bruteForce(sudoku);
 	solveSudoku(sudoku, print_steps, logical);
 	auto eTime = std::chrono::high_resolution_clock::now();		//the time after the sudoku solving was completed
 
