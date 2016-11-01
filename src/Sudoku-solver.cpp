@@ -1516,20 +1516,10 @@ bool CSudokuSolver::checkError(SUDOKU sudoku)
 	//check for an error in the solution 
 	//return true if there is an error
 	//return false if there are no errors
-	int poss = 0;
 	for (int i = 0; i < 9; ++i) 
 		for (int j = 0; j < 9; ++j) 
-			if (!sudoku.sudoku_a[i][j]) 
-			{
-				poss = 0;
-				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[i][j].num[n])
-						++poss;	
-				if (poss == 0)
-				{
-					return true;
-				}
-			}
+			if (!sudoku.sudoku_a[i][j] && numPossible(sudoku, i, j) == 0) 
+				return true;
 	return false;
 }
 
