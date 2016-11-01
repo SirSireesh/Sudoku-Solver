@@ -1505,7 +1505,7 @@ bool CSudokuSolver::bruteForce(SUDOKU &sudoku)
 {
 	if (sudoku.num_solved == 81)
 		return true;
-	solveSudoku(sudoku, false, false);
+	solveSudoku(sudoku, false, true);
 	if (checkError(sudoku))
 		return false;
 	SUDOKU copy_sudoku = sudoku;
