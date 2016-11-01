@@ -130,6 +130,36 @@ int CSudokuSolver::getCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
 	return -1;
 }
 
+int CSudokuSolver::numPossible(SUDOKU sudoku, int x, int y)
+{
+	int possible = 0;
+	if (sudoku.sudoku_ans.box[x][y].done == true)
+		return 0;
+	else
+		for (int n = 0; n < 9; ++n)
+			if (sudoku.sudoku_ans.box[x][y].num[n])
+				++possible;
+	return possible;
+}
+
+CSudokuSolver::POINT CSudokuSolver::leastNumsPos(SUDOKU sudoku)
+{
+	int min_possible = 100;
+	POINT min_point = {-1, -1};
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+		{
+			int cposs = numPossible(sudoku, i, j);
+			if (cposs < min_possible)
+			{
+				min_point.x = i;
+				min_point.y = j;
+				min_possible = cposs;
+			}
+		}
+	return min_point;
+}
+
 void CSudokuSolver::disablePos(SUDOKU &sudoku, int n, int x, int y)
 {
 	//disable a number at a poition on the possibilities board
