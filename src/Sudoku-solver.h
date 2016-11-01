@@ -63,6 +63,8 @@ namespace CSudokuSolver
 	bool checkError(SUDOKU sudoku);								//check if something went wrong
 	int numCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the number of common possibilities
 	int getCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the common number between 2 positions
+	int numPossible(SUDOKU sudoku, int x, int y);						//return the number of possible numbers at a position
+	POINT leastNumsPos(SUDOKU sudoku);							//return the position in the solver which has the least possible numbers
 
 	void nakedSingle(SUDOKU &sudoku, bool print_steps);					//check all the positions in a sudoku for a number that is the sole possibility in the box
 	void checkRows(SUDOKU &sudoku, bool print_steps);					//check the rows of a given sudoku for a number only possible in one place in the row
