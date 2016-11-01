@@ -149,12 +149,15 @@ CSudokuSolver::POINT CSudokuSolver::leastNumsPos(SUDOKU sudoku)
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 		{
-			int cposs = numPossible(sudoku, i, j);
-			if (cposs < min_possible)
+			if (sudoku.sudoku_ans.box[i][j].done == false)
 			{
-				min_point.x = i;
-				min_point.y = j;
-				min_possible = cposs;
+				int cposs = numPossible(sudoku, i, j);
+				if (cposs < min_possible)
+				{
+					min_point.x = i;
+					min_point.y = j;
+					min_possible = cposs;
+				}
 			}
 		}
 	return min_point;
@@ -371,7 +374,7 @@ void CSudokuSolver::nakedPair(SUDOKU &sudoku, bool print_steps = false)
 	//if there are two numbers such that they ar the only 2 possible numbers
 	//in two separate boxes within the same unit
 	//the same numbes can be disabled everywhere else in the same unit
-	
+
 	//exit on finding a pair, as our 'counter' becomes outdated
 	int counter[9][9];
 	for (int i = 0; i < 9; ++i)
@@ -800,7 +803,7 @@ void CSudokuSolver::hiddenPair(SUDOKU &sudoku, bool print_steps = false)
 					for (int k = 0; k < 9; ++k) 
 					{
 						if ((sudoku.sudoku_ans.box[i][k].num[num1[0]] && !sudoku.sudoku_ans.box[i][k].num[num2[0]]) 
-							|| (!sudoku.sudoku_ans.box[i][k].num[num1[0]] && sudoku.sudoku_ans.box[i][k].num[num2[0]]))
+								|| (!sudoku.sudoku_ans.box[i][k].num[num1[0]] && sudoku.sudoku_ans.box[i][k].num[num2[0]]))
 						{
 							hidden_pair = false;
 							break;
@@ -1042,7 +1045,7 @@ void CSudokuSolver::xWing(SUDOKU &sudoku, bool print_steps = false)
 						{
 							if ((columns.size() == 0 || std::find(columns.begin(), columns.end(), l) == columns.end()) 
 									&& (sudoku.sudoku_ans.box[i][l].num[j]
-									|| sudoku.sudoku_ans.box[k][l].num[j]))
+										|| sudoku.sudoku_ans.box[k][l].num[j]))
 								columns.push_back(l);
 						}
 						if (columns.size() == 2)
@@ -1099,7 +1102,7 @@ void CSudokuSolver::xWing(SUDOKU &sudoku, bool print_steps = false)
 						{
 							if ((rows.size() == 0 || std::find(rows.begin(), rows.end(), l) == rows.end()) 
 									&& (sudoku.sudoku_ans.box[l][i].num[j]
-									|| sudoku.sudoku_ans.box[l][k].num[j]))
+										|| sudoku.sudoku_ans.box[l][k].num[j]))
 								rows.push_back(l);
 						}
 						if (rows.size() == 2)
@@ -1298,13 +1301,13 @@ void CSudokuSolver::yWing(SUDOKU &sudoku, bool print_steps = false)
 						for (int n = 0; n < 9; ++n)
 							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) 
 									&& (sudoku.sudoku_ans.box[i][j].num[n] 
-									||  sudoku.sudoku_ans.box[k][j].num[n]))
+										||  sudoku.sudoku_ans.box[k][j].num[n]))
 								nums.push_back(n);
 						if (nums.size() == 3)
 						{
 							POINT pos1 = {i, j}, pos2 = {k , j};
 							POINT pos3 = getPos3(sudoku, pos1, pos2, counter, nums);
-							
+
 							if (pos3.x == pos1.x || pos3.x - pos3.x % 3 == pos1.x - pos1.x % 3)
 							{
 								int common_num = getCommon(sudoku, pos2, pos3);
@@ -1367,7 +1370,7 @@ void CSudokuSolver::yWing(SUDOKU &sudoku, bool print_steps = false)
 						for (int n = 0; n < 9; ++n)
 							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) 
 									&& (sudoku.sudoku_ans.box[j][i].num[n] 
-									||  sudoku.sudoku_ans.box[j][k].num[n]))
+										||  sudoku.sudoku_ans.box[j][k].num[n]))
 								nums.push_back(n);
 						if (nums.size() == 3)
 						{
@@ -1532,27 +1535,24 @@ bool CSudokuSolver::checkError(SUDOKU sudoku)
 
 bool CSudokuSolver::bruteForce(SUDOKU &sudoku)
 {
-	if (sudoku.num_solved == 81)
-		return true;
 	solveSudoku(sudoku, false, true);
 	if (checkError(sudoku))
 		return false;
+	if (sudoku.num_solved == 81)
+		return true;
 	SUDOKU copy_sudoku = sudoku;
-	for (int i = 0; i < 9; ++i)
-		for (int j = 0; j < 9; ++j)
-			if (copy_sudoku.sudoku_ans.box[i][j].done == false)
-				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[i][j].num[n])
-					{
-						finalize(copy_sudoku, n, i, j);
-						if (!bruteForce(copy_sudoku))
-							copy_sudoku = sudoku;
-						else
-						{
-							sudoku = copy_sudoku;
-							return true;
-						}
-					}
-	sudoku = copy_sudoku;
-	return true;
+	POINT least_pos = leastNumsPos(sudoku);
+	for (int n = 0; n < 9; ++n)
+		if (sudoku.sudoku_ans.box[least_pos.x][least_pos.y].num[n])
+		{
+			finalize(copy_sudoku, n, least_pos.x, least_pos.y);
+			if (!bruteForce(copy_sudoku))
+				copy_sudoku = sudoku;
+			else
+			{
+				sudoku = copy_sudoku;
+				return true;
+			}
+		}
+	return false;
 }
