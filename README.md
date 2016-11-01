@@ -22,6 +22,8 @@ You need a compiler capable of c++11
 
 * Trial and Error
 
+* Brute Force
+
 ###Installing
 You can run 
 
@@ -35,7 +37,7 @@ You can run
 
 `make install` 
 
-in that order to istall the program to `/opt/local/bin`
+in that order to install the program to `/opt/local/bin`
 
 ###Usage
 ssolver [options] 
@@ -44,16 +46,14 @@ The program accepts Sudokus from `stdin`. Blank boxes can be represented by spac
 
 The options allowed are 
 
--a --about   -- Print license
-
--h --help    -- Print help menu
-
--l --logical -- Use logic only to solve a sudoku (no trial and error)
-
--t --trace   -- Print the method used to solve the Sudoku
-
--s --silent  -- Silently solve the sudoku and print unformatted output (i.e. output is in a single line)
-
--v --version -- Print version and exit
+short | long  | Action|
+------|-------|-------|
+`-a`    |`--about`|Print license
+`-b`  | `--brute-force`|Use Brute Force to solve the sudoku
+`-h`    |`--help` |Print help menu
+`-l`    |`--logical` |Use logic only to solve a sudoku (no trial and error)
+`-t`    |`--trace`|Print the method used to solve the Sudoku
+`-s` |`--silent`  |Silently solve the sudoku and print unformatted output (i.e. output is in a single line)
+`-v` |`--version`|Print version and exit
 
 If you installed using the above instructions, you can always run `man ssolver`
