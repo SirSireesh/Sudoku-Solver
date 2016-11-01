@@ -1500,3 +1500,30 @@ bool CSudokuSolver::checkError(SUDOKU sudoku)
 			}
 	return false;
 }
+
+bool CSudokuSolver::bruteForce(SUDOKU &sudoku)
+{
+	if (sudoku.num_solved == 81)
+		return true;
+	solveSudoku(sudoku, false, false);
+	if (checkError(sudoku))
+		return false;
+	SUDOKU copy_sudoku = sudoku;
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+			if (copy_sudoku.sudoku_ans.box[i][j].done == false)
+				for (int n = 0; n < 9; ++n)
+					if (sudoku.sudoku_ans.box[i][j].num[n])
+					{
+						finalize(copy_sudoku, n, i, j);
+						if (!bruteForce(copy_sudoku))
+							copy_sudoku = sudoku;
+						else
+						{
+							sudoku = copy_sudoku;
+							return true;
+						}
+					}
+	sudoku = copy_sudoku;
+	return true;
+}
