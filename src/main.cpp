@@ -69,7 +69,14 @@ int main(int argc, char *argv[])
 	if (brute_force)
 		bruteForce(sudoku);
 	else
+	{
 		solveSudoku(sudoku, print_steps, logical);
+		if (sudoku.num_solved < 81 && !logical)
+		{
+			std::cerr << argv[0] << " : The sudoku could not be solved logically. Since the logical flag was not set, the program has solved it using brute force\n";
+			bruteForce(sudoku);
+		}
+	}
 	auto eTime = std::chrono::high_resolution_clock::now();		//the time after the sudoku solving was completed
 
 	if (checkError(sudoku)) 
@@ -107,7 +114,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		{
 			brute_force = true;
 			if (logical)
-				std::cerr << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
+				std::cerr << argv[0] << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
 		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-help") == 0)
 		{
@@ -117,7 +124,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		else if (strcmp(argv[i], "--logical") == 0)
 		{
 			if (brute_force)
-				std::cerr << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
+				std::cerr << argv[0] << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
 			else
 				logical = true;
 		}
@@ -127,7 +134,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 				print_steps = true;
 			else
 			{
-				std::cerr << "Conflicting options! --silent and --trace can not be used together!\nExiting!\n";
+				std::cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together!\nExiting!\n";
 				exit(1);
 			}
 		}
@@ -137,7 +144,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 				silent = true;
 			else 
 			{
-				std::cerr << "Conflicting options! --silent and --trace can not be used together!\nExiting!\n";
+				std::cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together!\nExiting!\n";
 				exit(1);
 			}
 		}
@@ -158,7 +165,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 					case 'b':
 						brute_force = true;
 						if (logical)
-							std::cerr << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
+							std::cerr << argv[0] << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
 						break;
 					case 'h':
 						printHelp(argv[0]);
@@ -168,7 +175,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 							print_steps = true;
 						else
 						{
-							std::cerr << "Conflicting options! -s and -t can not be used together!\nExiting!\n";
+							std::cerr << argv[0] << "Conflicting options! -s and -t can not be used together!\nExiting!\n";
 							exit(1);
 						}
 						break;
@@ -180,13 +187,13 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 							silent = true;
 						else
 						{
-							std::cerr << "Conflicting options! -s and -t can not be used together\nExiting!\n"; 
+							std::cerr << argv[0] << "Conflicting options! -s and -t can not be used together\nExiting!\n"; 
 							exit(1);
 						}
 						break;
 					case 'l' :
 						if (brute_force)
-							std::cerr << "Conflicting options! -b and-l can not be used together, the sudoku will be solved with brute force only\n";
+							std::cerr << argv[0] << "Conflicting options! -b and-l can not be used together, the sudoku will be solved with brute force only\n";
 						else
 							logical = true;
 						break;
