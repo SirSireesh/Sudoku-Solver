@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	{
 		//input string error
 		std::cerr << argv[0] << " : The input string was too short, too long or contained invalid characters\n";
-		std::cout << "Check your input and try agin!\nExiting ...\n";
+		std::cerr << "Check your input and try agin!\nExiting ...\n";
 		return 2;
 	}
 
