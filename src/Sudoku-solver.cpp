@@ -1478,36 +1478,41 @@ void CSudokuSolver::trialError(SUDOKU &sudoku, bool print_steps)
 
 void CSudokuSolver::solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical)
 {
+	//Solve the sudokus using the above written algorithms
 	while (sudoku.num_solved < 81 && sudoku.changed)
 	{
+		//get rid of the easy ones first
 		sudoku.changed = false;
 		nakedSingle(sudoku, print_steps);
 		if (!sudoku.changed)
 		{
+			//Do the easy stuff now
 			checkRows(sudoku, print_steps);
 			checkColumns(sudoku, print_steps);
 			checkBox(sudoku, print_steps);
 		}
 		if (!sudoku.changed)
-			nakedPair(sudoku, print_steps);
+			nakedPair(sudoku, print_steps);		//Naked Pairs
 		if (!sudoku.changed)
-			nakedTriple(sudoku, print_steps);
+			nakedTriple(sudoku, print_steps);	//Naked Triples
 		if (!sudoku.changed)
 		{
+			//Pointing Box
 			pointingBoxRows(sudoku, print_steps);
 			pointingBoxColumns(sudoku, print_steps);
 		}
 		if (!sudoku.changed)
 		{
+			//Box Line Reduce
 			boxLineReduceRow(sudoku, print_steps);
 			boxLineReduceColumn(sudoku, print_steps);
 		}
 		if (!sudoku.changed)
-			xWing(sudoku, print_steps);
+			xWing(sudoku, print_steps);		//X wing
 		if (!sudoku.changed)
-			yWing(sudoku, print_steps);
+			yWing(sudoku, print_steps);		//Y wing
 		if (!sudoku.changed && !logical)
-			trialError(sudoku, print_steps);
+			trialError(sudoku, print_steps);	//Trial Error
 	}
 }
 
