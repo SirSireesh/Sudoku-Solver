@@ -2,7 +2,6 @@
 /bin
 /.DS_STORE
 autom4te.cache
-configure
 config.status
 aclocal
 compile
