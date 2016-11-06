@@ -5,6 +5,7 @@ compiler: clang
 env:
         TOOLS=Autotools
 script:
+        - aclocal
         - automake --add-missing
         - autoconf || autoreconf
         - automake 
