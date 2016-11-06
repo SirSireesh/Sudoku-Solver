@@ -92,6 +92,10 @@ int main(int argc, char *argv[])
 		//print the fancy stuff if silent is not set
 		printfSudoku(sudoku);
 		std::cout << "Answered : " << termcolor::green << sudoku.num_solved << termcolor::reset << '\n';
+		std::cout << "Rated : ";
+		for (int i = 1; i <= sudoku.rating; ++i)
+			std::cout << '*';
+		std::cout << '\n';
 		std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n"; //print time in milliseconds
 	}
 	else 

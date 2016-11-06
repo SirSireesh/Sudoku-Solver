@@ -1492,7 +1492,11 @@ void CSudokuSolver::solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical)
 			checkBox(sudoku, print_steps);
 		}
 		if (!sudoku.changed)
+		{
+			if (sudoku.rating < 2)
+				sudoku.rating = 2;
 			nakedPair(sudoku, print_steps);		//Naked Pairs
+		}
 		if (!sudoku.changed)
 			nakedTriple(sudoku, print_steps);	//Naked Triples
 		if (!sudoku.changed)
@@ -1508,11 +1512,22 @@ void CSudokuSolver::solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical)
 			boxLineReduceColumn(sudoku, print_steps);
 		}
 		if (!sudoku.changed)
+		{
+			if (sudoku.rating < 3)
+				sudoku.rating = 3;
 			xWing(sudoku, print_steps);		//X wing
+		}
 		if (!sudoku.changed)
+		{
+			if (sudoku.rating < 4)
+				sudoku.rating = 4;
 			yWing(sudoku, print_steps);		//Y wing
+		}
 		if (!sudoku.changed && !logical)
+		{
 			trialError(sudoku, print_steps);	//Trial Error
+			sudoku.rating = 5;
+		}
 	}
 }
 
