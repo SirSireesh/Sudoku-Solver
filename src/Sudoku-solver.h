@@ -44,6 +44,7 @@ namespace CSudokuSolver
 		int sudoku_a[9][9];
 		SUDOKU_ANS_BOARD sudoku_ans;
 		int num_solved = 0;
+		int rating = 1;
 	};
 	struct POINT {
 		//points, makes it easier to pass params to functions and makes some code neater
