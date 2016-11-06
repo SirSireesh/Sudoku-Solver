@@ -2,3 +2,8 @@ os: osx
 osx_image: xcode8
 language: cpp
 compiler: clang
+env:
+        TOOLS=Autotools
+script:
+        - autoconf || autoreconf
+        - automake 
