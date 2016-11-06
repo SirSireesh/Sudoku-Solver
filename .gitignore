@@ -13,6 +13,7 @@ aclocal.m4
 depcomp
 Makefile
 config.h
+configure
 docs/Makefile
 src/.deps
 src/Makefile
