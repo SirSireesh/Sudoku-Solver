@@ -9,5 +9,6 @@ script:
         - automake --add-missing
         - autoconf || autoreconf
         - automake 
+        - mkdir bin
         - clang++ src/Sudoku-solver.cpp src/main.cpp -std=c++11 -o bin/ssolver
         - test-sudokus/solve-sudokus.sh
