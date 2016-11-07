@@ -1,6 +1,6 @@
 #!/bin/bash
 
-program=${BASH_SOURCE%/*}/../bin/ssolver
+program=${BASH_SOURCE%/*}/../src/ssolver
 testSudokus=${BASH_SOURCE%/*}/test.sudoku
 
 line=0
