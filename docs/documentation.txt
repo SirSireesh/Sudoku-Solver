@@ -41,5 +41,47 @@ Sudoku-solver.h
 	get the sudoku, print it and solve it
 	
 	Structures :
-		SUDOKU_ANS : This is representative of each individual cell
+		SUDOKU_CELL : This is representative of each individual cell
+		SUDOKU_ANS_BOARD : This is the 9x9 array of the cells
+		SUDOKU : This is the structure that contains the question,
+			answer, list of possiblities, number of cells solved,
+			rating of the sudoku, and status of the sudoku (if the
+			sudoku was changed in the last attempt to solve it)
+		POINT : This is a structure to represent points
+			NOTE : This structure has not been used everywhere
+			because more often than not, it makes code ugly, and
+			forces the creation of unnecessary 'temp' variables
+	
+	Functions :
+		getSudoku() : get the sudoku from stdin
+		initializeSudoku() : initialize the possiblities board
+		printSudoku() : print the sudoku to stdout, unformatted, in a
+				single line. usefull for scripting slving of multiple sudokus
+		disablePos() : disable a numeber from the sudoku possibiliities
+			       board
+		disableRow() : same as above, but for the entire row - uses
+				disablePos to do th dirty work
+		disableColumn() : same as above but for entire column - uses
+				disablePos() to do the dirty work
+		finalize() : declare a number to be solution to a cell
+				-disables all number in the cell on the
+				 possiblities board
+				-sets the number on the answer board
+				-sets the status to changed
+		checkError() : checks for any error in the solution
+				It checks if th epossiblities board has any
+				cells which have zero numbers possible and
+				havn't already been solved. If there are any,
+				something went wrong
+		numCommon() : Gives the number of common numbers between two
+			      cells
+		getCommon() : Gives the first common number between 2 cells
+		numPossible() : Gives the number of numbers possible in a given
+				cell
+		leastNumsPos() : Return the position of the cell that has the least number of
+				possiblities
+				Useful for the bruteForce() algorithm
+
+		The rest of the function names are self explanatory. 
+		They are the functions that will actually solve the sudoku
 }
