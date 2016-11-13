@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
 
 	SUDOKU sudoku;		//our sudoku board
 
+	if (!silent)
+		std::cout << "Enter the sudoku : ";
 	if (!getSudoku(sudoku))
 	{
 		//input string error
@@ -66,9 +68,7 @@ int main(int argc, char *argv[])
 	}
 
 	auto sTime = std::chrono::high_resolution_clock::now();		//get current time for printing time take
-	if (brute_force)
-		bruteForce(sudoku);
-	else
+	if (!brute_force)
 	{
 		solveSudoku(sudoku, print_steps, logical);
 		if (sudoku.num_solved < 81 && !logical)
@@ -77,6 +77,8 @@ int main(int argc, char *argv[])
 			bruteForce(sudoku);
 		}
 	}
+	else
+		bruteForce(sudoku);
 	auto eTime = std::chrono::high_resolution_clock::now();		//the time after the sudoku solving was completed
 
 	if (checkError(sudoku)) 
