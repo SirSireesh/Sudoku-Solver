@@ -23,7 +23,7 @@
 
 namespace CSudokuSolver
 {
-	struct SUDOKU_ANS {
+	struct SUDOKU_CELL {
 		//this is each individual cell in the 9x9 sudoku
 		//it stores a list of possible numbers
 		//it also store the status of a cell (solved or not)
@@ -32,7 +32,7 @@ namespace CSudokuSolver
 	};
 	struct SUDOKU_ANS_BOARD {
 		//this is the 9x9 sudoku made from the above
-		struct SUDOKU_ANS box[9][9];
+		struct SUDOKU_CELL cell[9][9];
 	};
 	struct SUDOKU {
 		//this contains 2 9x9 sudokus that store the given question and the answer

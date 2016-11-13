@@ -66,7 +66,7 @@ bool CSudokuSolver::initialiseSudoku(SUDOKU &sudoku)
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j) 
 		{
-			if (sudoku.sudoku_q[i][j] && sudoku.sudoku_ans.box[i][j].num[sudoku.sudoku_q[i][j] - 1] == false) 
+			if (sudoku.sudoku_q[i][j] && sudoku.sudoku_ans.cell[i][j].num[sudoku.sudoku_q[i][j] - 1] == false) 
 				return false;
 			if (sudoku.sudoku_q[i][j])
 				finalize(sudoku, sudoku.sudoku_q[i][j] - 1, i, j, true);
@@ -115,7 +115,7 @@ int CSudokuSolver::numCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
 	//return the number of common numbers between 2 positions
 	int commmon = 0;
 	for (int n = 0; n < 9; ++n)
-		if (sudoku.sudoku_ans.box[pos1.x][pos1.y].num[n] && sudoku.sudoku_ans.box[pos2.x][pos2.y].num[n])
+		if (sudoku.sudoku_ans.cell[pos1.x][pos1.y].num[n] && sudoku.sudoku_ans.cell[pos2.x][pos2.y].num[n])
 			++commmon;
 	return commmon;
 }
@@ -125,7 +125,7 @@ int CSudokuSolver::getCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
 	//return the first common number between 2 positions
 	//return -1 if none were found
 	for (int n = 0; n < 9; ++n)
-		if (sudoku.sudoku_ans.box[pos1.x][pos1.y].num[n] && sudoku.sudoku_ans.box[pos2.x][pos2.y].num[n])
+		if (sudoku.sudoku_ans.cell[pos1.x][pos1.y].num[n] && sudoku.sudoku_ans.cell[pos2.x][pos2.y].num[n])
 			return n;
 	return -1;
 }
@@ -133,11 +133,11 @@ int CSudokuSolver::getCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
 int CSudokuSolver::numPossible(SUDOKU sudoku, int x, int y)
 {
 	int possible = 0;
-	if (sudoku.sudoku_ans.box[x][y].done == true)
+	if (sudoku.sudoku_ans.cell[x][y].done == true)
 		return 0;
 	else
 		for (int n = 0; n < 9; ++n)
-			if (sudoku.sudoku_ans.box[x][y].num[n])
+			if (sudoku.sudoku_ans.cell[x][y].num[n])
 				++possible;
 	return possible;
 }
@@ -149,7 +149,7 @@ CSudokuSolver::POINT CSudokuSolver::leastNumsPos(SUDOKU sudoku)
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 		{
-			if (sudoku.sudoku_ans.box[i][j].done == false)
+			if (sudoku.sudoku_ans.cell[i][j].done == false)
 			{
 				int cposs = numPossible(sudoku, i, j);
 				if (cposs < min_possible)
@@ -168,10 +168,10 @@ void CSudokuSolver::disablePos(SUDOKU &sudoku, int n, int x, int y)
 	//disable a number at a poition on the possibilities board
 	//POINT struct is not used as the performance loss is significant and more unnecessay variables 'temp' variable are created
 	//don't change anything if the box is already solved or the num is already marked as false in that position
-	if (sudoku.sudoku_ans.box[x][y].num[n] == true && sudoku.sudoku_ans.box[x][y].done == false) 
+	if (sudoku.sudoku_ans.cell[x][y].num[n] == true && sudoku.sudoku_ans.cell[x][y].done == false) 
 	{
 		sudoku.changed = true;
-		sudoku.sudoku_ans.box[x][y].num[n] = false;
+		sudoku.sudoku_ans.cell[x][y].num[n] = false;
 	}	
 }
 
@@ -180,7 +180,7 @@ void CSudokuSolver::disableColumn(SUDOKU &sudoku, int n, int column)
 	//disable a given number for a column
 	//calls disablePos to do the dirty work
 	for (int i = 0; i < 9; ++i) 
-		if (sudoku.sudoku_ans.box[i][column].done == false)
+		if (sudoku.sudoku_ans.cell[i][column].done == false)
 			disablePos(sudoku, n, i, column);
 }
 
@@ -189,7 +189,7 @@ void CSudokuSolver::disableRow(SUDOKU &sudoku, int n, int row)
 	//disable a given number for a row
 	//calls disablePos to do the dirty work
 	for (int j = 0; j < 9; ++j) 
-		if (sudoku.sudoku_ans.box[row][j].done == false)
+		if (sudoku.sudoku_ans.cell[row][j].done == false)
 			disablePos(sudoku, n, row, j);
 }
 
@@ -199,7 +199,7 @@ void CSudokuSolver::disableBox(SUDOKU &sudoku, int n, int x, int y)
 	//calls disablePos to do the dirty work
 	for (int i = x - (x%3); i < (x - (x%3) + 3); ++i)
 		for (int j = y - (y%3); j < (y  - (y%3) + 3); ++j) 
-			if (sudoku.sudoku_ans.box[i][j].done == false)
+			if (sudoku.sudoku_ans.cell[i][j].done == false)
 				disablePos(sudoku, n, i, j);
 }
 
@@ -207,14 +207,14 @@ void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = fa
 {
 	//finalize a given number at a position
 #ifdef DEBUG
-	if (sudoku.sudoku_ans.box[x][y].num[n] == false) 
+	if (sudoku.sudoku_ans.cell[x][y].num[n] == false) 
 	{
 		//this should not happen, but no harm done preventing errors
 		//diabling this might give a slight boost on performance
 		std::cout << termcolor::red << "error : The number " << n + 1 << " was set to false at " << x << ' ' << y << "!\n";
 		return;
 	}
-	if (sudoku.sudoku_ans.box[x][y].done) 
+	if (sudoku.sudoku_ans.cell[x][y].done) 
 	{
 		//again, this should not happen, but no harm done preventing
 		//disabling this might give a slight boost in performance
@@ -222,7 +222,7 @@ void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = fa
 		return;
 	}
 #endif
-	sudoku.sudoku_ans.box[x][y].done = true;
+	sudoku.sudoku_ans.cell[x][y].done = true;
 	sudoku.changed = true;
 	if (init)
 		sudoku.sudoku_q[x][y] = sudoku.sudoku_a[x][y] = n + 1;
@@ -231,7 +231,7 @@ void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = fa
 
 	//disable all numbers in the cell to prevent silly bugs
 	for (int i = 0; i < 9; ++i) 
-		sudoku.sudoku_ans.box[x][y].num[i] = false;
+		sudoku.sudoku_ans.cell[x][y].num[i] = false;
 	//disable the number for all cells that it 'sees'
 	disableRow(sudoku, n, x);
 	disableColumn(sudoku, n, y);
@@ -250,12 +250,12 @@ void CSudokuSolver::checkColumns(SUDOKU &sudoku, bool print_steps = false)
 		for (auto& elem : only_pos)
 			elem = true;
 		for (int j = 0; j < 9; ++j) 
-			if (sudoku.sudoku_ans.box[j][i].done == false)
+			if (sudoku.sudoku_ans.cell[j][i].done == false)
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[j][i].num[n] && only_pos[n]) 
+					if (sudoku.sudoku_ans.cell[j][i].num[n] && only_pos[n]) 
 					{
 						for (int k = j + 1; k < 9; ++k)
-							if (sudoku.sudoku_ans.box[k][i].done == false && sudoku.sudoku_ans.box[k][i].num[n]) 
+							if (sudoku.sudoku_ans.cell[k][i].done == false && sudoku.sudoku_ans.cell[k][i].num[n]) 
 							{
 								only_pos[n] = false;
 								break;
@@ -282,12 +282,12 @@ void CSudokuSolver::checkRows(SUDOKU &sudoku, bool print_steps = false)
 		for (auto& elem : only_pos)		
 			elem = true;
 		for (int j = 0; j < 9; ++j) 
-			if (sudoku.sudoku_ans.box[i][j].done == false) 	
+			if (sudoku.sudoku_ans.cell[i][j].done == false) 	
 				for (int n  = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[i][j].num[n] && only_pos[n]) 
+					if (sudoku.sudoku_ans.cell[i][j].num[n] && only_pos[n]) 
 					{
 						for (int k = j + 1; k < 9; ++k)
-							if (sudoku.sudoku_ans.box[i][k].done == false && sudoku.sudoku_ans.box[i][k].num[n]) 
+							if (sudoku.sudoku_ans.cell[i][k].done == false && sudoku.sudoku_ans.cell[i][k].num[n]) 
 							{
 								only_pos[n] = false;
 								break;
@@ -317,15 +317,15 @@ void CSudokuSolver::checkBox(SUDOKU &sudoku, bool print_steps = false)
 				elem = true;
 			for (int k = i; k < i + 3 && k < 9; ++k) 
 				for (int l = j; l < j + 3 && j < 9; ++l) 
-					if (sudoku.sudoku_ans.box[k][l].done == false)
+					if (sudoku.sudoku_ans.cell[k][l].done == false)
 						for (int n = 0; n < 9; ++n)
-							if (sudoku.sudoku_ans.box[k][l].num[n] && only_pos[n]) 
+							if (sudoku.sudoku_ans.cell[k][l].num[n] && only_pos[n]) 
 							{
 								for (int m = i; m < i + 3; ++m) 
 									for (int o = j; o < j + 3; ++o) 
-										if (sudoku.sudoku_ans.box[m][o].done == false) 
+										if (sudoku.sudoku_ans.cell[m][o].done == false) 
 										{
-											if ((m != k || o != l) && (sudoku.sudoku_ans.box[m][o].num[n]))
+											if ((m != k || o != l) && (sudoku.sudoku_ans.cell[m][o].num[n]))
 											{
 												only_pos[n] = false;
 												break;
@@ -352,9 +352,9 @@ void CSudokuSolver::nakedSingle(SUDOKU &sudoku, bool print_steps = false)
 		for (int j = 0; j < 9; ++j)
 		{
 			poss = 0;
-			if (sudoku.sudoku_ans.box[i][j].done == false)
+			if (sudoku.sudoku_ans.cell[i][j].done == false)
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[i][j].num[n] == true) 
+					if (sudoku.sudoku_ans.cell[i][j].num[n] == true) 
 					{
 						++poss;
 						num = n;
@@ -381,9 +381,9 @@ void CSudokuSolver::nakedPair(SUDOKU &sudoku, bool print_steps = false)
 		for (int j = 0; j < 9; ++j)
 		{
 			counter[j][i] = 0;
-			if (sudoku.sudoku_ans.box[j][i].done == false)
+			if (sudoku.sudoku_ans.cell[j][i].done == false)
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[j][i].num[n])
+					if (sudoku.sudoku_ans.cell[j][i].num[n])
 						++counter[j][i];
 		}
 
@@ -409,15 +409,15 @@ void CSudokuSolver::nakedPair(SUDOKU &sudoku, bool print_steps = false)
 					for (int n = 0; n < 9; ++n)
 					{
 						if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
-								(sudoku.sudoku_ans.box[*row1][i].num[n]
-								 || sudoku.sudoku_ans.box[*row2][i].num[n]))
+								(sudoku.sudoku_ans.cell[*row1][i].num[n]
+								 || sudoku.sudoku_ans.cell[*row2][i].num[n]))
 							nums.push_back(n);
 					}
 					if (nums.size() == 2)
 					{
 						for (int j = 0; j < 9; ++j)
 						{
-							if (j != *row1 && j != *row2 && sudoku.sudoku_ans.box[j][i].done == false)
+							if (j != *row1 && j != *row2 && sudoku.sudoku_ans.cell[j][i].done == false)
 							{
 								for (auto num : nums)
 									disablePos(sudoku, num, j, i);
@@ -462,15 +462,15 @@ void CSudokuSolver::nakedPair(SUDOKU &sudoku, bool print_steps = false)
 					for (int n = 0; n < 9; ++n)
 					{
 						if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
-								(sudoku.sudoku_ans.box[i][*column1].num[n]
-								 || sudoku.sudoku_ans.box[i][*column2].num[n]))
+								(sudoku.sudoku_ans.cell[i][*column1].num[n]
+								 || sudoku.sudoku_ans.cell[i][*column2].num[n]))
 							nums.push_back(n);
 					}
 					if (nums.size() == 2)
 					{
 						for (int j = 0; j < 9; ++j)
 						{
-							if (std::find(columns.begin(), columns.end(), j) == columns.end() && sudoku.sudoku_ans.box[i][j].done == false)
+							if (std::find(columns.begin(), columns.end(), j) == columns.end() && sudoku.sudoku_ans.cell[i][j].done == false)
 							{
 								for (auto num : nums)
 									disablePos(sudoku, num, i, j);
@@ -525,8 +525,8 @@ void CSudokuSolver::nakedPair(SUDOKU &sudoku, bool print_steps = false)
 						for (int n = 0; n < 9; ++n)
 						{
 							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
-									(sudoku.sudoku_ans.box[pos1->x][pos1->y].num[n]
-									 || sudoku.sudoku_ans.box[pos2->x][pos2->y].num[n]))
+									(sudoku.sudoku_ans.cell[pos1->x][pos1->y].num[n]
+									 || sudoku.sudoku_ans.cell[pos2->x][pos2->y].num[n]))
 								nums.push_back(n);
 						}
 						if (nums.size() == 2)
@@ -571,9 +571,9 @@ void CSudokuSolver::nakedTriple(SUDOKU &sudoku, bool print_steps = false)
 		for (int j = 0; j < 9; ++j)
 		{
 			counter[j][i] = 0;
-			if (sudoku.sudoku_ans.box[j][i].done == false)
+			if (sudoku.sudoku_ans.cell[j][i].done == false)
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[j][i].num[n])
+					if (sudoku.sudoku_ans.cell[j][i].num[n])
 						++counter[j][i];
 		}
 
@@ -601,16 +601,16 @@ void CSudokuSolver::nakedTriple(SUDOKU &sudoku, bool print_steps = false)
 						for (int n = 0; n < 9; ++n)
 						{
 							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
-									(sudoku.sudoku_ans.box[*row1][i].num[n]
-									 || sudoku.sudoku_ans.box[*row2][i].num[n]
-									 || sudoku.sudoku_ans.box[*row3][i].num[n]))
+									(sudoku.sudoku_ans.cell[*row1][i].num[n]
+									 || sudoku.sudoku_ans.cell[*row2][i].num[n]
+									 || sudoku.sudoku_ans.cell[*row3][i].num[n]))
 								nums.push_back(n);
 						}
 						if (nums.size() == 3)
 						{
 							for (int j = 0; j < 9; ++j)
 							{
-								if (j != *row1 && j != *row2 && j != *row3 && sudoku.sudoku_ans.box[i][j].done == false)
+								if (j != *row1 && j != *row2 && j != *row3 && sudoku.sudoku_ans.cell[i][j].done == false)
 								{
 									for (auto num : nums)
 										disablePos(sudoku, num, j, i);
@@ -658,16 +658,16 @@ void CSudokuSolver::nakedTriple(SUDOKU &sudoku, bool print_steps = false)
 						for (int n = 0; n < 9; ++n)
 						{
 							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
-									(sudoku.sudoku_ans.box[i][*column1].num[n]
-									 || sudoku.sudoku_ans.box[i][*column2].num[n]
-									 || sudoku.sudoku_ans.box[i][*column3].num[n]))
+									(sudoku.sudoku_ans.cell[i][*column1].num[n]
+									 || sudoku.sudoku_ans.cell[i][*column2].num[n]
+									 || sudoku.sudoku_ans.cell[i][*column3].num[n]))
 								nums.push_back(n);
 						}
 						if (nums.size() == 3)
 						{
 							for (int j = 0; j < 9; ++j)
 							{
-								if (std::find(columns.begin(), columns.end(), j) == columns.end() && sudoku.sudoku_ans.box[j][i].done == false)
+								if (std::find(columns.begin(), columns.end(), j) == columns.end() && sudoku.sudoku_ans.cell[j][i].done == false)
 								{
 									for (auto num : nums)
 										disablePos(sudoku, num, i, j);
@@ -725,9 +725,9 @@ void CSudokuSolver::nakedTriple(SUDOKU &sudoku, bool print_steps = false)
 							for (int n = 0; n < 9; ++n)
 							{
 								if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) && 
-										(sudoku.sudoku_ans.box[pos1->x][pos1->y].num[n]
-										 || sudoku.sudoku_ans.box[pos2->x][pos2->y].num[n]
-										 || sudoku.sudoku_ans.box[pos3->x][pos3->y].num[n]))
+										(sudoku.sudoku_ans.cell[pos1->x][pos1->y].num[n]
+										 || sudoku.sudoku_ans.cell[pos2->x][pos2->y].num[n]
+										 || sudoku.sudoku_ans.cell[pos3->x][pos3->y].num[n]))
 									nums.push_back(n);
 							}
 							if (nums.size() == 3)
@@ -739,7 +739,7 @@ void CSudokuSolver::nakedTriple(SUDOKU &sudoku, bool print_steps = false)
 										if ((k != pos3->x || l != pos3->y) 
 												&& (k != pos2->x || l != pos2->y) 
 												&& (k != pos1->x || l != pos1->y) 
-												&& sudoku.sudoku_ans.box[k][l].done == false)
+												&& sudoku.sudoku_ans.cell[k][l].done == false)
 										{
 											for (auto num : nums)
 												disablePos(sudoku, num, k, l);
@@ -780,7 +780,7 @@ void CSudokuSolver::hiddenPair(SUDOKU &sudoku, bool print_steps = false)
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 			for (int n = 0; n < 9; ++n)
-				if (sudoku.sudoku_ans.box[i][j].num[n])
+				if (sudoku.sudoku_ans.cell[i][j].num[n])
 					++counter[i][n];
 
 	bool hidden_pair = true;
@@ -802,28 +802,28 @@ void CSudokuSolver::hiddenPair(SUDOKU &sudoku, bool print_steps = false)
 				{
 					for (int k = 0; k < 9; ++k) 
 					{
-						if ((sudoku.sudoku_ans.box[i][k].num[num1[0]] && !sudoku.sudoku_ans.box[i][k].num[num2[0]]) 
-								|| (!sudoku.sudoku_ans.box[i][k].num[num1[0]] && sudoku.sudoku_ans.box[i][k].num[num2[0]]))
+						if ((sudoku.sudoku_ans.cell[i][k].num[num1[0]] && !sudoku.sudoku_ans.cell[i][k].num[num2[0]]) 
+								|| (!sudoku.sudoku_ans.cell[i][k].num[num1[0]] && sudoku.sudoku_ans.cell[i][k].num[num2[0]]))
 						{
 							hidden_pair = false;
 							break;
 						}
-						else if (sudoku.sudoku_ans.box[i][k].num[num1[0]] && sudoku.sudoku_ans.box[i][k].num[num2[0]])
+						else if (sudoku.sudoku_ans.cell[i][k].num[num1[0]] && sudoku.sudoku_ans.cell[i][k].num[num2[0]])
 						{
 							num1[1] = k;
 							for (int l = k + 1; l < 9; ++l)
 							{
-								if (sudoku.sudoku_ans.box[i][l].num[num1[0]] && !sudoku.sudoku_ans.box[i][l].num[num2[0]])
+								if (sudoku.sudoku_ans.cell[i][l].num[num1[0]] && !sudoku.sudoku_ans.cell[i][l].num[num2[0]])
 								{
 									hidden_pair = false;
 									break;
 								}
-								else if (!sudoku.sudoku_ans.box[i][l].num[num1[0]] && sudoku.sudoku_ans.box[i][l].num[num2[0]])
+								else if (!sudoku.sudoku_ans.cell[i][l].num[num1[0]] && sudoku.sudoku_ans.cell[i][l].num[num2[0]])
 								{
 									hidden_pair = false;
 									break;
 								}
-								else if (sudoku.sudoku_ans.box[i][l].num[num1[0]] && sudoku.sudoku_ans.box[i][l].num[num2[0]])
+								else if (sudoku.sudoku_ans.cell[i][l].num[num1[0]] && sudoku.sudoku_ans.cell[i][l].num[num2[0]])
 								{
 									num2[1] = l;
 									break;
@@ -859,14 +859,14 @@ void CSudokuSolver::pointingBoxRows(SUDOKU &sudoku, bool print_steps = false)
 				elem = true;
 			for (int k = i; k < i + 3 && k < 9; ++k)
 				for (int l = j; l < j + 3 && l < 9; ++l) 
-					if (sudoku.sudoku_ans.box[k][l].done == false) 
+					if (sudoku.sudoku_ans.cell[k][l].done == false) 
 						for (int n = 0; n < 9; ++n) 
-							if (sudoku.sudoku_ans.box[k][l].num[n] && only_row[n]) 
+							if (sudoku.sudoku_ans.cell[k][l].num[n] && only_row[n]) 
 							{
 								for (int m = i; m < i + 3 && m < 9; ++m)
 									for (int o = j; o < j + 3 && o < 9; ++o) 
 										if (m != k)
-											if (sudoku.sudoku_ans.box[m][o].done == false && sudoku.sudoku_ans.box[m][o].num[n]) 
+											if (sudoku.sudoku_ans.cell[m][o].done == false && sudoku.sudoku_ans.cell[m][o].num[n]) 
 											{
 												only_row[n] = false;
 												break;
@@ -904,14 +904,14 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU &sudoku, bool print_steps = false)
 				elem = true;
 			for (int k = i; k < i + 3 && k < 9; ++k)
 				for (int l = j; l < j + 3 && l < 9; ++l) 
-					if (sudoku.sudoku_ans.box[l][k].done == false) 
+					if (sudoku.sudoku_ans.cell[l][k].done == false) 
 						for (int n = 0; n < 9; ++n)
-							if (sudoku.sudoku_ans.box[l][k].num[n] && only_column[n]) 
+							if (sudoku.sudoku_ans.cell[l][k].num[n] && only_column[n]) 
 							{
 								for (int m = i; m < i + 3; ++m)
 									for (int o = j; o < j + 3; ++o) 
 										if (m != k)
-											if (sudoku.sudoku_ans.box[o][m].done == false && sudoku.sudoku_ans.box[o][m].num[n]) 
+											if (sudoku.sudoku_ans.cell[o][m].done == false && sudoku.sudoku_ans.cell[o][m].num[n]) 
 											{
 												only_column[n] = false;
 												break;
@@ -944,12 +944,12 @@ void CSudokuSolver::boxLineReduceRow(SUDOKU &sudoku, bool print_steps = false)
 		for (auto& num : only_box_row)
 			num = true;
 		for (int j = 0; j < 9; ++j)
-			if (sudoku.sudoku_ans.box[i][j].done == false) 
+			if (sudoku.sudoku_ans.cell[i][j].done == false) 
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[i][j].num[n] && only_box_row[n])
+					if (sudoku.sudoku_ans.cell[i][j].num[n] && only_box_row[n])
 					{
 						for (int k = j - (j % 3) + 3; k < 9; ++k)
-							if (sudoku.sudoku_ans.box[i][k].num[n])
+							if (sudoku.sudoku_ans.cell[i][k].num[n])
 							{
 								only_box_row[n] = false;
 								break;
@@ -984,12 +984,12 @@ void CSudokuSolver::boxLineReduceColumn(SUDOKU &sudoku, bool print_steps = false
 		for (auto& num : only_box_column)
 			num = true;
 		for (int j = 0; j < 9; ++j)
-			if (sudoku.sudoku_ans.box[j][i].done == false) 
+			if (sudoku.sudoku_ans.cell[j][i].done == false) 
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[j][i].num[n] && only_box_column[n])
+					if (sudoku.sudoku_ans.cell[j][i].num[n] && only_box_column[n])
 					{
 						for (int k = j - (j % 3) + 3; k < 9; ++k)
-							if (sudoku.sudoku_ans.box[k][i].num[n])
+							if (sudoku.sudoku_ans.cell[k][i].num[n])
 							{
 								only_box_column[n] = false;
 								break;
@@ -1025,9 +1025,9 @@ void CSudokuSolver::xWing(SUDOKU &sudoku, bool print_steps = false)
 
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
-			if (sudoku.sudoku_ans.box[i][j].done == false)
+			if (sudoku.sudoku_ans.cell[i][j].done == false)
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[i][j].num[n]) 
+					if (sudoku.sudoku_ans.cell[i][j].num[n]) 
 						++counter[i][n];
 	std::list<int> columns;
 
@@ -1044,8 +1044,8 @@ void CSudokuSolver::xWing(SUDOKU &sudoku, bool print_steps = false)
 						for (int l = 0; l < 9; ++l)
 						{
 							if ((columns.size() == 0 || std::find(columns.begin(), columns.end(), l) == columns.end()) 
-									&& (sudoku.sudoku_ans.box[i][l].num[j]
-										|| sudoku.sudoku_ans.box[k][l].num[j]))
+									&& (sudoku.sudoku_ans.cell[i][l].num[j]
+										|| sudoku.sudoku_ans.cell[k][l].num[j]))
 								columns.push_back(l);
 						}
 						if (columns.size() == 2)
@@ -1082,9 +1082,9 @@ void CSudokuSolver::xWing(SUDOKU &sudoku, bool print_steps = false)
 
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
-			if (sudoku.sudoku_ans.box[j][i].done == false)
+			if (sudoku.sudoku_ans.cell[j][i].done == false)
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[j][i].num[n]) 
+					if (sudoku.sudoku_ans.cell[j][i].num[n]) 
 						++counter[n][i];
 	std::list<int> rows;
 
@@ -1101,8 +1101,8 @@ void CSudokuSolver::xWing(SUDOKU &sudoku, bool print_steps = false)
 						for (int l = 0; l < 9; ++l)
 						{
 							if ((rows.size() == 0 || std::find(rows.begin(), rows.end(), l) == rows.end()) 
-									&& (sudoku.sudoku_ans.box[l][i].num[j]
-										|| sudoku.sudoku_ans.box[l][k].num[j]))
+									&& (sudoku.sudoku_ans.cell[l][i].num[j]
+										|| sudoku.sudoku_ans.cell[l][k].num[j]))
 								rows.push_back(l);
 						}
 						if (rows.size() == 2)
@@ -1146,7 +1146,7 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 			{
 				nums_t.clear();
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[pos1.x][i].num[n] || sudoku.sudoku_ans.box[pos1.x][pos1.y].num[n])
+					if (sudoku.sudoku_ans.cell[pos1.x][i].num[n] || sudoku.sudoku_ans.cell[pos1.x][pos1.y].num[n])
 						nums_t.push_back(n);
 				CSudokuSolver::POINT temp = {pos1.x, i};
 				if (nums_t == nums && numCommon(sudoku, pos2, temp) < 2 && numCommon(sudoku, pos1, temp) < 2)
@@ -1158,7 +1158,7 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 			{
 				nums_t.clear();
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[pos2.x][i].num[n] || sudoku.sudoku_ans.box[pos2.x][pos2.y].num[n])
+					if (sudoku.sudoku_ans.cell[pos2.x][i].num[n] || sudoku.sudoku_ans.cell[pos2.x][pos2.y].num[n])
 						nums_t.push_back(n);
 				CSudokuSolver::POINT temp = {pos2.x, i};
 				if (nums_t == nums && numCommon(sudoku, pos2, temp) < 2 && numCommon(sudoku, pos1, temp) < 2)
@@ -1175,7 +1175,7 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 					{
 						nums_t.clear();
 						for (int n = 0; n < 9; ++n)
-							if (sudoku.sudoku_ans.box[i][j].num[n] || sudoku.sudoku_ans.box[pos1.x][pos1.y].num[n])
+							if (sudoku.sudoku_ans.cell[i][j].num[n] || sudoku.sudoku_ans.cell[pos1.x][pos1.y].num[n])
 								nums_t.push_back(n);
 						CSudokuSolver::POINT temp = {i, j};
 						if (nums_t == nums && numCommon(sudoku, pos2, temp) < 2 && (numCommon(sudoku, pos1, temp) < 2))
@@ -1194,7 +1194,7 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 					{
 						nums_t.clear();
 						for (int n = 0; n < 9; ++n)
-							if (sudoku.sudoku_ans.box[i][j].num[n] || sudoku.sudoku_ans.box[pos2.x][pos2.y].num[n])
+							if (sudoku.sudoku_ans.cell[i][j].num[n] || sudoku.sudoku_ans.cell[pos2.x][pos2.y].num[n])
 								nums_t.push_back(n);
 						CSudokuSolver::POINT temp = {i, j};
 						if (nums_t == nums && numCommon(sudoku, pos2, temp) < 2 && numCommon(sudoku, pos1, temp) < 2)
@@ -1211,7 +1211,7 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 			{
 				nums_t.clear();
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[i][pos1.y].num[n] || sudoku.sudoku_ans.box[pos1.x][pos1.y].num[n])
+					if (sudoku.sudoku_ans.cell[i][pos1.y].num[n] || sudoku.sudoku_ans.cell[pos1.x][pos1.y].num[n])
 						nums_t.push_back(n);
 				CSudokuSolver::POINT temp = {i , pos1.y};
 				if (nums_t == nums && numCommon(sudoku, pos2, temp) < 2 && numCommon(sudoku, pos1, temp) < 2)
@@ -1223,7 +1223,7 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 			{
 				nums_t.clear();
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[i][pos2.y].num[n] || sudoku.sudoku_ans.box[pos2.x][pos2.y].num[n])
+					if (sudoku.sudoku_ans.cell[i][pos2.y].num[n] || sudoku.sudoku_ans.cell[pos2.x][pos2.y].num[n])
 						nums_t.push_back(n);
 				CSudokuSolver::POINT temp = {i, pos2.y};
 				if (nums_t == nums && numCommon(sudoku, pos2, temp) < 2 && numCommon(sudoku, pos1, temp) < 2)
@@ -1240,7 +1240,7 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 					{
 						nums_t.clear();
 						for (int n = 0; n < 9; ++n)
-							if (sudoku.sudoku_ans.box[j][i].num[n] || sudoku.sudoku_ans.box[pos1.x][pos1.y].num[n])
+							if (sudoku.sudoku_ans.cell[j][i].num[n] || sudoku.sudoku_ans.cell[pos1.x][pos1.y].num[n])
 								nums_t.push_back(n);
 						CSudokuSolver::POINT temp = {j, i};
 						if (nums_t == nums && numCommon(sudoku, pos2, temp) < 2 && numCommon(sudoku, pos1, temp) < 2)
@@ -1259,7 +1259,7 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 					{
 						nums_t.clear();
 						for (int n = 0; n < 9; ++n)
-							if (sudoku.sudoku_ans.box[j][i].num[n] || sudoku.sudoku_ans.box[pos2.x][pos2.y].num[n])
+							if (sudoku.sudoku_ans.cell[j][i].num[n] || sudoku.sudoku_ans.cell[pos2.x][pos2.y].num[n])
 								nums_t.push_back(n);
 						CSudokuSolver::POINT temp = {j, i};
 						if (nums_t == nums && numCommon(sudoku, pos2, temp) < 2 && numCommon(sudoku, pos1, temp) < 2)
@@ -1285,9 +1285,9 @@ void CSudokuSolver::yWing(SUDOKU &sudoku, bool print_steps = false)
 
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
-			if (sudoku.sudoku_ans.box[i][j].done == false)
+			if (sudoku.sudoku_ans.cell[i][j].done == false)
 				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.box[i][j].num[n]) 
+					if (sudoku.sudoku_ans.cell[i][j].num[n]) 
 						++counter[i][j];
 
 	std::list<int> nums, nums_t;
@@ -1300,8 +1300,8 @@ void CSudokuSolver::yWing(SUDOKU &sudoku, bool print_steps = false)
 						nums.clear();
 						for (int n = 0; n < 9; ++n)
 							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) 
-									&& (sudoku.sudoku_ans.box[i][j].num[n] 
-										||  sudoku.sudoku_ans.box[k][j].num[n]))
+									&& (sudoku.sudoku_ans.cell[i][j].num[n] 
+										||  sudoku.sudoku_ans.cell[k][j].num[n]))
 								nums.push_back(n);
 						if (nums.size() == 3)
 						{
@@ -1369,8 +1369,8 @@ void CSudokuSolver::yWing(SUDOKU &sudoku, bool print_steps = false)
 						nums.clear();
 						for (int n = 0; n < 9; ++n)
 							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) 
-									&& (sudoku.sudoku_ans.box[j][i].num[n] 
-										||  sudoku.sudoku_ans.box[j][k].num[n]))
+									&& (sudoku.sudoku_ans.cell[j][i].num[n] 
+										||  sudoku.sudoku_ans.cell[j][k].num[n]))
 								nums.push_back(n);
 						if (nums.size() == 3)
 						{
@@ -1443,10 +1443,10 @@ void CSudokuSolver::trialError(SUDOKU &sudoku, bool print_steps)
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 		{
-			if (sudoku.sudoku_ans.box[i][j].done == false)
+			if (sudoku.sudoku_ans.cell[i][j].done == false)
 				for (int n = 0; n < 9; ++n)
 				{
-					if (copy_sudoku.sudoku_ans.box[i][j].num[n])
+					if (copy_sudoku.sudoku_ans.cell[i][j].num[n])
 					{
 						finalize(copy_sudoku, n, i, j);
 						solveSudoku(copy_sudoku, /*print_steps = */ false, /*logical = */ true);
@@ -1553,7 +1553,7 @@ bool CSudokuSolver::bruteForce(SUDOKU &sudoku)
 	SUDOKU copy_sudoku = sudoku;
 	POINT least_pos = leastNumsPos(sudoku);
 	for (int n = 0; n < 9; ++n)
-		if (sudoku.sudoku_ans.box[least_pos.x][least_pos.y].num[n])
+		if (sudoku.sudoku_ans.cell[least_pos.x][least_pos.y].num[n])
 		{
 			finalize(copy_sudoku, n, least_pos.x, least_pos.y);
 			if (!bruteForce(copy_sudoku))
