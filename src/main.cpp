@@ -140,20 +140,14 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 			if (!silent)
 				print_steps = true;
 			else
-			{
-				std::cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together!\nExiting!\n";
-				exit(1);
-			}
+				std::cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together, ignoring --trace\n";
 		}
 		else if (strcmp(argv[i], "--silent") == 0)
 		{
 			if (!print_steps)
 				silent = true;
 			else 
-			{
-				std::cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together!\nExiting!\n";
-				exit(1);
-			}
+				std::cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together, ignoring --silent\n";
 		}
 		else if (strcmp(argv[i], "--version") == 0)
 		{
@@ -172,35 +166,32 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 					case 'b':
 						brute_force = true;
 						if (logical)
+						{
 							std::cerr << argv[0] << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
+							logical = false;
+						}
 						break;
 					case 'h':
 						printHelp(argv[0]);
 						exit(0);
 					case 't' :
-						if (!silent)
-							print_steps = true;
+						if (silent)
+							std::cerr << argv[0] << "Conflicting options! -s and -t can not be used together, ignoring -t\n";
 						else
-						{
-							std::cerr << argv[0] << "Conflicting options! -s and -t can not be used together!\nExiting!\n";
-							exit(1);
-						}
+							print_steps = true;
 						break;
 					case 'v' :
 						printVersion(argv[0]);
 						exit(0);
 					case 's' :
-						if (!print_steps)
-							silent = true;
+						if (print_steps)
+							std::cerr << argv[0] << "Conflicting options! -s and -t can not be used together, ignoring -s\n";
 						else
-						{
-							std::cerr << argv[0] << "Conflicting options! -s and -t can not be used together\nExiting!\n"; 
-							exit(1);
-						}
+							silent = true;
 						break;
 					case 'l' :
 						if (brute_force)
-							std::cerr << argv[0] << "Conflicting options! -b and-l can not be used together, the sudoku will be solved with brute force only\n";
+							std::cerr << argv[0] << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
 						else
 							logical = true;
 						break;
