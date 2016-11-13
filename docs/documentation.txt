@@ -1,0 +1,37 @@
+This file describes the functioning of the program
+
+main.cpp
+{
+	This contains documentaion for the file main.cpp in src.
+
+	Function list :
+	1. main(int argc, char *argv[])
+		this is the main function
+	2. getOpt(int argc, char *argv[], bool, &print_steps, bool &silent, bool &logical, bool &brute_force)
+		this gets the options the user has set 
+	3. print*
+		these functions print License, help and version when called, to stdout
+	
+	What the file is for :
+		Getting the sudoku, initializing the board and solving the
+		sudoku
+		It prints the necessary stuff as per user enabled options
+	
+	How it goes :
+		0. getOpt() gets the options to make the program
+		   behave accordingly
+		1. getSudoku()
+			get the sudoku from the user and initaialize
+			sudoku.sudoku_q[][]
+		2. initialiseSudoku()
+			initialise the sudoku possibilities board
+		3. print the extra 'pretty stuff' only if the user hasn't
+		   set the silent flag. This so that unnecessary stuff is not
+		   printed to stdout when scripting
+		4. It now starts a timer and tries to solve the sudoku
+		5. It now checks if the sudoku hs any mistakes.
+		   If there are, then the question must be wrong.
+		6. Again, print 'pretty stuff' only if the user hasn't said
+		   otherwise
+
+}
