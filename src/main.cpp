@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
 
 	SUDOKU sudoku;		//our sudoku board
 
+	if (!silent)
+		std::cout << "Enter the sudoku : ";
 	if (!getSudoku(sudoku))
 	{
 		//input string error
