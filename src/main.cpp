@@ -41,6 +41,9 @@ int main(int argc, char *argv[])
 
 	SUDOKU sudoku;		//our sudoku board
 
+	if (!silent)
+		std::cout << "Enter the sudoku : ";	//print prompt, only if the silent switch is not enabled
+
 	if (!getSudoku(sudoku))
 	{
 		//input string error
