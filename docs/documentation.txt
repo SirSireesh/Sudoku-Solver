@@ -33,5 +33,13 @@ main.cpp
 		   If there are, then the question must be wrong.
 		6. Again, print 'pretty stuff' only if the user hasn't said
 		   otherwise
+}
 
+Sudoku-solver.h
+{
+	It contains the structure and list of functions that will be used to
+	get the sudoku, print it and solve it
+	
+	Structures :
+		SUDOKU_ANS : This is representative of each individual cell
 }
