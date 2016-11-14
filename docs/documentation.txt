@@ -85,3 +85,100 @@ Sudoku-solver.h
 		The rest of the function names are self explanatory. 
 		They are the functions that will actually solve the sudoku
 }
+
+Sudoku-solver.cpp
+{
+	1. getSudoku() :
+		Get the sudoku from stdin
+		Common errors to look for - 
+			It checks for invalid input
+			It checks to ensure that the input string length is 81
+			chars
+	2. initialiseSudoku()
+		Initialize the sudoku possibilities board
+		Does some basic error checking
+			if the sudoku question has a mistake, it return false
+	3. printSteps()
+		Print the sudoku without formatting
+	4. printfSudoku()
+		Print the sudoku, formatted 'pretty stuff'
+	5. numCommon()
+		Goes through the numbers possible in both cells, simultaneously
+		and then returns the number of common numbers
+	6. getCommon()
+		Goes through the numbers at both positions and returns the
+		first common. If none are common, it returns -1
+	7. numPossible()
+		It goes through the numbers possible at the given position and
+		returns the number of numbers possible there
+	8. leastNumsPos()
+		It goes through all the cells and returns the cell with least
+		numbers possible
+		It does not do any error checking, so if the sudoku has already
+		been solved, output is unpredictible (it probably will return
+		0,0)
+	9. disablePos()
+		Makes sure that the cell is not already solved, and that the
+		number was not already set to false
+		If that is true, then it disables the number at the number at
+		the position and then sets the sudoku status to changed
+	10. disableColumn()
+		Disable the number for the given column
+		Calls disablePos() in a for loop
+	11. disableRow()
+		Disable the number for the given row
+		Calls disablePos() in a for loop
+	12. disableBox()
+		Disable the number for the given box
+		Calls disablePos() in nested for loops
+	13. finalize()
+		Set the given number as the solution to the given cell
+		Change the changed status
+		Set the solved status for the cell
+		Increment the number of cells solved
+		Disable the number for the rest of the cells that can 'see'
+		this cell
+	14. checkColumns()
+		Check the columns for a number that has only 1 possible
+		position in that column
+	15. checkRows()
+		Same as above, but for rows
+	16. checkBox()
+		Same as above, but for boxes
+	17. nakedSingle()
+		Look for a number that is the only possible in a cell
+	18. nakedPair()
+		Look for naked pairs in the sudoku
+	19. nakedTriple()
+		Look for naked triples in the sudoku
+	20. hiddenPair()
+		Look for hidden pairs in the sudoku
+	21. pointingBoxRows()
+		Look for numbers that are only possible within a single row of
+		the 3x3 box. 
+		Note : since it does not check entire row in a box, it should
+		ideally be called after all the check* and nakedSingle()
+		functions
+	22. pointingColumns()
+		Same as above, but for columns
+	23. boxLineReduceRow()
+		Compare the columns with rows and then disable as necessary
+	24. boxLineReduceColumn()
+		Same as above, but for columns
+	25. xWing()
+		Search for x wing pattern and disable as necessary
+	26. getPos3()
+		For the yWing function, a 3rd position is necessary, which this
+		function returns
+	27. yWing()
+		Search for y wing pattern and disable as necessary
+	28. trialError()
+		Try a number at a position and hope to arrive at the solution
+		or a contradiction
+	29. solveSudoku()
+		Use the above functions to solve the given sudoku
+	30. checkError()
+		Look for an error in the sudoku
+	31. bruteForce()
+		Brute force teh solution to the sudoku
+}
