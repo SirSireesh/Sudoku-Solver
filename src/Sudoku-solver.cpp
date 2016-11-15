@@ -1545,21 +1545,29 @@ bool CSudokuSolver::checkError(SUDOKU sudoku)
 
 bool CSudokuSolver::bruteForce(SUDOKU &sudoku)
 {
-	solveSudoku(sudoku, false, true);
 	if (checkError(sudoku))
+		//return false on error in solution
 		return false;
 	if (sudoku.num_solved == 81)
+		//return true if sudoku was solved
 		return true;
+
+	//create a copy to prevent issues
 	SUDOKU copy_sudoku = sudoku;
+	//get the position with least guesses to be made - less guesses = faster
 	POINT least_pos = leastNumsPos(sudoku);
+
 	for (int n = 0; n < 9; ++n)
 		if (sudoku.sudoku_ans.cell[least_pos.x][least_pos.y].num[n])
 		{
+			//try the number a position
 			finalize(copy_sudoku, n, least_pos.x, least_pos.y);
 			if (!bruteForce(copy_sudoku))
+				//the next bruteforce returned false, so this must be wrong solution
 				copy_sudoku = sudoku;
 			else
 			{
+				//this must be a right solution, so save it
 				sudoku = copy_sudoku;
 				return true;
 			}
