@@ -1545,7 +1545,7 @@ bool CSudokuSolver::checkError(SUDOKU sudoku)
 
 bool CSudokuSolver::bruteForce(SUDOKU &sudoku)
 {
-	solveSudoku(sudoku, false, false);
+	solveSudoku(sudoku, false, true);
 	if (checkError(sudoku))
 		//return false on error in solution
 		return false;
