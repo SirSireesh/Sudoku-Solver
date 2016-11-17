@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <iterator>
 #include <string>
+#include <cctype>
 
 #include "Sudoku-solver.h"
 #include "termcolor.hpp"
@@ -38,7 +39,31 @@ bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 	std::string input;
 	std::getline(std::cin, input);
 
-	if (input.length() != 81)
+	if (input.length() < 81)
+		return false;
+	else if (input.length() > 81)
+		input.resize(81);
+
+	int count[9] = {0,0,0,0,0,0,0,0,0}, sum = 0;
+	bool has_min_num_clues = false;
+	for (auto num : input)
+	{
+		if (isdigit(num))
+		{
+			++count[static_cast<int>(num - 1)];
+			++sum;
+		}
+	}
+	if (sum == 17)
+	{
+		for (auto num : count)
+			if (num >= 8)
+				has_min_num_clues = true;
+	}
+	else 
+		has_min_num_clues = true;
+
+	if (!has_min_num_clues)
 		return false;
 
 	for (int i = 0; i < 9; ++i)
