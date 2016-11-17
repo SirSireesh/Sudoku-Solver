@@ -44,28 +44,6 @@ bool CSudokuSolver::getSudoku(SUDOKU &sudoku)
 	else if (input.length() > 81)
 		input.resize(81);
 
-	int count[9] = {0,0,0,0,0,0,0,0,0}, sum = 0;
-	bool has_min_num_clues = false;
-	for (auto num : input)
-	{
-		if (isdigit(num))
-		{
-			++count[static_cast<int>(num - 1)];
-			++sum;
-		}
-	}
-	if (sum == 17)
-	{
-		for (auto num : count)
-			if (num >= 8)
-				has_min_num_clues = true;
-	}
-	else 
-		has_min_num_clues = true;
-
-	if (!has_min_num_clues)
-		return false;
-
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 		{
@@ -96,6 +74,30 @@ bool CSudokuSolver::initialiseSudoku(SUDOKU &sudoku)
 			if (sudoku.sudoku_q[i][j])
 				finalize(sudoku, sudoku.sudoku_q[i][j] - 1, i, j, true);
 		}
+
+	int count[9] = {0,0,0,0,0,0,0,0,0}, sum = 0;
+	bool has_min_num_clues = false;
+	for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j)
+		{
+			if (sudoku.sudoku_q[i][j])
+			{
+				++count[sudoku.sudoku_q[i][j]];
+				++sum;
+			}
+		}
+	if (sum == 17)
+	{
+		for (auto num : count)
+			if (num >= 8)
+				has_min_num_clues = true;
+	}
+	else 
+		has_min_num_clues = true;
+
+	if (!has_min_num_clues)
+		return false;
+
 	return true;
 }
 
