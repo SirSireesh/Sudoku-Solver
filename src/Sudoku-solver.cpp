@@ -406,13 +406,7 @@ void CSudokuSolver::nakedPair(SUDOKU &sudoku, bool print_steps = false)
 	int counter[9][9];
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
-		{
-			counter[j][i] = 0;
-			if (sudoku.sudoku_ans.cell[j][i].done == false)
-				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.cell[j][i].num[n])
-						++counter[j][i];
-		}
+			counter[j][i] = numPossible(sudoku, j, i);
 
 	std::list<int> nums;
 	std::list<int> rows;
@@ -596,13 +590,7 @@ void CSudokuSolver::nakedTriple(SUDOKU &sudoku, bool print_steps = false)
 	int counter[9][9];
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
-		{
-			counter[j][i] = 0;
-			if (sudoku.sudoku_ans.cell[j][i].done == false)
-				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.cell[j][i].num[n])
-						++counter[j][i];
-		}
+			counter[j][i] = numPossible(sudoku, j, i);
 
 	std::list<int> nums;
 	std::list<int> rows;
