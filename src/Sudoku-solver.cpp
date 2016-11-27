@@ -1306,16 +1306,10 @@ void CSudokuSolver::yWing(SUDOKU &sudoku, bool print_steps = false)
 	//under certain conditions, 
 	//they may be disabled
 	int counter[9][9];
-	for (int i = 0; i < 9; ++i)
-		for (int j = 0; j < 9; ++j)
-			counter[i][j] = 0;
 
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
-			if (sudoku.sudoku_ans.cell[i][j].done == false)
-				for (int n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.cell[i][j].num[n]) 
-						++counter[i][j];
+			counter[i][j] = numPossible(sudoku, i, j);
 
 	std::list<int> nums, nums_t;
 	for (int i = 0; i < 9; ++i)
@@ -1328,7 +1322,7 @@ void CSudokuSolver::yWing(SUDOKU &sudoku, bool print_steps = false)
 						for (int n = 0; n < 9; ++n)
 							if ((nums.size() == 0 || std::find(nums.begin(), nums.end(), n) == nums.end()) 
 									&& (sudoku.sudoku_ans.cell[i][j].num[n] 
-										||  sudoku.sudoku_ans.cell[k][j].num[n]))
+									||  sudoku.sudoku_ans.cell[k][j].num[n]))
 								nums.push_back(n);
 						if (nums.size() == 3)
 						{
