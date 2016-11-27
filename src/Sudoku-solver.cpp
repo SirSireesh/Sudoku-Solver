@@ -1280,7 +1280,7 @@ CSudokuSolver::POINT getPos3(CSudokuSolver::SUDOKU sudoku, CSudokuSolver::POINT 
 		{
 			for (int j = pos2.x - pos2.x % 3; j < pos2.x - (pos2.x % 3) + 3; ++j)
 			{
-				if (j != pos2.y)
+				if (j != pos2.x)
 				{
 					if (counter[j][i] == 2)
 					{
