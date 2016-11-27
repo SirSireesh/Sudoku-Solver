@@ -391,7 +391,7 @@ void CSudokuSolver::nakedSingle(SUDOKU &sudoku, bool print_steps = false)
 				finalize(sudoku, num, i, j);
 				if (print_steps)
 					std::cout << termcolor::green << "Single : " << termcolor::magenta << static_cast<char> (i + 65) << j + 1 
-						<< termcolor::reset << " set to " << termcolor::green << num + 1 <<  termcolor::reset << " : unique in box\n";
+						<< termcolor::reset << " set to " << termcolor::green << num + 1 <<  termcolor::reset << " : unique in cell\n";
 			}
 		}
 }
