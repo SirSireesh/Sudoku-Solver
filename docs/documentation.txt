@@ -180,5 +180,5 @@ Sudoku-solver.cpp
 	30. checkError()
 		Look for an error in the sudoku
 	31. bruteForce()
-		Brute force teh solution to the sudoku
+		Brute force the solution to the sudoku
 }
