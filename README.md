@@ -27,9 +27,11 @@ You need a compiler capable of c++11
 ###Installing
 You can run 
 
-`autoconf` 
+`aclocal` 
 
-`automake` 
+`automake --add-missing`
+
+`autoreconf`
 
 `./configure`
 
