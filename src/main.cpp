@@ -27,6 +27,8 @@
 #include "termcolor.hpp"
 
 using namespace CSudokuSolver;
+using namespace std;
+using namespace termcolor;
 
 void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logical, bool &brute_force);
 void printVersion(const char name[]);
@@ -42,20 +44,20 @@ int main(int argc, char *argv[])
 	SUDOKU sudoku;		//our sudoku board
 
 	if (!silent)
-		std::cout << "Enter the sudoku : ";	//print prompt, only if the silent switch is not enabled
+		cout << "Enter the sudoku : ";	//print prompt, only if the silent switch is not enabled
 
 	if (!getSudoku(sudoku))
 	{
 		//input string error
-		std::cerr << argv[0] << " : The input string was too short, too long or contained invalid characters\n";
-		std::cerr << "Check your input and try agin!\nExiting ...\n";
+		cerr << argv[0] << " : The input string was too short, too long or contained invalid characters\n";
+		cerr << "Check your input and try agin!\nExiting ...\n";
 		return 2;
 	}
 
 	if (!initialiseSudoku(sudoku) || sudoku.num_solved < 17) 
 	{ 
 		//input string has invalid question or the sudoku has too few clues 
-		std::cerr << argv[0] <<  " : The input sudoku is invalid! It contains too few clues or an invalid question.\n";
+		cerr << argv[0] <<  " : The input sudoku is invalid! It contains too few clues or an invalid question.\n";
 		printSudoku(sudoku.sudoku_q);
 		return 2;
 	}
@@ -63,22 +65,22 @@ int main(int argc, char *argv[])
 	if (!silent)
 	{
 		//print extra only if silent is not set
-		std::cout << "The given sudoku is :\n";
+		cout << "The given sudoku is :\n";
 		printfSudoku(sudoku);
-		std::cout << "Given : " << termcolor::red << sudoku.num_solved << termcolor::reset << '\n';
+		cout << "Given : " << red << sudoku.num_solved << reset << '\n';
 	}
 
-	auto sTime = std::chrono::high_resolution_clock::now();		//get current time for printing time take
+	auto sTime = chrono::high_resolution_clock::now();		//get current time for printing time take
 	if (!brute_force)
 		solveSudoku(sudoku, print_steps, logical);
 	else
 		bruteForce(sudoku);
-	auto eTime = std::chrono::high_resolution_clock::now();		//the time after the sudoku solving was completed
+	auto eTime = chrono::high_resolution_clock::now();		//the time after the sudoku solving was completed
 
 	if (checkError(sudoku)) 
 	{
 		//Since the solver can't go wrong, the input sudoku must be invalid if there is an error
-		std::cerr << argv[0] << " : Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
+		cerr << argv[0] << " : Something went wrong while solving the sudoku! Are you sure the give sudoku is valid?!\n";
 		printSudoku(sudoku.sudoku_a);
 		return 3;
 	}
@@ -87,12 +89,12 @@ int main(int argc, char *argv[])
 	{
 		//print the fancy stuff if silent is not set
 		printfSudoku(sudoku);
-		std::cout << "Answered : " << termcolor::green << sudoku.num_solved << termcolor::reset << '\n';
-		std::cout << "Rated : ";
+		cout << "Answered : " << green << sudoku.num_solved << reset << '\n';
+		cout << "Rated : ";
 		for (int i = 1; i <= sudoku.rating; ++i)
-			std::cout << '*';
-		std::cout << '\n';
-		std::cout << "Time taken = " << std::chrono::duration_cast<std::chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n"; //print time in milliseconds
+			cout << '*';
+		cout << '\n';
+		cout << "Time taken = " << chrono::duration_cast<chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n"; //print time in milliseconds
 	}
 	else 
 		printSudoku(sudoku.sudoku_a);
@@ -114,7 +116,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		{
 			brute_force = true;
 			if (logical)
-				std::cerr << argv[0] << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
+				cerr << argv[0] << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
 		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-help") == 0)
 		{
@@ -124,7 +126,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		else if (strcmp(argv[i], "--logical") == 0)
 		{
 			if (brute_force)
-				std::cerr << argv[0] << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
+				cerr << argv[0] << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
 			else
 				logical = true;
 		}
@@ -133,14 +135,14 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 			if (!silent)
 				print_steps = true;
 			else
-				std::cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together, ignoring --trace\n";
+				cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together, ignoring --trace\n";
 		}
 		else if (strcmp(argv[i], "--silent") == 0)
 		{
 			if (!print_steps)
 				silent = true;
 			else 
-				std::cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together, ignoring --silent\n";
+				cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together, ignoring --silent\n";
 		}
 		else if (strcmp(argv[i], "--version") == 0)
 		{
@@ -160,7 +162,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 						brute_force = true;
 						if (logical)
 						{
-							std::cerr << argv[0] << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
+							cerr << argv[0] << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
 							logical = false;
 						}
 						break;
@@ -169,7 +171,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 						exit(0);
 					case 't' :
 						if (silent)
-							std::cerr << argv[0] << "Conflicting options! -s and -t can not be used together, ignoring -t\n";
+							cerr << argv[0] << "Conflicting options! -s and -t can not be used together, ignoring -t\n";
 						else
 							print_steps = true;
 						break;
@@ -178,29 +180,29 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 						exit(0);
 					case 's' :
 						if (print_steps)
-							std::cerr << argv[0] << "Conflicting options! -s and -t can not be used together, ignoring -s\n";
+							cerr << argv[0] << "Conflicting options! -s and -t can not be used together, ignoring -s\n";
 						else
 							silent = true;
 						break;
 					case 'l' :
 						if (brute_force)
-							std::cerr << argv[0] << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
+							cerr << argv[0] << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
 						else
 							logical = true;
 						break;
 					default :
-						std::cerr << argv[0] << " invalid option : " << argv[i][j] << '\n';
-						std::cerr << "Usage : " << argv[0] << " [options]\n";
-						std::cerr << "Try \'" << argv[0] << " -h\' for more information\n";
+						cerr << argv[0] << " invalid option : " << argv[i][j] << '\n';
+						cerr << "Usage : " << argv[0] << " [options]\n";
+						cerr << "Try \'" << argv[0] << " -h\' for more information\n";
 						exit(1);
 				}
 		}
 		else
 		{
 			//since we don't suppport file handling for now, any other options must be mistakes
-			std::cerr << argv[0] << " invalid option : " << argv[i] << '\n';
-			std::cerr << "Usage : " << argv[0] << " [options]\n";
-			std::cerr << "Try \'" << argv[0] << " -h\' for more information\n";
+			cerr << argv[0] << " invalid option : " << argv[i] << '\n';
+			cerr << "Usage : " << argv[0] << " [options]\n";
+			cerr << "Try \'" << argv[0] << " -h\' for more information\n";
 			exit(1);
 		}
 	}
@@ -210,28 +212,28 @@ void printHelp(const char name[])
 {
 	//print help menu
 	printVersion(name);
-	std::cout << "Usage : " << name << " [options]\n";
-	std::cout << "Options:\n";
-	std::cout << " -a  --about	\t Print license info and exit\n";
-	std::cout << " -b  --brute-force\t Solve the sudoku using Brute Force™\n";
-	std::cout << " -h  --help	\t Print this help menu and exit\n";
-	std::cout << " -l  --logical	\t Sove the sudoku logically (no guesses/trial and error)\n";
-	std::cout << " -s  --silent 	\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
-	std::cout << " -t  --trace  	\t Print how to solve the given sudoku (step by step solution!)\n";
-	std::cout << " -v  --version	\t Print version info and exit\n";
+	cout << "Usage : " << name << " [options]\n";
+	cout << "Options:\n";
+	cout << " -a  --about	\t Print license info and exit\n";
+	cout << " -b  --brute-force\t Solve the sudoku using Brute Force™\n";
+	cout << " -h  --help	\t Print this help menu and exit\n";
+	cout << " -l  --logical	\t Sove the sudoku logically (no guesses/trial and error)\n";
+	cout << " -s  --silent 	\t Only print unformatted input and answer (useful for automated solving of sudokus)\n";
+	cout << " -t  --trace  	\t Print how to solve the given sudoku (step by step solution!)\n";
+	cout << " -v  --version	\t Print version info and exit\n";
 }
 
 void printVersion(const char name[])
 {
 	//print version
-	std::cout << name << " : version 0.10.2 (Eliza)\n\n";
+	cout << name << " : version 0.10.2 (Eliza)\n\n";
 }
 
 void printLicense()
 {
 	//print license, as per GPL requirements
-	std::cout << "ssolver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
-	std::cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
-	std::cout << "This program is free software, and you are welcome to redistribute it under\n";
-	std::cout << "certain conditions; check license.txt for more details\n";
+	cout << "ssolver (C) 2016 Kiran Dhana and Sireesh Kodali.\n";
+	cout << "This program comes with ABSOLUTLY NO WARRANTY; for details check license.txt\n";
+	cout << "This program is free software, and you are welcome to redistribute it under\n";
+	cout << "certain conditions; check license.txt for more details\n";
 }
