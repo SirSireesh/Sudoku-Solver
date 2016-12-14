@@ -70,14 +70,7 @@ int main(int argc, char *argv[])
 
 	auto sTime = std::chrono::high_resolution_clock::now();		//get current time for printing time take
 	if (!brute_force)
-	{
 		solveSudoku(sudoku, print_steps, logical);
-		if (sudoku.num_solved < 81 && !logical)
-		{
-			std::cerr << argv[0] << " : The sudoku could not be solved logically. Since the logical flag was not set, the program has solved it using brute force\n";
-			bruteForce(sudoku);
-		}
-	}
 	else
 		bruteForce(sudoku);
 	auto eTime = std::chrono::high_resolution_clock::now();		//the time after the sudoku solving was completed

@@ -83,5 +83,5 @@ namespace CSudokuSolver
 	void yWing(SUDOKU &sudoku, bool print_steps);						//y-wing algorithm
 	void trialError(SUDOKU &sudoku, bool print_steps);					//trial - error one at a time guessing to the solution
 	bool bruteForce(SUDOKU &sudoku);							//Brute force away
-	void solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical);			//solve the sudoku using the above functions
+	void solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical, bool brute_force = false);	//solve the sudoku using the above functions
 }
