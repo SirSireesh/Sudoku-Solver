@@ -205,21 +205,21 @@ void CSudokuSolver::disablePos(SUDOKU &sudoku, int n, int x, int y)
 	}	
 }
 
-void CSudokuSolver::disableColumn(SUDOKU &sudoku, int n, int column)
+void CSudokuSolver::disableColumn(SUDOKU &sudoku, int n, int row, int column)
 {
 	//disable a given number for a column
 	//calls disablePos to do the dirty work
 	for (int i = 0; i < 9; ++i) 
-		if (sudoku.sudoku_ans.cell[i][column].done == false)
+		if (sudoku.sudoku_ans.cell[i][column].done == false && i != row)
 			disablePos(sudoku, n, i, column);
 }
 
-void CSudokuSolver::disableRow(SUDOKU &sudoku, int n, int row)
+void CSudokuSolver::disableRow(SUDOKU &sudoku, int n, int row, int column)
 {
 	//disable a given number for a row
 	//calls disablePos to do the dirty work
 	for (int j = 0; j < 9; ++j) 
-		if (sudoku.sudoku_ans.cell[row][j].done == false)
+		if (sudoku.sudoku_ans.cell[row][j].done == false && j != column)
 			disablePos(sudoku, n, row, j);
 }
 
@@ -229,7 +229,7 @@ void CSudokuSolver::disableBox(SUDOKU &sudoku, int n, int x, int y)
 	//calls disablePos to do the dirty work
 	for (int i = x - (x%3); i < (x - (x%3) + 3); ++i)
 		for (int j = y - (y%3); j < (y  - (y%3) + 3); ++j) 
-			if (sudoku.sudoku_ans.cell[i][j].done == false)
+			if (sudoku.sudoku_ans.cell[i][j].done == false && (i != x || j != y))
 				disablePos(sudoku, n, i, j);
 }
 
@@ -240,7 +240,6 @@ void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = fa
 	if (sudoku.sudoku_ans.cell[x][y].num[n] == false) 
 	{
 		//this should not happen, but no harm done preventing errors
-		//diabling this might give a slight boost on performance
 		cout << red << "error : The number " << n + 1 << " was set to false at " << x << ' ' << y << "!\n";
 		return;
 	}
@@ -259,12 +258,13 @@ void CSudokuSolver::finalize(SUDOKU &sudoku, int n, int x, int y, bool init = fa
 	else
 		sudoku.sudoku_a[x][y] = n + 1;
 
-	//disable all numbers in the cell to prevent silly bugs
+	//disable all other nums in this pos
 	for (int i = 0; i < 9; ++i) 
-		sudoku.sudoku_ans.cell[x][y].num[i] = false;
+		if (i != n)
+			sudoku.sudoku_ans.cell[x][y].num[i] = false;
 	//disable the number for all cells that it 'sees'
-	disableRow(sudoku, n, x);
-	disableColumn(sudoku, n, y);
+	disableRow(sudoku, n, x, y);
+	disableColumn(sudoku, n, x, y);
 	disableBox(sudoku, n, x, y);
 	++sudoku.num_solved;
 }
