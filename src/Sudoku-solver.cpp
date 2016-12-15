@@ -1488,7 +1488,7 @@ void CSudokuSolver::trialError(SUDOKU &sudoku, bool print_steps)
 		}
 }
 
-void CSudokuSolver::solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical, bool brute_force)
+void CSudokuSolver::solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical)
 {
 	//Solve the sudokus using the above written algorithms
 	while (sudoku.num_solved < 81 && sudoku.changed)
@@ -1542,7 +1542,6 @@ void CSudokuSolver::solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical, 
 		}
 		if (!sudoku.changed && !logical)
 		{
-			cerr << "The sudoku could not be solved logically. Since the local flag was not set, the program has solved it using brute force\n";
 			bruteForce(sudoku);
 		}
 	}
