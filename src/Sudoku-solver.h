@@ -56,6 +56,7 @@ namespace CSudokuSolver
 	bool initialiseSudoku(SUDOKU &sudoku);							//initialse a sudoku from a given question board
 	void printSudoku(int sudoku_q[9][9]);							//unformatted print a sudoku
 	void printfSudoku(SUDOKU sudoku);							//formatted print a given sudoku and its repective answer board
+	void printPossible(SUDOKU sudoku);							//print the possibilities list
 	void disablePos(SUDOKU &sudoku, int n, int x, int y);					//disable n for a given position
 	void disableRow(SUDOKU &sudoku, int n, int row, int column);				//disable every instance of n in a given row
 	void disableColumn(SUDOKU &sudoku, int n, int row, int column);				//disable every instance of n in a given column
