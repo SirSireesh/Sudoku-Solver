@@ -140,6 +140,49 @@ void CSudokuSolver::printfSudoku(SUDOKU sudoku)
 	}
 }
 
+void CSudokuSolver::printPossible(SUDOKU sudoku)
+{
+	for (int i = 0; i < 9; ++i)
+	{
+		for (int j = 0; j < 9; ++j)
+		{
+			for (int n = 0; n < 3; ++n)
+			{
+				if (sudoku.sudoku_ans.cell[i][j].num[n])
+					cout << n + 1 << ' ';
+				else
+					cout << "  ";
+			}
+			cout << '|';
+		}
+		cout << '\n';
+		for (int j = 0; j < 9; ++j)
+		{
+			for (int n = 3; n < 6; ++n)
+			{
+				if (sudoku.sudoku_ans.cell[i][j].num[n])
+					cout << n + 1 << ' ';
+				else
+					cout << "  ";
+			}
+			cout << '|';
+		}
+		cout << '\n';
+		for (int j = 0; j < 9; ++j)
+		{
+			for (int n = 6; n < 9; ++n)
+			{
+				if (sudoku.sudoku_ans.cell[i][j].num[n])
+					cout << n + 1 << ' ';
+				else
+					cout << "  ";
+			}
+			cout << '|';
+		}
+		cout << "\n\n";
+	}
+}
+
 int CSudokuSolver::numCommon(SUDOKU sudoku, POINT pos1, POINT pos2)
 {
 	//return the number of common numbers between 2 positions
