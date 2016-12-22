@@ -33,7 +33,7 @@ namespace CSudokuSolver
 	};
 	struct SUDOKU_ANS_BOARD {
 		//this is the 9x9 sudoku made from the above
-		struct SUDOKU_CELL cell[9][9];
+		std::array<std::array<SUDOKU_CELL, 9>, 9> cell;
 	};
 	struct SUDOKU {
 		//this contains 2 9x9 sudokus that store the given question and the answer
@@ -41,32 +41,32 @@ namespace CSudokuSolver
 		//lastly it has a bool that keeps tells us if a change was made to the sudoku answer
 		//contains an int which keeps track of the number of solved cells
 		bool changed = true;
-		int sudoku_q[9][9];
-		int sudoku_a[9][9];
+		std::array<std::array<short, 9>, 9> sudoku_q;
+		std::array<std::array<short, 9>, 9> sudoku_a;
 		SUDOKU_ANS_BOARD sudoku_ans;
-		int num_solved = 0;
-		int rating = 1;
+		unsigned short num_solved = 0;
+		unsigned short rating = 1;
 	};
 	struct POINT {
 		//points, makes it easier to pass params to functions and makes some code neater
-		int x;
-		int y;
+		short x;
+		short y;
 	};
 
 	bool getSudoku(SUDOKU &sudoku);								//take a sudoku for stdin
 	bool initialiseSudoku(SUDOKU &sudoku);							//initialse a sudoku from a given question board
-	void printSudoku(int sudoku_q[9][9]);							//unformatted print a sudoku
+	void printSudoku(std::array<std::array<short, 9>, 9> sudoku_q);				//unformatted print a sudoku
 	void printfSudoku(SUDOKU sudoku);							//formatted print a given sudoku and its repective answer board
 	void printPossible(SUDOKU sudoku);							//print the possibilities list
-	void disablePos(SUDOKU &sudoku, int n, int x, int y);					//disable n for a given position
-	void disableRow(SUDOKU &sudoku, int n, int row, int column);				//disable every instance of n in a given row
-	void disableColumn(SUDOKU &sudoku, int n, int row, int column);				//disable every instance of n in a given column
-	void disableBox(SUDOKU &sudoku, int n, int x, int y);					//disable every instance of n in a given box
-	void finalize(SUDOKU &sudoku, int n, int x, int y, bool init);				//finalize n for a given position
+	void disablePos(SUDOKU &sudoku, short n, short x, short y);				//disable n for a given position
+	void disableRow(SUDOKU &sudoku, short n, short row, short column);			//disable every instance of n in a given row
+	void disableColumn(SUDOKU &sudoku, short n, short row, short column);			//disable every instance of n in a given column
+	void disableBox(SUDOKU &sudoku, short n, short x, short y);				//disable every instance of n in a given box
+	void finalize(SUDOKU &sudoku, short n, short x, short y, bool init);			//finalize n for a given position
 	bool checkError(SUDOKU sudoku);								//check if something went wrong
-	int numCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the number of common possibilities
-	int getCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the common number between 2 positions
-	int numPossible(SUDOKU sudoku, int x, int y);						//return the number of possible numbers at a position
+	short numCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the number of common possibilities
+	short getCommon(SUDOKU sudoku, POINT pos1, POINT pos2);					//return the common number between 2 positions
+	short numPossible(SUDOKU sudoku, short x, short y);					//return the number of possible numbers at a position
 	POINT leastNumsPos(SUDOKU sudoku);							//return the position in the solver which has the least possible numbers
 
 	void nakedSingle(SUDOKU &sudoku, bool print_steps);					//check all the positions in a sudoku for a number that is the sole possibility in the box
