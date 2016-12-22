@@ -20,6 +20,7 @@
     */
 
 #pragma once
+#include <array>
 
 namespace CSudokuSolver
 {
@@ -28,7 +29,7 @@ namespace CSudokuSolver
 		//it stores a list of possible numbers
 		//it also store the status of a cell (solved or not)
 		bool done = false;
-		bool num[9] = {true, true, true, true, true, true, true, true, true};
+		std::array<bool, 9> num = {true, true, true, true, true, true, true, true, true};
 	};
 	struct SUDOKU_ANS_BOARD {
 		//this is the 9x9 sudoku made from the above

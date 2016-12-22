@@ -217,19 +217,19 @@ int CSudokuSolver::numPossible(SUDOKU sudoku, int x, int y)
 
 CSudokuSolver::POINT CSudokuSolver::leastNumsPos(SUDOKU sudoku)
 {
-	int min_possible = 100;
+	int min_possible = 10;
 	POINT min_point = {-1, -1};
 	for (int i = 0; i < 9; ++i)
 		for (int j = 0; j < 9; ++j)
 		{
 			if (sudoku.sudoku_ans.cell[i][j].done == false)
 			{
-				int cposs = numPossible(sudoku, i, j);
-				if (cposs < min_possible)
+				int current_possible = numPossible(sudoku, i, j);
+				if (current_possible < min_possible)
 				{
 					min_point.x = i;
 					min_point.y = j;
-					min_possible = cposs;
+					min_possible = current_possible;
 				}
 			}
 		}
@@ -380,7 +380,7 @@ void CSudokuSolver::checkBox(SUDOKU &sudoku, bool print_steps = false)
 {
 	//check within a 3x3 box if there is a number that fits only in one place
 	//if there exists such a number, that is its final place
-	bool only_pos[9];
+	std::array<bool, 9>  only_pos;
 
 	for (int i = 0; i < 9; i += 3) 
 	{
@@ -1597,7 +1597,7 @@ bool CSudokuSolver::checkError(SUDOKU sudoku)
 	//return false if there are no errors
 	for (int i = 0; i < 9; ++i) 
 		for (int j = 0; j < 9; ++j) 
-			if (!sudoku.sudoku_a[i][j] && numPossible(sudoku, i, j) == 0) 
+			if (none_of(sudoku.sudoku_ans.cell[i][j].num.begin(), sudoku.sudoku_ans.cell[i][j].num.end(), [](bool n) -> bool {return n;})) 
 				return true;
 	return false;
 }
