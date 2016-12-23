@@ -19,14 +19,11 @@
     dkiran100@gmail.com
     */
 
-//#define DEBUG
-
 #include <iostream>
 #include <list>
 #include <algorithm>
 #include <iterator>
 #include <string>
-#include <cctype>
 
 #include "Sudoku-solver.h"
 #include "termcolor.hpp"
@@ -78,23 +75,14 @@ bool CSudokuSolver::initialiseSudoku(SUDOKU &sudoku)
 				finalize(sudoku, sudoku.sudoku_q[i][j] - 1, i, j, true);
 		}
 
-	short count[9] = {0,0,0,0,0,0,0,0,0}, sum = 0;
+	array<short, 9> count = {0,0,0,0,0,0,0,0,0};
+	short sum = 0;
 	bool has_min_num_clues = false;
-	for (short i = 0; i < 9; ++i)
-		for (short j = 0; j < 9; ++j)
-		{
-			if (sudoku.sudoku_q[i][j])
-			{
-				++count[sudoku.sudoku_q[i][j]];
-				++sum;
-			}
-		}
-	if (sum == 17)
-	{
-		for (auto num : count)
-			if (num >= 8)
-				has_min_num_clues = true;
-	}
+
+	for_each(sudoku.sudoku_q[0].begin(), sudoku.sudoku_q[8].end(), [&](short n) -> void {++count[n]; ++sum;});
+
+	if (sum == 17 && none_of(count.begin(), count.end(), [](short num) {return num >= 8;}))
+		has_min_num_clues = true;
 	else 
 		has_min_num_clues = true;
 
@@ -106,17 +94,15 @@ bool CSudokuSolver::initialiseSudoku(SUDOKU &sudoku)
 
 void CSudokuSolver::printSudoku(std::array<std::array<short, 9>, 9> sudoku_q)
 {
-	//prshort the sudoku, unformatted, as a single line string
-	for (short i = 0; i < 9; ++i)
-		for (short j = 0; j < 9; ++j)
-			cout << sudoku_q[i][j];
+	//print the sudoku, unformatted, as a single line string
+	for_each(sudoku_q[0].begin(), sudoku_q[8].end(), [](short n){cout << n;});
 	cout << '\n';
 }
 
 void CSudokuSolver::printfSudoku(SUDOKU sudoku)
 {
-	//prshort the sudoku with all the fancy extras
-	//prshorts black chars for given q and red for nums solved by the program
+	//print the sudoku with all the fancy extras
+	//prints black chars for given q and red for nums solved by the program
 	cout << "\t\t   " << magenta << "1 2 3 4 5 6 7 8 9\n";
 	for (short i = 0; i < 9; ++i) 
 	{
@@ -208,13 +194,7 @@ short CSudokuSolver::numPossible(SUDOKU sudoku, short x, short y)
 	if (sudoku.sudoku_ans.cell[x][y].done == true)
 		return 0;
 	else
-	{
-		short possible = 0;
-		for (short n = 0; n < 9; ++n)
-			if (sudoku.sudoku_ans.cell[x][y].num[n])
-				++possible;
-		return possible;
-	}
+		return count(sudoku.sudoku_ans.cell[x][y].num.begin(), sudoku.sudoku_ans.cell[x][y].num.end(), true);
 }
 
 CSudokuSolver::POINT CSudokuSolver::leastNumsPos(SUDOKU sudoku)
@@ -281,23 +261,9 @@ void CSudokuSolver::disableBox(SUDOKU &sudoku, short n, short x, short y)
 void CSudokuSolver::finalize(SUDOKU &sudoku, short n, short x, short y, bool init = false)
 {
 	//finalize a given number at a position
-#ifdef DEBUG
-	if (sudoku.sudoku_ans.cell[x][y].num[n] == false) 
-	{
-		//this should not happen, but no harm done preventing errors
-		cout << red << "error : The number " << n + 1 << " was set to false at " << x << ' ' << y << "!\n";
-		return;
-	}
-	if (sudoku.sudoku_ans.cell[x][y].done) 
-	{
-		//again, this should not happen, but no harm done preventing
-		//disabling this might give a slight boost in performance
-		cout << red << "error : The position " << x << ' ' << y << " was set to done!" << " Number " << sudoku.sudoku_q[x][y] << " is already there!\n";
-		return;
-	}
-#endif
 	sudoku.sudoku_ans.cell[x][y].done = true;
 	sudoku.changed = true;
+	++sudoku.num_solved;
 
 	if (init)
 		sudoku.sudoku_q[x][y] = sudoku.sudoku_a[x][y] = n + 1;
@@ -312,7 +278,6 @@ void CSudokuSolver::finalize(SUDOKU &sudoku, short n, short x, short y, bool ini
 	disableRow(sudoku, n, x, y);
 	disableColumn(sudoku, n, x, y);
 	disableBox(sudoku, n, x, y);
-	++sudoku.num_solved;
 }
 
 void CSudokuSolver::checkColumns(SUDOKU &sudoku, bool print_steps = false)
@@ -412,7 +377,7 @@ void CSudokuSolver::checkBox(SUDOKU &sudoku, bool print_steps = false)
 									finalize(sudoku, n, k, l);
 									if (print_steps)
 										cout << green << "Single : " << magenta << static_cast<char> (k + 65) << l + 1 
-											<< reset << " set to " << green << n + 1 << reset << " : unique in 3x3 box\n";
+											<< reset << " set to " << green << n + 1 << reset << " : unique in box\n";
 								}
 							}
 		}
@@ -427,20 +392,16 @@ void CSudokuSolver::nakedSingle(SUDOKU &sudoku, bool print_steps = false)
 	for (short i = 0; i < 9; ++i)
 		for (short j = 0; j < 9; ++j)
 		{
-			poss = 0;
-			if (sudoku.sudoku_ans.cell[i][j].done == false)
-				for (short n = 0; n < 9; ++n)
-					if (sudoku.sudoku_ans.cell[i][j].num[n] == true) 
-					{
-						++poss;
-						num = n;
-					}
-			if (poss == 1)
+			if (numPossible(sudoku, i, j) == 1)
 			{
-				finalize(sudoku, num, i, j);
-				if (print_steps)
-					cout << green << "Single : " << magenta << static_cast<char> (i + 65) << j + 1 
-						<< reset << " set to " << green << num + 1 <<  reset << " : unique in cell\n";
+				for (short n = 0; n < 9; ++n)
+					if (sudoku.sudoku_ans.cell[i][j].num[n])
+					{
+						finalize(sudoku, n, i, j);
+						if (print_steps)
+							cout << green << "Single : " << magenta << static_cast<char> (i + 65) << j + 1 
+								<< reset << " set to " << green << num + 1 <<  reset << " : unique in cell\n";
+					}
 			}
 		}
 }
@@ -875,7 +836,7 @@ void CSudokuSolver::pointingBoxRows(SUDOKU &sudoku, bool print_steps = false)
 									if (sudoku.changed)
 									{
 										if (print_steps)
-											cout << green << "Poshorting Box (Rows) : " << magenta << static_cast<char> (k + 65) 
+											cout << green << "Pointing Box (Rows) : " << magenta << static_cast<char> (k + 65) 
 												<< l + 1 << reset << " removes " << green << n + 1 << reset << '\n';
 										return;
 									}
@@ -920,7 +881,7 @@ void CSudokuSolver::pointingBoxColumns(SUDOKU &sudoku, bool print_steps = false)
 									if (sudoku.changed)
 									{
 										if (print_steps)
-											cout << green << "Poshorting Box (Columns) : " << magenta << static_cast<char> (l + 65) 
+											cout << green << "Pointing Box (Columns) : " << magenta << static_cast<char> (l + 65) 
 												<< k + 1 << reset << " removes " << green << n + 1 << reset << '\n';
 										return;
 									}
@@ -1490,7 +1451,7 @@ void CSudokuSolver::solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical)
 			nakedTriple(sudoku, print_steps);	//Naked Triples
 		if (!sudoku.changed)
 		{
-			//Poshorting Box
+			//Pointing Box
 			pointingBoxRows(sudoku, print_steps);
 			pointingBoxColumns(sudoku, print_steps);
 		}
@@ -1531,7 +1492,7 @@ bool CSudokuSolver::checkError(SUDOKU sudoku)
 	//return false if there are no errors
 	for (short i = 0; i < 9; ++i) 
 		for (short j = 0; j < 9; ++j) 
-			if (none_of(sudoku.sudoku_ans.cell[i][j].num.begin(), sudoku.sudoku_ans.cell[i][j].num.end(), [](bool n) -> bool {return n;})) 
+			if (none_of(sudoku.sudoku_ans.cell[i][j].num.begin(), sudoku.sudoku_ans.cell[i][j].num.end(), [](bool num) {return num;})) 
 				return true;
 	return false;
 }
