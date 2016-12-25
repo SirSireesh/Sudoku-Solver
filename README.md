@@ -59,3 +59,5 @@ short | long  | Action|
 `-v` |`--version`|Print version and exit
 
 If you installed using the above instructions, you can always run `man ssolver`
+
+zsh users can add `#compdef _gnu_generic ssolver` to their zshrc for command autocompletion
