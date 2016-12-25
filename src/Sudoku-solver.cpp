@@ -401,6 +401,7 @@ void CSudokuSolver::nakedSingle(SUDOKU &sudoku, bool print_steps = false)
 						if (print_steps)
 							cout << green << "Single : " << magenta << static_cast<char> (i + 65) << j + 1 
 								<< reset << " set to " << green << num + 1 <<  reset << " : unique in cell\n";
+						break;
 					}
 			}
 		}
