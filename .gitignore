@@ -1,24 +1,4 @@
 #ignore bin directory
 /bin
 /.DS_STORE
-autom4te.cache
-config.status
-aclocal
-compile
-config.log
-decomp
-install-sh
-missing
-aclocal.m4
-depcomp
-Makefile
-config.h
-configure
-docs/Makefile
-src/.deps
-src/Makefile
-stamp-h1
-src/Makefile.in
-src/*.o
-src/ssolver
 *.solutions
