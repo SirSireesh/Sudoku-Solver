@@ -95,6 +95,8 @@ int main(int argc, char *argv[])
 			cout << '*';
 		cout << '\n';
 		cout << "Time taken = " << chrono::duration_cast<chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n"; //print time in milliseconds
+		if (sudoku.num_solved < 81 && !silent)
+			printPossible(sudoku);
 	}
 	else 
 		printSudoku(sudoku.sudoku_a);
