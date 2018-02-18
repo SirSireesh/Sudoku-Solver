@@ -1,4 +1,4 @@
-#Sudoku Solver
+# Sudoku Solver
 This is a sudoku solving program.
 
 You should compile it with `clang -std=c++11 -O3 -march=native Sudoku-solver.cpp main.cpp -o ssolver` 
@@ -7,7 +7,7 @@ Note : gcc users must compile with `g++ -std=gnu++11 -O3 -march=native Sudoku-so
 
 You need a compiler capable of c++11
 
-###Supported Fuctions :
+### Supported Fuctions :
 * Naked Singles/Pairs/Triples
 
 * Hidden Singles
@@ -24,24 +24,16 @@ You need a compiler capable of c++11
 
 * Brute Force
 
-###Installing
+### Installing
 You can run 
 
-`aclocal` 
+`c++ src/*.cpp -o ssolver -O2 -march=native -mtune=native` 
 
-`automake --add-missing`
-
-`autoreconf`
-
-`./configure`
-
-`make` 
-
-`make install` 
+`mv ./ssolver /opt/local/bin/ssolver` 
 
 in that order to install the program to `/opt/local/bin`
 
-###Usage
+### Usage
 ssolver [options] 
 
 The program accepts Sudokus from `stdin`. Blank boxes can be represented by spaces, 0s or '.'s.
