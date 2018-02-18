@@ -29,7 +29,7 @@ namespace CSudokuSolver
 		//it stores a list of possible numbers
 		//it also store the status of a cell (solved or not)
 		bool done = false;
-		std::array<bool, 9> num = {true, true, true, true, true, true, true, true, true};
+		std::array<bool, 9> num = {{true, true, true, true, true, true, true, true, true}};
 	};
 	struct SUDOKU_ANS_BOARD {
 		//this is the 9x9 sudoku made from the above
@@ -85,5 +85,5 @@ namespace CSudokuSolver
 	void yWing(SUDOKU &sudoku, bool print_steps);						//y-wing algorithm
 	void trialError(SUDOKU &sudoku, bool print_steps);					//trial - error one at a time guessing to the solution
 	bool bruteForce(SUDOKU &sudoku);							//Brute force away
-	void solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical)		;	//solve the sudoku using the above functions
+	void solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical);			//solve the sudoku using the above functions
 }

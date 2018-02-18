@@ -94,12 +94,13 @@ int main(int argc, char *argv[])
 		for (int i = 1; i <= sudoku.rating; ++i)
 			cout << '*';
 		cout << '\n';
-		cout << "Time taken = " << chrono::duration_cast<chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n"; //print time in milliseconds
 		if (sudoku.num_solved < 81 && !silent)
 			printPossible(sudoku);
 	}
-	else 
+	else
 		printSudoku(sudoku.sudoku_a);
+
+	cout << "Time taken = " << chrono::duration_cast<chrono::nanoseconds>(eTime - sTime).count() * 1E-6 << " milliseconds\n"; //print time in milliseconds
 
 	return 0;
 }
@@ -118,7 +119,8 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		{
 			brute_force = true;
 			if (logical)
-				cerr << argv[0] << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
+				cerr << argv[0] 
+					<< "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
 		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-help") == 0)
 		{
@@ -128,7 +130,8 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		else if (strcmp(argv[i], "--logical") == 0)
 		{
 			if (brute_force)
-				cerr << argv[0] << "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
+				cerr << argv[0] 
+					<< "Conflicting options! --brute-force and --logical can not be used together, the sudoku will be solved with brute force only\n";
 			else
 				logical = true;
 		}
@@ -143,7 +146,7 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 		{
 			if (!print_steps)
 				silent = true;
-			else 
+			else
 				cerr << argv[0] << "Conflicting options! --silent and --trace can not be used together, ignoring --silent\n";
 		}
 		else if (strcmp(argv[i], "--version") == 0)
@@ -164,7 +167,8 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 						brute_force = true;
 						if (logical)
 						{
-							cerr << argv[0] << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
+							cerr << argv[0] 
+								<< "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
 							logical = false;
 						}
 						break;
@@ -188,7 +192,8 @@ void getOpt(int argc, char *argv[], bool &print_steps, bool &silent, bool &logic
 						break;
 					case 'l' :
 						if (brute_force)
-							cerr << argv[0] << "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
+							cerr << argv[0] 
+								<< "Conflicting options! -b and -l can not be used together, the sudoku will be solved with brute force only\n";
 						else
 							logical = true;
 						break;
