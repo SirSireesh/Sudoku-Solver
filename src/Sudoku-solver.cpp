@@ -100,7 +100,7 @@ void CSudokuSolver::printfSudoku(SUDOKU sudoku)
 {
 	//print the sudoku with all the fancy extras
 	//prints black chars for given q and red for nums solved by the program
-	cout << "\t\t   " << magenta << "1 2 3 4 5 6 7 8 9\n";
+	cout << "\t\t  " << magenta << "1 2 3 4 5 6 7 8 9\n";
 	for (short i = 0; i < 9; ++i)
 	{
 		cout << "\t\t" << magenta << char(i + 65) << blue << " ";
@@ -793,112 +793,65 @@ void CSudokuSolver::nakedTriple(SUDOKU &sudoku, bool print_steps = false)
 
 void CSudokuSolver::hiddenPair(SUDOKU &sudoku, bool print_steps = false)
 {
-	array<array<short, 9>, 9> counter;
-	for (short i = 0; i < 9; ++i)
-		for (short j = 0; j < 9; ++j)
-			counter[i][j] = 0;
-
-	for (short i = 0; i < 9; ++i)
+	for (short i = 0; i < 9; ++i) {
+		array<short, 9> counter = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 		for (short j = 0; j < 9; ++j)
 			for (short n = 0; n < 9; ++n)
 				if (sudoku.sudoku_ans.cell[i][j].num[n])
-					++counter[i][n];
-
-	POINT pos1, pos2 = {-1, -1};
-	for (short i = 0; i < 9; ++i)
-	{
-		for (short j = 0; j < 9; ++j)
-		{
-			if (counter[i][j] == 2)
-			{
-				for (short k = j + 1; k < 9; ++k)
-				{
-					if (counter[i][k] == 2)
-					{
-						for (short l = 0; l < 9; ++l)
-						{
-							if (sudoku.sudoku_ans.cell[i][l].num[j] && sudoku.sudoku_ans.cell[i][l].num[k])
-							{
-								pos1.x = pos2.x = i;
-								pos1.y = l;
-								for (short m = l + 1; m < 9; ++m)
-									if (sudoku.sudoku_ans.cell[i][l].num[j] && sudoku.sudoku_ans.cell[i][l].num[k])
-									{
-										pos2.y = m;
-										if (pos2.y >= 0)
-										{
-											for (short n = 0; n < 9; ++n)
-											{
-												if (n != k && n != j)
-												{
-													disablePos(sudoku, n, pos1.x, pos1.y);
-													disablePos(sudoku, n, pos2.x, pos2.y);
-												}
+					++counter[n];
+		for (short n = 0; n < 9; ++n)
+			if (counter[n] == 2) {
+				for (short m = n + 1; m < 9; ++m)
+					if (counter[m] == 2)
+						for (short j = 0; j < 9; ++j)
+							if (sudoku.sudoku_ans.cell[i][j].num[n] && sudoku.sudoku_ans.cell[i][j].num[m])
+								for (short k = j + 1; k < 9; ++k)
+									if (sudoku.sudoku_ans.cell[i][k].num[n] && sudoku.sudoku_ans.cell[i][k].num[m]) {
+										for (short o = 0; o < 9; ++o)
+											if (o != m && o != n) {
+												disablePos(sudoku, o, i, j);
+												disablePos(sudoku, o, i, k);
 											}
-											if (sudoku.changed)
-											{
-												if (print_steps)
-													cout << green << "Hidden Pair (Rows) " << reset << " : " << magenta
-														<< char(pos1.x + 65) << pos1.y + 1 << ' ' << char(pos2.x + 65)
-														<< pos2.y + 1 << reset << " containing "
-														<< green << k + 1 << ' ' << j + 1 << reset << '\n';
-												return;
-											}
-											else
-												pos2.y = -1;
+										if (sudoku.changed && print_steps) {
+											cout << green << "Hidden Pair (Rows) : " << magenta << char(i + 'A')
+												<< j + 1 << reset << " and " << magenta << char(i + 'A')
+												<< k + 1 << reset << " formed by " << green << n + 1 << reset
+												<< " and " << green << m + 1 << reset << '\n';
+											return;
 										}
 									}
-							}
-						}
-					}
-				}
 			}
-		}
 	}
-	/*
-	 * for (pos1.x = 0, pos2.x = 0; pos1.x < 9; ++pos1.x, ++pos2.x)
-	 * {
-	 * for (pos1.y = 0; pos1.y < 9; ++pos1.y)
-	 * {
-	 * for (pos2.y = pos1.y + 1; pos2.y < 9; ++pos2.y)
-	 * if (numCommon(sudoku, pos1, pos2) == 2)
-	   {
-	   short num1 = -1, num2 = -1;
-	   for (short n = 0; n < 9; ++n)
-	   {
-	   if (sudoku.sudoku_ans.cell[pos1.x][pos1.y].num[n] && sudoku.sudoku_ans.cell[pos2.x][pos2.y].num[n])
-	   {
-	   if (num1 == -1)
-	   num1 = n;
-	   else
-	   num2 = n;
-	   }
-	   }
-	   if (counter[pos1.x][num1] == counter[pos2.x][num2] && counter[pos1.x][num1] == 2)
-	   {
-	   for (short n = 0; n < 9; ++n)
-	   {
-	   if (n != num1 && n != num2)
-	   {
-	   disablePos(sudoku, n, pos1.x, pos1.y);
-	   disablePos(sudoku, n, pos2.x, pos2.y);
-	   }
-	   }
-	   }
-	   if (sudoku.changed)
-	   {
-	   if (print_steps)
-	   {
-	   cout << green << "Hidden Pair (Rows) " << reset << " : " << magenta << char(pos1.x + 65) << pos1.y + 1 << ' '
-	   << char(pos2.x + 65) << pos2.y + 1 << reset << " containing " << green << num1 + 1 << ' ' << num2 + 1
-	   << reset << '\n';
-	   }
-	   return;
-	   }
-	   }
-	   }
-	   }*/
 
+	for (short i = 0; i < 9; ++i) {
+		array<short, 9> counter = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+		for (short j = 0; j < 9; ++j)
+			for (short n = 0; n < 9; ++n)
+				if (sudoku.sudoku_ans.cell[j][i].num[n])
+					++counter[n];
+		for (short n = 0; n < 9; ++n)
+			if (counter[n] == 2) {
+				for (short m = n + 1; m < 9; ++m)
+					if (counter[m] == 2)
+						for (short j = 0; j < 9; ++j)
+							if (sudoku.sudoku_ans.cell[j][i].num[n] && sudoku.sudoku_ans.cell[j][i].num[m])
+								for (short k = j + 1; k < 9; ++k)
+									if (sudoku.sudoku_ans.cell[k][i].num[n] && sudoku.sudoku_ans.cell[k][i].num[m]) {
+										for (short o = 0; o < 9; ++o)
+											if (o != m && o != n) {
+												disablePos(sudoku, o, j, i);
+												disablePos(sudoku, o, k, i);
+											}
+										if (sudoku.changed && print_steps) {
+											cout << green << "Hidden Pair (Cols) : " << magenta << char(j + 'A')
+												<< i + 1 << reset << " and " << magenta << char(j + 'A')
+												<< k + 1 << reset << " formed by " << green << n + 1 << reset
+												<< " and " << green << m + 1 << reset << '\n';
+											return;
+										}
+									}
+			}
+	}
 }
 
 void CSudokuSolver::pointingBoxRows(SUDOKU &sudoku, bool print_steps = false)
@@ -1549,8 +1502,8 @@ void CSudokuSolver::solveSudoku(SUDOKU &sudoku, bool print_steps, bool logical)
 		}
 		if (!sudoku.changed)
 			nakedTriple(sudoku, print_steps);
-		//if (!sudoku.changed)
-		//	hiddenPair(sudoku, print_steps);
+		if (!sudoku.changed)
+			hiddenPair(sudoku, print_steps);
 		if (!sudoku.changed)
 		{
 			pointingBoxRows(sudoku, print_steps);
